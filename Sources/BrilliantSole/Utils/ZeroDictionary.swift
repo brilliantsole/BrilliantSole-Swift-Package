@@ -1,13 +1,13 @@
 //
 //  ZeroDictionary.swift
-//  BrilliantKit
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
 
 import Foundation
 
-// MARK: - for initializing BKSensorDataConfigurations
+// MARK: - for initializing BSSensorDataConfigurations
 
 extension Dictionary where Key: CaseIterable & RawRepresentable, Key.RawValue: Numeric, Value: Numeric {
     static var zero: Self {
@@ -26,7 +26,7 @@ extension Dictionary where Key: CaseIterable & RawRepresentable, Key.RawValue: N
     }
 }
 
-// MARK: - for checking BKSensorDataConfigurations is zero
+// MARK: - for checking BSSensorDataConfigurations is zero
 
 extension Dictionary where Value: BinaryInteger {
     var isZero: Bool {
@@ -34,7 +34,7 @@ extension Dictionary where Value: BinaryInteger {
     }
 }
 
-// MARK: - for BKMotionCalibration
+// MARK: - for BSMotionCalibration
 
 extension Dictionary where Key: CaseIterable & RawRepresentable, Key.RawValue: Numeric, Value: RawRepresentable, Value.RawValue: Numeric {
     static var zero: Self {

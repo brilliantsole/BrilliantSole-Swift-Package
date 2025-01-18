@@ -1,6 +1,6 @@
 //
-//  BKVibrationWaveformEffect.swift
-//  BrilliantKit
+//  BSVibrationWaveformEffect.swift
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Based on [DRV2605 Haptic Driver, section 11.2](https://www.ti.com/lit/ds/symlink/drv2605.pdf)
-public enum BKVibrationWaveformEffect: UInt8, CaseIterable, Identifiable {
+public enum BSVibrationWaveformEffect: UInt8, CaseIterable, Identifiable {
     public var id: UInt8 { rawValue }
     var data: Data {
         .init([rawValue])

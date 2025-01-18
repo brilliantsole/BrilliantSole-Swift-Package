@@ -1,13 +1,13 @@
 //
-//  BKVibrationWaveformEffectSegment.swift
-//  BrilliantKit
+//  BSVibrationWaveformEffectSegment.swift
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
 
-struct BKVibrationWaveformEffectSegment {
-    var type: BKVibrationWaveformEffectSegmentType
-    var effect: BKVibrationWaveformEffect
+struct BSVibrationWaveformEffectSegment {
+    var type: BSVibrationWaveformEffectSegmentType
+    var effect: BSVibrationWaveformEffect
     var delay: UInt16 {
         didSet {
             delay = min(delay, Self.maxDelay)
@@ -24,7 +24,7 @@ struct BKVibrationWaveformEffectSegment {
     static let maxDelay: UInt16 = 1270
     static let maxLoopCount: UInt8 = 3
 
-    init(effect: BKVibrationWaveformEffect, loopCount: UInt8 = 0) {
+    init(effect: BSVibrationWaveformEffect, loopCount: UInt8 = 0) {
         self.type = .effect
         self.effect = effect
         self.delay = 0

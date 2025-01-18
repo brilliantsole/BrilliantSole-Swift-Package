@@ -1,13 +1,13 @@
 //
-//  VibrationWaveformSegment.swift
-//  BrilliantKit
+//  BSVibrationWaveformSegment.swift
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
 
 import Foundation
 
-struct BKVibrationWaveformSegment {
+struct BSVibrationWaveformSegment {
     var amplitude: Float {
         didSet {
             amplitude = max(0.0, min(amplitude, 1.0))

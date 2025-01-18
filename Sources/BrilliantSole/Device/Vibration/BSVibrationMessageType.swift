@@ -1,6 +1,6 @@
 //
-//  BKVibrationMessageType.swift
-//  BrilliantKit
+//  BSVibrationMessageType.swift
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
@@ -9,6 +9,6 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BKVibrationMessageType: UInt8 {
+public enum BSVibrationMessageType: UInt8 {
     case triggerVibration
 }

@@ -1,6 +1,6 @@
 //
 //  MathUtils.swift
-//  BrilliantKit
+//  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.
 //
@@ -39,7 +39,7 @@ public func interpolate<T: Interpolatable>(from start: T, to end: T, with parame
 
 public extension Interpolatable {
     mutating func interpolate(to value: Self, with parameter: InterpolationParameter) {
-        self = BrilliantKit.interpolate(from: self, to: value, with: parameter)
+        self = BrilliantSole.interpolate(from: self, to: value, with: parameter)
     }
 }
 
@@ -65,15 +65,15 @@ public protocol GetInterpolatable: Comparable {
 extension Float: GetInterpolatable {}
 extension Double: GetInterpolatable {}
 
-public func getInterpolation<T: GetInterpolatable>(of value: T, between from: T, and to: T) -> T {
+public func getInterpolation<T: GetInterpolatable>(of value: T, between from: T, and to: T, clampValue: Bool) -> T {
     let lower = min(from, to)
     let upper = max(from, to)
-    let clampedValue = clamp(value, min: lower, max: upper)
-    return (value - lower) / (upper - lower)
+    let _value = clampValue ? clamp(value, min: lower, max: upper) : value
+    return (_value - lower) / (upper - lower)
 }
 
 public extension GetInterpolatable {
-    func getInterpolation(between from: Self, and to: Self) -> Self {
-        BrilliantKit.getInterpolation(of: self, between: from, and: to)
+    func getInterpolation(between from: Self, and to: Self, clampValue: Bool) -> Self {
+        BrilliantSole.getInterpolation(of: self, between: from, and: to, clampValue: clampValue)
     }
 }
