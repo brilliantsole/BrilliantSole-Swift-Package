@@ -26,7 +26,7 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
         let includeAllWaveformEffectSegments = hasAtLeast1WaveformEffectWithANonzeroLoopCount || waveformEffectSequenceLoopCount != 0
 
         for index in 0 ..< (includeAllWaveformEffectSegments ? maxLength : count) {
-            if index < count {
+            if index >= count {
                 data += BSVibrationWaveformEffect.none.data
                 continue
             }

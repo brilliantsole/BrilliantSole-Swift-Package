@@ -21,9 +21,9 @@ public struct BSVibrationConfiguration {
         }
     }
 
-    public var waveformEffectSegmentsLoopCount: UInt8 = 0 {
+    public var loopCount: UInt8 = 0 {
         didSet {
-            waveformEffectSegmentsLoopCount = min(waveformEffectSegmentsLoopCount, BSVibrationWaveformEffectSegments.maxWaveformEffectSegmentsLoopCount)
+            loopCount = min(loopCount, BSVibrationWaveformEffectSegments.maxWaveformEffectSegmentsLoopCount)
         }
     }
 
@@ -33,11 +33,11 @@ public struct BSVibrationConfiguration {
         }
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, waveformEffectsegmentsLoopCount: UInt8) {
+    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8) {
         self.locations = locations
         self.waveformEffectSegments = waveformEffectSegments
         self.type = .waveformEffect
-        self.waveformEffectSegmentsLoopCount = waveformEffectsegmentsLoopCount
+        self.loopCount = loopCount
     }
 
     init(locations: [BSVibrationLocationFlag], waveformSegments: BSVibrationWaveformSegments) {
@@ -70,7 +70,7 @@ public struct BSVibrationConfiguration {
     func getSegmentsData() -> Data {
         switch type {
         case .waveformEffect:
-            waveformEffectSegments.getData(waveformEffectSequenceLoopCount: waveformEffectSegmentsLoopCount)
+            waveformEffectSegments.getData(waveformEffectSequenceLoopCount: loopCount)
         case .waveform:
             waveformSegments.getData()
         }

@@ -1,6 +1,16 @@
-import Testing
 @testable import BrilliantSole
+import Testing
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+struct BSVibrationTests {
+    @Test mutating func vibrationWaveformTest() async throws {
+        let configuration: BSVibrationConfiguration = .init(locations: [.front, .rear], waveformSegments: [.init(amplitude: 0.5, duration: 100)])
+        let configurationData = configuration.getData()
+        print(configurationData.bytes)
+    }
+
+    @Test mutating func vibrationWaveformEffectTest() async throws {
+        let configuration: BSVibrationConfiguration = .init(locations: [.front], waveformEffectSegments: [.init(effect: .alert1000ms, loopCount: 0)], loopCount: 0)
+        let configurationData = configuration.getData()
+        print(configurationData.bytes)
+    }
 }
