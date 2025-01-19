@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import OSLog
 import UkatonMacros
 
+@StaticLogger
 public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
     var type: BSVibrationWaveformEffectSegmentType
     var effect: BSVibrationWaveformEffect
@@ -46,9 +48,11 @@ public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
     var bytes: [UInt8] {
         switch type {
         case .effect:
-            [effect.rawValue]
+            logger.debug("Creating waveform effect segment with effect: \(effect.name)")
+            return [effect.rawValue]
         case .delay:
-            [UInt8(1 << 7 | (delay / 10))]
+            logger.debug("Creating delay segment with delay: \(delay)ms")
+            return [UInt8(1 << 7 | (delay / 10))]
         }
     }
 

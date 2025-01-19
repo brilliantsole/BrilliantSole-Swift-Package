@@ -14,7 +14,7 @@ public extension Array where Element == BSVibrationWaveformSegment {
 
     func getData() -> Data {
         var data: Data = .init()
-        data += prefix(Int(type.maxSegmentsLength)).flatMap { $0.data }
+        data += prefix(Int(maxLength)).flatMap { $0.data }
         return data
     }
 }
