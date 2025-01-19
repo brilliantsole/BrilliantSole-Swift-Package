@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UkatonMacros
 
-struct BSVibrationWaveformSegment {
+public struct BSVibrationWaveformSegment: BSVibrationSegment {
     var amplitude: Float {
         didSet {
             amplitude = max(0.0, min(amplitude, 1.0))
@@ -32,5 +33,13 @@ struct BSVibrationWaveformSegment {
         // Apply rounding and clamping
         self.amplitude = round(self.amplitude * Float(Self.amplitudeNumberOfSteps)) / Float(Self.amplitudeNumberOfSteps)
         self.duration -= self.duration % 10
+    }
+
+    var bytes: [UInt8] {
+        [UInt8(amplitude * Float(Self.amplitudeNumberOfSteps)), UInt8(duration / 10)]
+    }
+
+    var data: Data {
+        .init(bytes)
     }
 }

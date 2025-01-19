@@ -5,7 +5,10 @@
 //  Created by Zack Qattan on 1/15/25.
 //
 
-struct BSVibrationWaveformEffectSegment {
+import Foundation
+import UkatonMacros
+
+public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
     var type: BSVibrationWaveformEffectSegmentType
     var effect: BSVibrationWaveformEffect
     var delay: UInt16 {
@@ -38,5 +41,18 @@ struct BSVibrationWaveformEffectSegment {
         self.loopCount = min(loopCount, Self.maxLoopCount)
 
         self.delay -= self.delay % 10
+    }
+
+    var bytes: [UInt8] {
+        switch type {
+        case .effect:
+            [effect.rawValue]
+        case .delay:
+            [UInt8(1 << 7 | (delay / 10))]
+        }
+    }
+
+    var data: Data {
+        .init(bytes)
     }
 }

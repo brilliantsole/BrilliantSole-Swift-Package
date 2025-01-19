@@ -13,7 +13,7 @@ public enum BSVibrationType: UInt8 {
     case waveformEffect
     case waveform
 
-    public var maxSequenceLength: Int {
+    public var maxSegmentsLength: Int {
         switch self {
         case .waveformEffect:
             8
