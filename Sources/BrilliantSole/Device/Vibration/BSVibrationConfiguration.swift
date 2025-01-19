@@ -17,7 +17,7 @@ public struct BSVibrationConfiguration {
 
     public var waveformEffectSegments: BSVibrationWaveformEffectSegments = [] {
         didSet {
-            waveformEffectSegments = waveformEffectSegments.shortenToMaxLength()
+            waveformEffectSegments = waveformEffectSegments.getMaxLengthPrefix()
         }
     }
 
@@ -29,7 +29,7 @@ public struct BSVibrationConfiguration {
 
     public var waveformSegments: BSVibrationWaveformSegments = [] {
         didSet {
-            waveformSegments = waveformSegments.shortenToMaxLength()
+            waveformSegments = waveformSegments.getMaxLengthPrefix()
         }
     }
 

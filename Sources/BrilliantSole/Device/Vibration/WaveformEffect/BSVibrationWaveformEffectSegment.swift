@@ -52,7 +52,7 @@ public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
         }
     }
 
-    var data: Data {
+    public var data: Data {
         .init(bytes)
     }
 }

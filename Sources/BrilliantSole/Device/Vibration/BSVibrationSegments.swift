@@ -20,7 +20,7 @@ public extension BSVibrationSegments {
 extension Array: BSVibrationSegments where Element: BSVibrationSegment {
     public var data: Data { .init() }
     public var type: BSVibrationType { .waveform }
-    public func shortenToMaxLength() -> Self {
+    func getMaxLengthPrefix() -> Self {
         guard count <= maxLength else {
             return .init(prefix(maxLength))
         }

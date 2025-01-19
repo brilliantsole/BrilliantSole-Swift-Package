@@ -39,7 +39,7 @@ public struct BSVibrationWaveformSegment: BSVibrationSegment {
         [UInt8(amplitude * Float(Self.amplitudeNumberOfSteps)), UInt8(duration / 10)]
     }
 
-    var data: Data {
+    public var data: Data {
         .init(bytes)
     }
 }
