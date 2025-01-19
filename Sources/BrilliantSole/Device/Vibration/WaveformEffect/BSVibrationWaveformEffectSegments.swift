@@ -23,7 +23,7 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
             }
         }
 
-        var includeAllWaveformEffectSegments = hasAtLeast1WaveformEffectWithANonzeroLoopCount || waveformEffectSequenceLoopCount != 0
+        let includeAllWaveformEffectSegments = hasAtLeast1WaveformEffectWithANonzeroLoopCount || waveformEffectSequenceLoopCount != 0
 
         for index in 0 ..< (includeAllWaveformEffectSegments ? maxLength : count) {
             if index < count {
@@ -39,7 +39,7 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
             var segmentLoopCount: UInt8 = 0
             if index < count { segmentLoopCount = self[index].loopCount }
 
-            var bitOffset = 2 * (index % 4)
+            let bitOffset = 2 * (index % 4)
             data[data.count - 1] |= UInt8(segmentLoopCount << bitOffset)
 
             if index == 3 || index == 7 {}
@@ -50,7 +50,6 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
             data.append(contentsOf: [waveformEffectSequenceLoopCount])
         }
 
-        // FILL
         return data
     }
 
