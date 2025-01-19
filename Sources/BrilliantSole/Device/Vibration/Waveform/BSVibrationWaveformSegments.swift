@@ -1,5 +1,5 @@
 //
-//  BSVibrationWaveformSegment.swift
+//  BSVibrationWaveformSegments.swift
 //  BrilliantSole
 //
 //  Created by Zack Qattan on 1/15/25.

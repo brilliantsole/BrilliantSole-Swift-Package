@@ -8,7 +8,9 @@
 import Foundation
 import UkatonMacros
 
-public struct BSVibrationLocationFlag: OptionSet, Sendable {
+public struct BSVibrationLocationFlag: OptionSet, Sendable, CaseIterable {
+    public static let allCases: [BSVibrationLocationFlag] = [.front, .rear]
+
     public let rawValue: UInt8
 
     public init(rawValue: UInt8) {

@@ -9,7 +9,7 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSVibrationType: UInt8 {
+public enum BSVibrationType: UInt8, CaseIterable {
     case waveformEffect
     case waveform
 

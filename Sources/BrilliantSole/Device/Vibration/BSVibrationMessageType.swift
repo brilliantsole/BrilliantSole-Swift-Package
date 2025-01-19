@@ -9,6 +9,6 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSVibrationMessageType: UInt8 {
+public enum BSVibrationMessageType: UInt8, CaseIterable {
     case triggerVibration
 }
