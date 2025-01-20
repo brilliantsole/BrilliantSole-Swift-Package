@@ -15,9 +15,9 @@ protocol BSManager {
     func canParseRxMessage(messageTypeEnum: MessageType.RawValue) -> Bool
     func onRxMessage(messageTypeEnum: MessageType.RawValue, data: Data)
 
-    var sendTxMessages: ((_ txMessages: [Data], _ sendImmediately: Bool) -> Void)? { get set }
+    var sendTxMessages: ((_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)? { get set }
 }
 
 extension BSManager {
-    func canParseRxMessage(message: MessageType) -> Bool { false }
+    func canParseRxMessage(messageTypeEnum: MessageType.RawValue) -> Bool { false }
 }
