@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import OSLog
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "BSManager")
 
 protocol BSManager {
     associatedtype MessageType: RawRepresentable & CaseIterable where MessageType.RawValue == UInt8

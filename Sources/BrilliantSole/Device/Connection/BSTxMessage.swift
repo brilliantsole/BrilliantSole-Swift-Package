@@ -30,7 +30,7 @@ struct BSTxMessage {
         let dataLength = self.dataLength()
         _data.append(dataLength.data(littleEndian: true))
         if dataLength > 0, let data = data {
-            _data.append(contentsOf: data)
+            _data += data
         }
     }
 }

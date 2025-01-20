@@ -10,11 +10,10 @@ import Foundation
 // MARK: - Data to Object
 
 extension Data {
-    func parse<T>(at offset: inout Data.Index) -> T {
+    func parse<T>(at offset: Data.Index) -> T {
         let size = MemoryLayout<T>.size
         let value = subdata(in: Data.Index(offset) ..< self.index(Data.Index(offset), offsetBy: size))
             .withUnsafeBytes { $0.load(as: T.self) }
-        offset += size
         return value
     }
 }
@@ -22,15 +21,15 @@ extension Data {
 // MARK: Data to Number
 
 extension FixedWidthInteger {
-    static func parse(from data: Data, at offset: inout Data.Index, littleEndian: Bool = true) -> Self {
-        let value: Self = data.parse(at: &offset)
+    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+        let value: Self = data.parse(at: offset)
         return littleEndian ? value.littleEndian : value.bigEndian
     }
 }
 
 extension Float32 {
-    static func parse(from data: Data, at offset: inout Data.Index, littleEndian: Bool = true) -> Self {
-        var value: Self = data.parse(at: &offset)
+    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+        var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt32(littleEndian: 1) == 1) {
             value = .init(bitPattern: value.bitPattern.byteSwapped)
@@ -40,8 +39,8 @@ extension Float32 {
 }
 
 extension Float64 {
-    static func parse(from data: Data, at offset: inout Data.Index, littleEndian: Bool = true) -> Self {
-        var value: Self = data.parse(at: &offset)
+    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+        var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt64(littleEndian: 1) == 1) {
             value = .init(bitPattern: value.bitPattern.byteSwapped)
@@ -71,10 +70,7 @@ extension FixedWidthInteger {
 // MARK: - Data to String
 
 extension Data {
-    func parseString(offset: inout Data.Index, until finalOffset: Data.Index) -> String {
-        defer {
-            offset = finalOffset
-        }
+    func parseString(offset: Data.Index, until finalOffset: Data.Index) -> String {
         guard offset < finalOffset, finalOffset <= count else {
             return ""
         }

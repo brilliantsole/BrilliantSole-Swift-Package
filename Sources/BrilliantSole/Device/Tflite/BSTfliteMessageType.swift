@@ -11,7 +11,7 @@ import UkatonMacros
 public enum BSTfliteMessageType: UInt8, CaseIterable, Sendable {
     case getTfliteName
     case setTfliteName
-    case setTfliteTask
+    case getTfliteTask
     case setTfliteTask
     case getTfliteSensorRate
     case setTfliteSensorRate

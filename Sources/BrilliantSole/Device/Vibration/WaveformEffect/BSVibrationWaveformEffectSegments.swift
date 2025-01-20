@@ -47,7 +47,7 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
 
         let includeAllWaveformEffectSegmentLoopCounts = waveformEffectSequenceLoopCount != 0
         if includeAllWaveformEffectSegmentLoopCounts {
-            data.append(contentsOf: [waveformEffectSequenceLoopCount])
+            data += waveformEffectSequenceLoopCount.data
         }
 
         return data
