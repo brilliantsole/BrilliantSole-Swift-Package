@@ -18,7 +18,7 @@ extension Data {
     }
 }
 
-// MARK: Data to Number
+// MARK: - Data to Number
 
 extension FixedWidthInteger {
     static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {

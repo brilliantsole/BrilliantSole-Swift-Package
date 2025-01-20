@@ -8,11 +8,13 @@
 import Foundation
 import OSLog
 
-private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "BSSensorConfiguration")
+private let logger = getLogger(category: "BSSensorConfiguration")
 
 typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 
 extension BSSensorConfiguration {
+    // MARK: - Parsing
+
     static func parse(data: Data) -> Self? {
         guard data.count.isMultiple(of: 3) else {
             logger.error("Invalid data length (\(data.count)) - must be multiple of 3")
@@ -46,5 +48,35 @@ extension BSSensorConfiguration {
             data += sensorRate.rawValue.data(littleEndian: true)
         }
         return data
+    }
+
+    // MARK: - Zero
+
+    var isZero: Bool {
+        !contains(where: { $1 != ._0ms })
+    }
+
+    static var zero: Self {
+        var zero: Self = .init()
+        Key.allCases.forEach { zero[$0] = ._0ms }
+        return zero
+    }
+
+    // MARK: - Toggling
+
+    func isEnabled(_ key: Key) -> Bool {
+        self[key] != ._0ms
+    }
+
+    func contains(_ key: Key) -> Bool {
+        keys.contains(key)
+    }
+
+    mutating func toggle(_ key: Key, sensorRate: Value) {
+        if isEnabled(key) {
+            self[key] = ._0ms
+        } else {
+            self[key] = sensorRate
+        }
     }
 }

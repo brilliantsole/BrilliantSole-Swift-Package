@@ -9,7 +9,8 @@ struct BSSensorConfigurationTests {
         print("sensorConfigurationData: \(configurationData.bytes)")
         let parsedConfiguration = BSSensorConfiguration.parse(data: configurationData)
         #expect(parsedConfiguration != nil)
-        print("parsedConfiguration: \(String(describing: parsedConfiguration))")
+        print("parsedConfiguration: \(String(describing: parsedConfiguration!))")
+        #expect(configuration == parsedConfiguration)
     }
 }
 
