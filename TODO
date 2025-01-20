@@ -1,2 +1,7 @@
-Sensors
-    enums
+enums
+    battery
+    tflite
+    fileTransfer
+    connectionStatus
+    information
+    deviceInformation

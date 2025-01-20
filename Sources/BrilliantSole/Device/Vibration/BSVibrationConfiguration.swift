@@ -11,7 +11,7 @@ import UkatonMacros
 
 @StaticLogger
 public struct BSVibrationConfiguration {
-    public var locations: [BSVibrationLocationFlag]
+    public var locations: [BSVibrationLocation]
 
     public var type: BSVibrationType
 
@@ -33,14 +33,14 @@ public struct BSVibrationConfiguration {
         }
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8) {
+    init(locations: [BSVibrationLocation], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8) {
         self.locations = locations
         self.waveformEffectSegments = waveformEffectSegments
         self.type = .waveformEffect
         self.loopCount = loopCount
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformSegments: BSVibrationWaveformSegments) {
+    init(locations: [BSVibrationLocation], waveformSegments: BSVibrationWaveformSegments) {
         self.locations = locations
         self.waveformSegments = waveformSegments
         self.type = .waveform
