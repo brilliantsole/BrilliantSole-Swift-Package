@@ -1,7 +1,14 @@
 enums
-    battery
-    tflite
-    fileTransfer
-    connectionStatus
     information
     deviceInformation
+    tflite
+    fileTransfer
+sensorConfiguration
+sensorData
+fileTransfer
+tflite
+managers
+device
+devicePair
+scanner
+client
