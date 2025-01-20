@@ -8,6 +8,6 @@
 import UkatonMacros
 
 @EnumName
-public enum BSFileType: UInt8, CaseIterable {
+public enum BSFileType: UInt8, CaseIterable, Sendable {
     case tflite
 }

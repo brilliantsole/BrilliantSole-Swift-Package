@@ -8,6 +8,6 @@
 import UkatonMacros
 
 @EnumName
-public enum BSConnectionMessageType: UInt8, CaseIterable {
+public enum BSConnectionMessageType: UInt8, CaseIterable, Sendable {
     case connectionMessage
 }

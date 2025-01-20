@@ -6,3 +6,7 @@
 //
 
 typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
+
+extension BSSensorConfiguration {
+    // FILL
+}

@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSMetaConnectionMessageType: UInt8, CaseIterable {
+public enum BSMetaConnectionMessageType: UInt8, CaseIterable, Sendable {
     case rx
     case tx
 }

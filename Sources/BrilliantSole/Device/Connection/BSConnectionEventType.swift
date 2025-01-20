@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSConnectionEventType: UInt8, CaseIterable {
+public enum BSConnectionEventType: UInt8, CaseIterable, Sendable {
     case connectionStatus
     case isConnected
 }

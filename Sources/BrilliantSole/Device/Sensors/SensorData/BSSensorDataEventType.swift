@@ -8,4 +8,4 @@
 import UkatonMacros
 
 // @EnumName
-// public enum BSSensorDataEventType: UInt8, CaseIterable {}
+// public enum BSSensorDataEventType: UInt8, CaseIterable, Sendable {}

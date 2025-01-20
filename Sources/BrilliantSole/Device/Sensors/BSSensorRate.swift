@@ -9,7 +9,7 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSSensorRate: UInt16, CaseIterable {
+public enum BSSensorRate: UInt16, CaseIterable, Sendable {
     case _0ms = 0
     case _5ms = 5
     case _10ms = 10
