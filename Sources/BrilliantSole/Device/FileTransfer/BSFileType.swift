@@ -10,4 +10,11 @@ import UkatonMacros
 @EnumName
 public enum BSFileType: UInt8, CaseIterable, Sendable {
     case tflite
+
+    var fileExtension: String {
+        switch self {
+        case .tflite:
+            return "tflite"
+        }
+    }
 }

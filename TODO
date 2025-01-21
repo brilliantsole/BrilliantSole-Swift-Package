@@ -1,7 +1,3 @@
-sensorData
-    pressure parsing
-fileTransfer
-tflite
 managers
 device
 devicePair

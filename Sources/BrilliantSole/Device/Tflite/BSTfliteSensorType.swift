@@ -12,3 +12,23 @@ extension BSSensorType {
         return Self.tfliteSensorTypes.contains(self)
     }
 }
+
+public enum BSTfliteSensorType: CaseIterable {
+    case pressure
+    case linearAcceleration
+    case gyroscope
+    case magnetometer
+
+    var sensorType: BSSensorType {
+        switch self {
+        case .pressure:
+            return .pressure
+        case .linearAcceleration:
+            return .linearAcceleration
+        case .gyroscope:
+            return .gyroscope
+        case .magnetometer:
+            return .magnetometer
+        }
+    }
+}

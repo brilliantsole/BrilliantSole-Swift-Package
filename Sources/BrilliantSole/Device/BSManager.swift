@@ -1,5 +1,5 @@
 //
-//  BSBaseManagerProtocol.swift
+//  BSManager.swift
 //  BrilliantSole
 //
 //  Created by Zack Qattan on 1/19/25.
