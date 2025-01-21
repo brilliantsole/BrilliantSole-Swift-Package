@@ -15,7 +15,7 @@ typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 extension BSSensorConfiguration {
     // MARK: - Parsing
 
-    static func parse(data: Data) -> Self? {
+    static func parse(_ data: Data) -> Self? {
         guard data.count.isMultiple(of: 3) else {
             logger.error("Invalid data length (\(data.count)) - must be multiple of 3")
             return nil

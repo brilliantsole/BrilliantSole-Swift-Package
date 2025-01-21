@@ -7,14 +7,14 @@
 
 import OSLog
 import simd
-
-private let logger = getLogger(category: "BSRange")
+import UkatonMacros
 
 public typealias BSCenterOfPressure = simd_double2
 
-struct BSCenterOfPressureRange<T: BinaryFloatingPoint> {
-    var x: BSRange<T> = .init()
-    var y: BSRange<T> = .init()
+@StaticLogger
+struct BSCenterOfPressureRange {
+    var x: BSRange = .init()
+    var y: BSRange = .init()
 
     mutating func reset() {
         x.reset()
@@ -22,16 +22,23 @@ struct BSCenterOfPressureRange<T: BinaryFloatingPoint> {
     }
 
     mutating func update(with value: BSCenterOfPressure) {
-        x.update(with: T(value.x))
-        y.update(with: T(value.y))
+        x.update(with: Float(value.x))
+        y.update(with: Float(value.y))
+#if DEBUG
         let string = String(describing: self)
         logger.debug("updated to \(string)")
+#endif
     }
 
     func getNormalization(for value: BSCenterOfPressure) -> BSCenterOfPressure {
         .init(
-            x: Double(x.getNormalization(for: T(value.x), weightBySpan: false)),
-            y: Double(y.getNormalization(for: T(value.y), weightBySpan: false))
+            x: Double(x.getNormalization(for: Float(value.x), weightBySpan: false)),
+            y: Double(y.getNormalization(for: Float(value.y), weightBySpan: false))
         )
+    }
+
+    mutating func updateAndGetNormalization(for value: BSCenterOfPressure) -> BSCenterOfPressure {
+        update(with: value)
+        return getNormalization(for: value)
     }
 }

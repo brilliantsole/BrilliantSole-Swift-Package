@@ -21,14 +21,14 @@ extension Data {
 // MARK: - Data to Number
 
 extension FixedWidthInteger {
-    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
         let value: Self = data.parse(at: offset)
         return littleEndian ? value.littleEndian : value.bigEndian
     }
 }
 
 extension Float32 {
-    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
         var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt32(littleEndian: 1) == 1) {
@@ -39,7 +39,7 @@ extension Float32 {
 }
 
 extension Float64 {
-    static func parse(from data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
         var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt64(littleEndian: 1) == 1) {

@@ -25,7 +25,67 @@ public struct BSPressureData {
         self.normalizedCenterOfPressure = normalizedCenterOfPressure
     }
 
-    static func parse(data: Data, numberOfPressureSensors: UInt8) -> Self? {
-        // FILL
+    static func parse(_ data: Data, scalar: Float, positions: [BSPressureSensorPosition], ranges: inout [BSRange], centerOfPressureRange: inout BSCenterOfPressureRange) -> Self? {
+        guard data.count * 2 == ranges.count else {
+            let rangesCount = ranges.count
+            logger.error("data count mismatch (expected \(rangesCount), got \(data.count * 2)")
+            return nil
+        }
+        var sensors: [BSPressureSensorData] = .init()
+        var scaledSum: Float = 0
+        var normalizedSum: Float = 0
+
+        for index in ranges.indices {
+            let rawValue: UInt16 = .parse(data, at: index * 2)
+            logger.debug("#\(index) rawValue: \(rawValue)")
+
+            let scaledValue = Float(rawValue) * scalar
+            logger.debug("#\(index) scaledValue: \(scaledValue)")
+
+            let normalizedValue = ranges[index].updateAndGetNormalization(for: scaledValue, weightBySpan: true)
+            logger.debug("#\(index) normalizedValue: \(normalizedValue)")
+
+            let sensor: BSPressureSensorData = .init(
+                position: positions[index],
+                rawValue: rawValue,
+                scaledValue: scaledValue,
+                normalizedValue: normalizedValue
+            )
+            logger.debug("#\(index) sensor: \(String(describing: sensor))")
+            sensors[index] = sensor
+
+            scaledSum += scaledValue
+            normalizedSum += normalizedValue
+            logger.debug("partial (#\(index) scaledSum: \(scaledSum), normalizedValue: \(normalizedValue)")
+        }
+
+        logger.debug("final scaledSum: \(scaledSum), normalizedSum: \(normalizedSum)")
+
+        var centerOfPressure: BSCenterOfPressure?
+        var normalizedCenterOfPressure: BSCenterOfPressure?
+
+        if scaledSum > 0 {
+            centerOfPressure = .init()
+            for index in sensors.indices {
+                sensors[index].updateWeightedValue(scaledSum: scaledSum)
+                centerOfPressure! += sensors[index].position * Double(sensors[index].weightedValue)
+            }
+            logger.debug("centerOfPressure: \(String(describing: centerOfPressure))")
+
+            normalizedCenterOfPressure = centerOfPressureRange.updateAndGetNormalization(for: centerOfPressure!)
+            logger.debug("normalizedCenterOfPressure: \(String(describing: normalizedCenterOfPressure))")
+        }
+        else {
+            logger.debug("scaledSum is 0 - skipping centerOfPressure calculation")
+        }
+
+        let pressureData: BSPressureData = .init(
+            sensors: sensors,
+            scaledSum: scaledSum,
+            normalizedSum: normalizedSum,
+            centerOfPressure: centerOfPressure,
+            normalizedCenterOfPressure: normalizedCenterOfPressure
+        )
+        return pressureData
     }
 }
