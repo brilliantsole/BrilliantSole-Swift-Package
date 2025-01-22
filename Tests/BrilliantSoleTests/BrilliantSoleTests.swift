@@ -7,10 +7,27 @@ struct BSSensorConfigurationTests {
         print("sensorConfiguration: \(configuration)")
         let configurationData = configuration.getData()
         print("sensorConfigurationData: \(configurationData.bytes)")
-        let parsedConfiguration = BSSensorConfiguration.parse(data: configurationData)
+        let parsedConfiguration = BSSensorConfiguration.parse(configurationData)
         #expect(parsedConfiguration != nil)
         print("parsedConfiguration: \(String(describing: parsedConfiguration!))")
         #expect(configuration == parsedConfiguration)
+    }
+}
+
+struct BSTfliteTests {
+    @Test func loadTfliteFileTest() async throws {
+        var tfliteFile: BSTfliteFile = .init(
+            fileName: "model",
+            modelName: "gestures",
+            sensorTypes: [.linearAcceleration, .gyroscope],
+            task: .classification,
+            sensorRate: ._10ms,
+            classes: ["idle", "kick", "stomp", "tap"]
+        )
+        let data = tfliteFile.getFileData(bundle: .module)
+        #expect(data != nil)
+        print("checksum: \(data!.crc32())")
+        #expect(data!.crc32() == 200001559)
     }
 }
 

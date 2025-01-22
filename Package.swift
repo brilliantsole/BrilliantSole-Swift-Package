@@ -26,7 +26,10 @@ let package = Package(
         ),
         .testTarget(
             name: "BrilliantSoleTests",
-            dependencies: ["BrilliantSole"]
+            dependencies: ["BrilliantSole"],
+            resources: [
+                .copy("Resources/model.tflite"),
+            ]
         ),
     ]
 )

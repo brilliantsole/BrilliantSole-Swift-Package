@@ -31,9 +31,9 @@ class BSTfliteFile: BSBaseFile {
         }
     }
 
-    let classes: [String]
+    let classes: [String]?
 
-    init(fileName: String, modelName: String, sensorTypes: [BSTfliteSensorType], task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: UInt16, threshold: Float, classes: [String]) {
+    init(fileName: String, modelName: String, sensorTypes: [BSTfliteSensorType], task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: UInt16 = 0, threshold: Float = 0.0, classes: [String]?) {
         self.modelName = modelName
         self.sensorTypes = sensorTypes
         self.task = task
