@@ -82,7 +82,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
         }
     }
 
-    var sendTxMessages: (([BSTxMessage], Bool) -> Void)?
+    var sendTxMessages: (([BSTxMessage], _ sendImmediately: Bool) -> Void)?
 
     func createMessage(_ messageType: MessageType, data: Data? = nil) -> BSTxMessage {
         .init(type: Self.enumToTxRx![messageType]!, data: data)

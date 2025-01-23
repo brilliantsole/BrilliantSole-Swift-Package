@@ -13,7 +13,7 @@ typealias BSBarometer = Float
 
 extension BSBarometer {
     static func parse(_ data: Data, scalar: Float) -> Self {
-        var barometer: Float = .parse(data, at: 0)
+        var barometer: Float = .parse(data)
         barometer *= scalar
         logger.debug("parsed barometer: \(barometer)")
         return barometer

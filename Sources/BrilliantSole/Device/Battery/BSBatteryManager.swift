@@ -26,29 +26,41 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
 
     override func reset() {
         super.reset()
-        isBatteryChargingSubject.value = false
-        batteryCurrentSubject.value = 0
+        isBatteryCharging = false
+        batteryCurrent = 0
     }
 
     // MARK: - isBatteryCharging
 
     var isBatteryChargingSubject = CurrentValueSubject<Bool, Never>(false)
-    var isBatteryCharging: Bool { isBatteryChargingSubject.value }
+    var isBatteryCharging: Bool {
+        get { isBatteryChargingSubject.value }
+        set {
+            isBatteryChargingSubject.value = newValue
+            logger.debug("updated isBatteryCharging to \(newValue)")
+        }
+    }
 
     func parseIsBatteryCharging(_ data: Data) {
         let newIsBatteryCharging: Bool = data[0] == 1
         logger.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
-        isBatteryChargingSubject.value = newIsBatteryCharging
+        isBatteryCharging = newIsBatteryCharging
     }
 
     // MARK: - batteryCurrent
 
     var batteryCurrentSubject = CurrentValueSubject<Float, Never>(0)
-    var batteryCurrent: Float { batteryCurrentSubject.value }
+    private(set) var batteryCurrent: Float {
+        get { batteryCurrentSubject.value }
+        set {
+            batteryCurrentSubject.value = newValue
+            logger.debug("updated batteryCurrent to \(newValue)")
+        }
+    }
 
     func parseBatteryCurrent(_ data: Data) {
-        let newBatteryCurrent: Float = .parse(data, at: 0)
+        let newBatteryCurrent: Float = .parse(data)
         logger.debug("parsed batteryCurrent: \(newBatteryCurrent)")
-        batteryCurrentSubject.value = newBatteryCurrent
+        batteryCurrent = newBatteryCurrent
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Data to Object
 
 extension Data {
-    func parse<T>(at offset: Data.Index) -> T {
+    func parse<T>(at offset: Data.Index = .zero) -> T {
         let size = MemoryLayout<T>.size
         let value = subdata(in: Data.Index(offset) ..< self.index(Data.Index(offset), offsetBy: size))
             .withUnsafeBytes { $0.load(as: T.self) }
@@ -21,14 +21,14 @@ extension Data {
 // MARK: - Data to Number
 
 extension FixedWidthInteger {
-    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
         let value: Self = data.parse(at: offset)
         return littleEndian ? value.littleEndian : value.bigEndian
     }
 }
 
 extension Float32 {
-    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
         var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt32(littleEndian: 1) == 1) {
@@ -39,7 +39,7 @@ extension Float32 {
 }
 
 extension Float64 {
-    static func parse(_ data: Data, at offset: Data.Index, littleEndian: Bool = true) -> Self {
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
         var value: Self = data.parse(at: offset)
 
         if littleEndian != (UInt64(littleEndian: 1) == 1) {
@@ -60,7 +60,7 @@ extension Numeric {
 }
 
 extension FixedWidthInteger {
-    func data(littleEndian: Bool) -> Data {
+    func data(littleEndian: Bool = true) -> Data {
         var source = littleEndian ? self.littleEndian : self.bigEndian
         // return Data(bytes: &source, count: MemoryLayout<Self>.size)
         return withUnsafeBytes(of: &source) { Data($0) }
@@ -70,7 +70,7 @@ extension FixedWidthInteger {
 // MARK: - Data to String
 
 extension Data {
-    func parseString(offset: Data.Index, until finalOffset: Data.Index) -> String {
+    func parseString(offset: Data.Index = .zero, until finalOffset: Data.Index) -> String {
         guard offset < finalOffset, finalOffset <= count else {
             return ""
         }
@@ -81,6 +81,12 @@ extension Data {
             return ""
         }
         return newName
+    }
+}
+
+extension String {
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self {
+        data.parseString(offset: offset, until: data.count)
     }
 }
 
