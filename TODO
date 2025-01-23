@@ -1,6 +1,10 @@
-managers
-    all Managers (all but parsers)
-    test enum
+Managers
+    Information
+    SensorConfig
+    Vibration
+    SensorData
+    FileTransfer
+    Tflite
 device
 scanner
 devicePair
