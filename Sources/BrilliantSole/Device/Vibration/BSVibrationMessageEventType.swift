@@ -9,4 +9,4 @@ import Foundation
 import UkatonMacros
 
 // @EnumName
-// public enum BSVibrationMessageEventType: UInt8, CaseIterable, Sendable {}
+// public enum BSVibrationMessageEventType: UInt8, BSEnum {}

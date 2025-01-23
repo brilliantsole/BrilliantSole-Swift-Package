@@ -8,6 +8,6 @@
 import UkatonMacros
 
 @EnumName
-public enum BSVibrationMessageType: UInt8, CaseIterable, Sendable {
+public enum BSVibrationMessageType: UInt8, BSEnum {
     case triggerVibration
 }

@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSSensorDataMessageType: UInt8, CaseIterable, Sendable {
+public enum BSSensorDataMessageType: UInt8, BSEnum {
     case getPressurePositions
     case getSensorScalars
     case sensorData

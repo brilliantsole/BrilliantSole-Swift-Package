@@ -9,7 +9,7 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSDeviceType: UInt8, CaseIterable, Sendable {
+public enum BSDeviceType: UInt8, BSEnum {
     case leftInsole
     case rightInsole
 }

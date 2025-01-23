@@ -15,12 +15,9 @@ protocol BSManager {
 
     func reset()
     func onSendTxData()
-    func canParseRxMessage(messageTypeEnum: MessageType.RawValue) -> Bool
-    func onRxMessage(messageTypeEnum: MessageType.RawValue, data: Data)
+    func canParseRxMessageEnum(_ messageTypeEnum: MessageType.RawValue) -> Bool
+    func onRxMessageEnum(_ messageTypeEnum: MessageType.RawValue, data: Data)
+    func onRxMessage(_ messageType: MessageType, data: Data)
 
     var sendTxMessages: ((_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)? { get set }
-}
-
-extension BSManager {
-    func canParseRxMessage(messageTypeEnum: MessageType.RawValue) -> Bool { false }
 }

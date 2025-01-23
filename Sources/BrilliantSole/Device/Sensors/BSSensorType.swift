@@ -9,7 +9,7 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSSensorType: UInt8, CaseIterable, Sendable {
+public enum BSSensorType: UInt8, BSEnum {
     case pressure
 
     case acceleration

@@ -1,5 +1,7 @@
 managers
+    BaseManager
+    MessageUtils
 device
-devicePair
 scanner
+devicePair
 client

@@ -8,4 +8,4 @@
 import UkatonMacros
 
 // @EnumName
-// public enum BSBatteryEventType: UInt8, CaseIterable, Sendable {}
+// public enum BSBatteryEventType: UInt8, BSEnum {}

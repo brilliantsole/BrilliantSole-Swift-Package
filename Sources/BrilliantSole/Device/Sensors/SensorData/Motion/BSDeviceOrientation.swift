@@ -9,7 +9,7 @@ import Foundation
 import UkatonMacros
 
 @EnumName
-public enum BSDeviceOrientation: UInt8, CaseIterable, Sendable {
+public enum BSDeviceOrientation: UInt8, BSEnum {
     case portraitUpright
     case landscapeLeft
     case portraitUpsideDown

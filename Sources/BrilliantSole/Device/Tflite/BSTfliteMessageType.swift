@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSTfliteMessageType: UInt8, CaseIterable, Sendable {
+public enum BSTfliteMessageType: UInt8, BSEnum {
     case getTfliteName
     case setTfliteName
     case getTfliteTask

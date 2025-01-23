@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSTfliteTask: UInt8, CaseIterable, Sendable {
+public enum BSTfliteTask: UInt8, BSEnum {
     case classification
     case regression
 }

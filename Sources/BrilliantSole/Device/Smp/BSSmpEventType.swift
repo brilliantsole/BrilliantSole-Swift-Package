@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSSmpEventType: UInt8, CaseIterable, Sendable {
+public enum BSSmpEventType: UInt8, BSEnum {
     case firmwareImages
     case firmwareUploadProgress
     case firmwareStatus

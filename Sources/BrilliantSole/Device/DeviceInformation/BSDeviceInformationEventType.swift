@@ -8,6 +8,6 @@
 import UkatonMacros
 
 @EnumName
-public enum BSDeviceInformationEventType: UInt8, CaseIterable, Sendable {
+public enum BSDeviceInformationEventType: UInt8, BSEnum {
     case deviceInformation
 }

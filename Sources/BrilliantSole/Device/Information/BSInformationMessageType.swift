@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSInformationMessageType: UInt8, CaseIterable, Sendable {
+public enum BSInformationMessageType: UInt8, BSEnum {
     case getMtu
     case getId
     case getName

@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSFileTransferMessageType: UInt8, CaseIterable, Sendable {
+public enum BSFileTransferMessageType: UInt8, BSEnum {
     case getMaxFileLength
     case getFileTransferType
     case setFileTransferType

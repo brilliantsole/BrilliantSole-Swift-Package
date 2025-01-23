@@ -8,6 +8,6 @@
 import UkatonMacros
 
 @EnumName
-public enum BSSmpMessageType: UInt8, CaseIterable, Sendable {
+public enum BSSmpMessageType: UInt8, BSEnum {
     case smp
 }

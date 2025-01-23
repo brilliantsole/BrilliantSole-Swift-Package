@@ -6,4 +6,4 @@
 //
 
 // @EnumName
-// public enum BSInformationEventType: UInt8, CaseIterable, Sendable {}
+// public enum BSInformationEventType: UInt8, BSEnum {}

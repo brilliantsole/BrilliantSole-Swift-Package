@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSBatteryMessageType: UInt8, CaseIterable, Sendable {
+public enum BSBatteryMessageType: UInt8, BSEnum {
     case getIsBatteryCharging
     case getBatteryCurrent
 }

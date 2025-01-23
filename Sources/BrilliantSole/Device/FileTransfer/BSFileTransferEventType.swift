@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSFileTransferEventType: UInt8, CaseIterable, Sendable {
+public enum BSFileTransferEventType: UInt8, BSEnum {
     case fileTransferProgress
     case fileTransferComplete
     case fileReceived

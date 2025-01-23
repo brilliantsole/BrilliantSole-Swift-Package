@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSFileTransferCommand: UInt8, CaseIterable, Sendable {
+public enum BSFileTransferCommand: UInt8, BSEnum {
     case send
     case receive
     case cancel
