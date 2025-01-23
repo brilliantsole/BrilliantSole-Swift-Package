@@ -1,6 +1,6 @@
 managers
-    BaseManager
-    MessageUtils
+    all Managers (all but parsers)
+    test enum
 device
 scanner
 devicePair

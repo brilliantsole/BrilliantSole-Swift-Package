@@ -2,6 +2,13 @@
 import Testing
 
 enum BSTests {
+    struct BSTxRxMessageTests {
+        @Test func enumStringsTest() async throws {
+            let enumStrings = BSTxRxMessageUtils.enumStrings
+            enumStrings.enumerated().forEach { print("\($0): \($1)") }
+        }
+    }
+
     struct BSSensorConfigurationTests {
         @Test func parseConfigurationTest() async throws {
             let configuration: BSSensorConfiguration = [.acceleration: ._80ms, .gameRotation: ._20ms]

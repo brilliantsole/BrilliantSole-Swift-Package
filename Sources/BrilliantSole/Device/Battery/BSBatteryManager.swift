@@ -10,6 +10,10 @@ import UkatonMacros
 
 @StaticLogger
 class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
+    override class var requiredMessageTypes: [BSBatteryMessageType]? {
+        [.getIsBatteryCharging, .getBatteryCurrent]
+    }
+
     override func onRxMessage(_ messageType: BSBatteryMessageType, data: Data) {
         switch messageType {
         case .getIsBatteryCharging:
@@ -17,9 +21,5 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
         case .getBatteryCurrent:
             print("FILL")
         }
-    }
-
-    override class var requiredMessageTypes: [BSBatteryMessageType]? {
-        [.getIsBatteryCharging, .getBatteryCurrent]
     }
 }

@@ -89,5 +89,5 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     }
 
     class var requiredMessageTypes: [MessageType]? { nil }
-    class var requiredTxRxMessageTypes: [UInt8]? { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredMessageTypes!) : nil }
+    static var requiredTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredMessageTypes!) : [] }
 }

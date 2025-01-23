@@ -20,4 +20,7 @@ protocol BSManager {
     func onRxMessage(_ messageType: MessageType, data: Data)
 
     var sendTxMessages: ((_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)? { get set }
+
+    static func initTxRxEnum(offset: inout UInt8, enumStrings: inout [String])
+    static var requiredTxRxMessageTypes: [UInt8] { get }
 }
