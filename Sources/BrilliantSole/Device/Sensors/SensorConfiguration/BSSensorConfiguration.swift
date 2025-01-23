@@ -13,6 +13,10 @@ private let logger = getLogger(category: "BSSensorConfiguration")
 typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 
 extension BSSensorConfiguration {
+    // MARK: - SensorTypes
+
+    var sensorTypes: [BSSensorType] { keys.map { $0 } }
+
     // MARK: - Parsing
 
     static func parse(_ data: Data) -> Self? {
@@ -45,7 +49,7 @@ extension BSSensorConfiguration {
         var data: Data = .init()
         for (sensorType, sensorRate) in self {
             data += sensorType.rawValue.data
-            data += sensorRate.rawValue.data(littleEndian: true)
+            data += sensorRate.rawValue.getData(littleEndian: true)
         }
         return data
     }
@@ -60,6 +64,10 @@ extension BSSensorConfiguration {
         var zero: Self = .init()
         Key.allCases.forEach { zero[$0] = ._0ms }
         return zero
+    }
+
+    mutating func clear() {
+        self.keys.forEach { self[$0] = ._0ms }
     }
 
     // MARK: - Toggling
@@ -78,5 +86,15 @@ extension BSSensorConfiguration {
         } else {
             self[key] = sensorRate
         }
+    }
+
+    // MARK: - equality
+
+    func isASubsetOf(_ other: Self) -> Bool {
+        other.count >= count && other.keys.allSatisfy { self[$0] == other[$0] }
+    }
+
+    func isSimilarTo(_ other: Self) -> Bool {
+        count > other.count ? other.isASubsetOf(self) : self.isASubsetOf(other)
     }
 }

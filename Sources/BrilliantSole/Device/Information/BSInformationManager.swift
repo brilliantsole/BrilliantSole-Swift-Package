@@ -147,7 +147,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     func updateCurrentTime() {
         let newCurrentTime = getUtcTime()
         logger.debug("updating currentTime to \(newCurrentTime)...")
-        let messages = createMessage(.setCurrentTime, data: newCurrentTime.data())
-        sendTxMessages!([messages], false)
+        let messages = createMessage(.setCurrentTime, data: newCurrentTime.getData())
+        sendTxMessages([messages], sendImmediately: false)
     }
 }

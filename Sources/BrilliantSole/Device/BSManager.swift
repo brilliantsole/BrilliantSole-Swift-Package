@@ -19,7 +19,8 @@ protocol BSManager {
     func onRxMessageEnum(_ messageTypeEnum: MessageType.RawValue, data: Data)
     func onRxMessage(_ messageType: MessageType, data: Data)
 
-    var sendTxMessages: ((_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)? { get set }
+    func sendTxMessages(_ txMessages: [BSTxMessage], sendImmediately: Bool)
+    func setSendTxMessages(_ callback: @escaping (_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)
 
     static func initTxRxEnum(offset: inout UInt8, enumStrings: inout [String])
     static var requiredTxRxMessageTypes: [UInt8] { get }

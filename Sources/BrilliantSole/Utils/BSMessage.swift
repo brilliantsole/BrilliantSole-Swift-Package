@@ -28,7 +28,7 @@ struct BSMessage<MessageType: RawRepresentable> where MessageType.RawValue == UI
         _data.append(type.rawValue)
 
         let dataLength = self.dataLength()
-        _data.append(dataLength.data(littleEndian: true))
+        _data.append(dataLength.getData(littleEndian: true))
         if dataLength > 0, let data = data {
             _data += data
         }

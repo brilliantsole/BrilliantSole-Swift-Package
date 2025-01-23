@@ -60,7 +60,7 @@ extension Numeric {
 }
 
 extension FixedWidthInteger {
-    func data(littleEndian: Bool = true) -> Data {
+    func getData(littleEndian: Bool = true) -> Data {
         var source = littleEndian ? self.littleEndian : self.bigEndian
         // return Data(bytes: &source, count: MemoryLayout<Self>.size)
         return withUnsafeBytes(of: &source) { Data($0) }
