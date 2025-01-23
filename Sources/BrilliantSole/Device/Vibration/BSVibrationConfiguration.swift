@@ -67,7 +67,7 @@ public struct BSVibrationConfiguration {
         return data
     }
 
-    func getSegmentsData() -> Data {
+    private func getSegmentsData() -> Data {
         switch type {
         case .waveformEffect:
             waveformEffectSegments.getData(waveformEffectSequenceLoopCount: loopCount)

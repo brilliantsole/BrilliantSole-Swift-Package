@@ -1,6 +1,4 @@
 Managers
-    SensorConfig
-    Vibration
     SensorData
     FileTransfer
     Tflite
