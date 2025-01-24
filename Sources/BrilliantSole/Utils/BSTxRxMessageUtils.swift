@@ -24,7 +24,7 @@ class BSTxRxMessageUtils {
         var enumStrings: [String] = .init()
         var offset: UInt8 = 0
         for manager in BSManagers {
-            manager.initTxRxEnum(offset: &offset, enumStrings: &enumStrings)
+            manager.initTxRxEnum(at: &offset, enumStrings: &enumStrings)
         }
         return enumStrings
     }()

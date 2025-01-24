@@ -16,9 +16,10 @@ func getUtcTime() -> UInt64 {
 
 private let timestampThreshold: UInt16 = 60_000
 
-func parseTimestamp(_ data: Data, at offset: Data.Index) -> UInt64 {
+func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> UInt64 {
     let currentTime = getUtcTime()
     logger.debug("currentTime: \(currentTime)ms")
+    offset += 2
 
     let rawTimestamp: UInt16 = .parse(data, at: offset)
     logger.debug("rawTimestamp: \(rawTimestamp)ms")

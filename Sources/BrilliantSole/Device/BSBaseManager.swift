@@ -24,7 +24,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     typealias TxRxToEnum = BSTxRxToEnum<MessageType>
     class var txRxToEnum: TxRxToEnum? { allTxRxToEnum[key] as? TxRxToEnum }
 
-    static func initTxRxEnum(offset: inout UInt8, enumStrings: inout [String]) {
+    static func initTxRxEnum(at offset: inout UInt8, enumStrings: inout [String]) {
         guard enumToTxRx == nil else {
             fatalError(
                 "enumToTxRx already initialized. Please call `BSBaseManager.initTxRxEnum` only once."

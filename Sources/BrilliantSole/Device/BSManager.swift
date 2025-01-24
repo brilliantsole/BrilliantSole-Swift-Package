@@ -22,6 +22,6 @@ protocol BSManager {
     func sendTxMessages(_ txMessages: [BSTxMessage], sendImmediately: Bool)
     func setSendTxMessages(_ callback: @escaping (_ txMessages: [BSTxMessage], _ sendImmediately: Bool) -> Void)
 
-    static func initTxRxEnum(offset: inout UInt8, enumStrings: inout [String])
+    static func initTxRxEnum(at offset: inout UInt8, enumStrings: inout [String])
     static var requiredTxRxMessageTypes: [UInt8] { get }
 }

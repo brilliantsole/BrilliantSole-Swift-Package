@@ -70,14 +70,14 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
 
     func parseSensorData(_ data: Data) {
         var offset: Data.Index = 0
-        var timestamp = parseTimestamp(data, at: offset)
-        offset += 2
+        let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")
-
-        // FILL
+        parseMessages(data, messageCallback: { [self] (sensorType: BSSensorType, data: Data) in
+            onSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
+        }, at: offset)
     }
 
-    func onSensorDataMessage() {
+    func onSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: UInt64) {
         // FILL
     }
 }
