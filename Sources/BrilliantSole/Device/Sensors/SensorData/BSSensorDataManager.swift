@@ -5,6 +5,7 @@
 //  Created by Zack Qattan on 1/22/25.
 //
 
+import Combine
 import OSLog
 import UkatonMacros
 
@@ -20,11 +21,63 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     override func onRxMessage(_ messageType: BSSensorDataMessageType, data: Data) {
         switch messageType {
         case .getPressurePositions:
-            print("FILL")
+            parsePressurePositions(data)
         case .getSensorScalars:
-            print("FILL")
+            parseSensorScalars(data)
         case .sensorData:
-            print("FILL")
+            parseSensorData(data)
         }
+    }
+
+    override func reset() {
+        super.reset()
+        sensorScalars.removeAll()
+    }
+
+    // MARK: - pressurePositions
+
+    func parsePressurePositions(_ data: Data) {}
+
+    // MARK: - sensorScalars
+
+    typealias BSSensorScalars = [BSSensorType: Float]
+    var sensorScalarsSubject = CurrentValueSubject<BSSensorScalars, Never>(.init())
+    private(set) var sensorScalars: BSSensorScalars {
+        get { sensorScalarsSubject.value }
+        set {
+            sensorScalarsSubject.value = newValue
+            logger.debug("updated sensorScalars to \(newValue)")
+        }
+    }
+
+    func parseSensorScalars(_ data: Data) {
+        var newSensorScalars: BSSensorScalars = .init()
+        for index in stride(from: 0, to: data.count, by: 5) {
+            let rawSensorType: UInt8 = data[index]
+            guard let sensorType: BSSensorType = .init(rawValue: rawSensorType) else {
+                logger.error("invalid rawSensorType \(rawSensorType)")
+                return
+            }
+            let sensorScalar: Float = .parse(data, at: index + 1)
+            logger.debug("\(sensorType.name) scalar: \(sensorScalar)")
+            newSensorScalars[sensorType] = sensorScalar
+        }
+        logger.debug("parsed sensorScalars: \(newSensorScalars)")
+        sensorScalars = newSensorScalars
+    }
+
+    // MARK: - sensorData
+
+    func parseSensorData(_ data: Data) {
+        var offset: Data.Index = 0
+        var timestamp = parseTimestamp(data, at: offset)
+        offset += 2
+        logger.debug("timestamp: \(timestamp)ms")
+
+        // FILL
+    }
+
+    func onSensorDataMessage() {
+        // FILL
     }
 }
