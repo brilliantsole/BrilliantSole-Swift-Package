@@ -10,13 +10,15 @@ import OSLog
 
 private let logger = getLogger(category: "BSTimeUtils")
 
-func getUtcTime() -> UInt64 {
+public typealias BSTimestamp = UInt64
+
+func getUtcTime() -> BSTimestamp {
     .init(Date().timeIntervalSince1970 * 1000)
 }
 
 private let timestampThreshold: UInt16 = 60_000
 
-func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> UInt64 {
+func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> BSTimestamp {
     let currentTime = getUtcTime()
     logger.debug("currentTime: \(currentTime)ms")
     offset += 2
@@ -24,16 +26,16 @@ func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> UInt64 {
     let rawTimestamp: UInt16 = .parse(data, at: offset)
     logger.debug("rawTimestamp: \(rawTimestamp)ms")
 
-    var timestamp: UInt64 = currentTime - (currentTime % (UInt64(UInt16.max) + 1))
+    var timestamp: BSTimestamp = currentTime - (currentTime % (BSTimestamp(UInt16.max) + 1))
     logger.debug("truncated timestamp: \(timestamp)ms")
-    timestamp += UInt64(rawTimestamp)
+    timestamp += BSTimestamp(rawTimestamp)
     logger.debug("full timestamp: \(timestamp)ms")
 
     let timestampDifference = currentTime > timestamp ? currentTime - timestamp : timestamp - currentTime
     logger.debug("timestampDifference: \(timestampDifference)ms")
     if timestampDifference > timestampThreshold {
         logger.debug("correcting timestamp overflow")
-        timestamp += UInt64(UInt16.max) * (currentTime - timestamp).signum()
+        timestamp += BSTimestamp(UInt16.max) * (currentTime - timestamp).signum()
     }
 
     logger.debug("timestamp: \(timestamp)ms")

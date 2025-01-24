@@ -32,7 +32,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
 
     // MARK: - isBatteryCharging
 
-    var isBatteryChargingSubject = CurrentValueSubject<Bool, Never>(false)
+    let isBatteryChargingSubject = CurrentValueSubject<Bool, Never>(false)
     var isBatteryCharging: Bool {
         get { isBatteryChargingSubject.value }
         set {
@@ -49,7 +49,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
 
     // MARK: - batteryCurrent
 
-    var batteryCurrentSubject = CurrentValueSubject<Float, Never>(0)
+    let batteryCurrentSubject = CurrentValueSubject<Float, Never>(0)
     private(set) var batteryCurrent: Float {
         get { batteryCurrentSubject.value }
         set {

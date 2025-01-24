@@ -32,16 +32,19 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     override func reset() {
         super.reset()
         sensorScalars.removeAll()
+        sensorDataManagers.forEach { $0.reset() }
     }
 
     // MARK: - pressurePositions
 
-    func parsePressurePositions(_ data: Data) {}
+    func parsePressurePositions(_ data: Data) {
+        pressureSensorDataManager.parsePressurePositions(data)
+    }
 
     // MARK: - sensorScalars
 
     typealias BSSensorScalars = [BSSensorType: Float]
-    var sensorScalarsSubject = CurrentValueSubject<BSSensorScalars, Never>(.init())
+    let sensorScalarsSubject = CurrentValueSubject<BSSensorScalars, Never>(.init())
     private(set) var sensorScalars: BSSensorScalars {
         get { sensorScalarsSubject.value }
         set {
@@ -68,6 +71,11 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
 
     // MARK: - sensorData
 
+    let pressureSensorDataManager: BSPressureSensorDataManager = .init()
+    let motionSensorDataManager: BSMotionSensorDataManager = .init()
+    let barometerSensorDataManager: BSBarometerSensorDataManager = .init()
+    var sensorDataManagers: [BSBaseSensorDataManager] { [pressureSensorDataManager, motionSensorDataManager, barometerSensorDataManager] }
+
     func parseSensorData(_ data: Data) {
         var offset: Data.Index = 0
         let timestamp = parseTimestamp(data, at: &offset)
@@ -77,7 +85,13 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         }, at: offset)
     }
 
-    func onSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: UInt64) {
-        // FILL
+    func onSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {
+        let scalar = sensorScalars[sensorType] ?? 1
+        for sensorDataManager in sensorDataManagers {
+            if sensorDataManager.canParseSensorData(sensorType) {
+                sensorDataManager.parseSensorData(sensorType: sensorType, data: data, timestamp: timestamp, scalar: scalar)
+                break
+            }
+        }
     }
 }

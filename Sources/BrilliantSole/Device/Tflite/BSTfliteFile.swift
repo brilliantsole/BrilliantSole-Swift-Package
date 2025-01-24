@@ -9,9 +9,9 @@ class BSTfliteFile: BSBaseFile {
     override class var fileType: BSFileType { .tflite }
 
     let modelName: String
-    let sensorTypes: [BSTfliteSensorType]
-    func getSensorTypes() -> [BSSensorType] {
-        sensorTypes.map { $0.sensorType }
+    let sensorTypes: Set<BSTfliteSensorType>
+    func getSensorTypes() -> Set<BSSensorType> {
+        .init(sensorTypes.map { $0.sensorType })
     }
 
     let task: BSTfliteTask
@@ -33,7 +33,7 @@ class BSTfliteFile: BSBaseFile {
 
     let classes: [String]?
 
-    init(fileName: String, modelName: String, sensorTypes: [BSTfliteSensorType], task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: UInt16 = 0, threshold: Float = 0.0, classes: [String]?) {
+    init(fileName: String, modelName: String, sensorTypes: Set<BSTfliteSensorType>, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: UInt16 = 0, threshold: Float = 0.0, classes: [String]?) {
         self.modelName = modelName
         self.sensorTypes = sensorTypes
         self.task = task

@@ -47,7 +47,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - mtu
 
-    var mtuSubject = CurrentValueSubject<UInt16, Never>(0)
+    let mtuSubject = CurrentValueSubject<UInt16, Never>(0)
     var mtu: UInt16 {
         get { mtuSubject.value }
         set {
@@ -66,7 +66,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - id
 
-    var idSubject = CurrentValueSubject<String, Never>("")
+    let idSubject = CurrentValueSubject<String, Never>("")
     private(set) var id: String {
         get { idSubject.value }
         set {
@@ -83,7 +83,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - name
 
-    var nameSubject = CurrentValueSubject<String, Never>("")
+    let nameSubject = CurrentValueSubject<String, Never>("")
     private(set) var name: String {
         get { nameSubject.value }
         set {
@@ -105,7 +105,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - deviceType
 
-    var deviceTypeSubject = CurrentValueSubject<BSDeviceType, Never>(.leftInsole)
+    let deviceTypeSubject = CurrentValueSubject<BSDeviceType, Never>(.leftInsole)
     private(set) var deviceType: BSDeviceType {
         get { deviceTypeSubject.value }
         set {
@@ -126,7 +126,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - currentTime
 
-    var currentTimeSubject = CurrentValueSubject<UInt32, Never>(0)
+    let currentTimeSubject = CurrentValueSubject<UInt32, Never>(0)
     private(set) var currentTime: UInt32 {
         get { currentTimeSubject.value }
         set {

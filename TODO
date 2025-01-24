@@ -1,6 +1,6 @@
-SensorDataManager
 Managers
     SensorData
+        Motion
     FileTransfer
     Tflite
 device

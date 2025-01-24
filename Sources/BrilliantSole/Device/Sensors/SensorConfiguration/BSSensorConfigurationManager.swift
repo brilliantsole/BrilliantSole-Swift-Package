@@ -30,7 +30,7 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
 
     // MARK: sensorConfiguration
 
-    var sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.zero)
+    let sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.zero)
     private(set) var sensorConfiguration: BSSensorConfiguration {
         get { sensorConfigurationSubject.value }
         set {
