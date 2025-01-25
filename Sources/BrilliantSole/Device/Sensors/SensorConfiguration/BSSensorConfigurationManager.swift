@@ -62,8 +62,7 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
             sensorConfiguration.sensorTypes.filter { _newSensorConfiguration.contains($0) }.forEach { _newSensorConfiguration[$0] = ._0ms }
         }
         logger.debug("sending setSensorConfiguration: \(_newSensorConfiguration)")
-        let message = createMessage(.setSensorConfiguration, data: _newSensorConfiguration.getData())
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setSensorConfiguration, data: _newSensorConfiguration.getData(), sendImmediately: sendImmediately)
     }
 
     func clearSensorConfiguration(sendImmediately: Bool = true) {

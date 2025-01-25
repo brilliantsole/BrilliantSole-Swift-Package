@@ -59,8 +59,8 @@ public struct BSVibrationConfiguration {
             return data
         }
 
-        data += type.rawValue.data
-        data += locations.rawValue.data
+        data += type.data
+        data += locations.data
         data.append(segmentsData)
 
         logger.debug("serialized \(type.name) vibration: \(data.debugDescription)")

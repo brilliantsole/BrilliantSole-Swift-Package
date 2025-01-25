@@ -56,9 +56,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     func parseSensorScalars(_ data: Data) {
         var newSensorScalars: BSSensorScalars = .init()
         for index in stride(from: 0, to: data.count, by: 5) {
-            let rawSensorType: UInt8 = data[index]
-            guard let sensorType: BSSensorType = .init(rawValue: rawSensorType) else {
-                logger.error("invalid rawSensorType \(rawSensorType)")
+            guard let sensorType = BSSensorType.parse(data, at: index) else {
                 return
             }
             let sensorScalar: Float = .parse(data, at: index + 1)

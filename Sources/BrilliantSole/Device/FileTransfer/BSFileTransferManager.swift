@@ -88,9 +88,8 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     func parseFileTransferType(_ data: Data) {
-        let rawFileType = data[0]
-        guard let newFileType = BSFileType(rawValue: rawFileType) else {
-            fatalError("invalid rawFileType \(rawFileType)")
+        guard let newFileType = BSFileType.parse(data) else {
+            return
         }
         logger.debug("parsed fileType \(newFileType.name)")
         fileType = newFileType
@@ -101,8 +100,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             logger.debug("redundant fileType assignment \(newFileType.name)")
             return
         }
-        let message = createMessage(.setFileTransferType, data: newFileType.rawValue.data)
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setFileTransferType, data: newFileType.data, sendImmediately: sendImmediately)
     }
 
     // MARK: - fileLength
@@ -127,8 +125,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             logger.debug("redundant fileLength assignment \(newFileLength)")
             return
         }
-        let message = createMessage(.setFileLength, data: newFileLength.getData())
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setFileLength, data: newFileLength.getData(), sendImmediately: sendImmediately)
     }
 
     // MARK: - fileChecksum
@@ -154,16 +151,14 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             return
         }
         logger.debug("setting checksum \(newFileChecksum)")
-        let message = createMessage(.setFileChecksum, data: newFileChecksum.getData())
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setFileChecksum, data: newFileChecksum.getData(), sendImmediately: sendImmediately)
     }
 
     // MARK: - fileTransferCommand
 
     func setFileTransferCommand(_ fileTransferCommand: BSFileTransferCommand, sendImmediately: Bool = true) {
         logger.debug("setting fileTransferCommand \(fileTransferCommand.name)")
-        let message = createMessage(.setFileTransferCommand, data: fileTransferCommand.rawValue.data)
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setFileTransferCommand, data: fileTransferCommand.data, sendImmediately: sendImmediately)
     }
 
     // MARK: - fileTransferStatus
@@ -178,9 +173,8 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     func parseFileTransferStatus(_ data: Data) {
-        let rawFileTransferStatus = data[0]
-        guard let newFileTransferStatus = BSFileTransferStatus(rawValue: rawFileTransferStatus) else {
-            fatalError("invalid rawFileTransferStatus \(rawFileTransferStatus)")
+        guard let newFileTransferStatus = BSFileTransferStatus.parse(data) else {
+            return
         }
         logger.debug("parsed fileTransferStatus \(newFileTransferStatus.name)")
         fileTransferStatus = newFileTransferStatus
@@ -225,8 +219,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             fileReceivedSubject.send((fileType, fileDataToReceive))
         }
         else {
-            let message = createMessage(.fileBytesTransferred, data: currentFileLength.getData())
-            sendTxMessages([message], sendImmediately: true)
+            createAndSendMessage(.fileBytesTransferred, data: currentFileLength.getData(), sendImmediately: true)
         }
     }
 
@@ -339,9 +332,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         let fileBlockToSend = fileDataToSend.subdata(in: Data.Index(bytesTransferred) ..< Data.Index(bytesTransferred + fileBlockLength))
         bytesTransferred += fileBlockLength
         logger.debug("bytesTransferred: \(self.bytesTransferred)")
-
-        let message = createMessage(.setFileTransferBlock, data: fileBlockToSend)
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.setFileTransferBlock, data: fileBlockToSend, sendImmediately: sendImmediately)
     }
 
     func receiveFile(fileType: BSFileType, sendImmediately: Bool = true) {

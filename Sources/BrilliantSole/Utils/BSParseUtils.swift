@@ -16,9 +16,7 @@ func parseMessages<MessageType: BSEnum>(_ data: Data, messageCallback: @escaping
     while offset < data.count {
         logger.debug("parsing message at \(offset)...")
 
-        let rawMessageType = data[offset]
-        guard let messageType = MessageType(rawValue: rawMessageType) else {
-            logger.error("invalid rawMessageType \(rawMessageType)")
+        guard let messageType = MessageType.parse(data, at: offset) else {
             return
         }
         offset += 1

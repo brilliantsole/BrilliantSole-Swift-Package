@@ -152,9 +152,8 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     let deviceOrientationSubject = PassthroughSubject<(BSDeviceOrientation, BSTimestamp), Never>()
     func parseDeviceOrientation(data: Data, timestamp: BSTimestamp) {
-        let rawDeviceOrientation = data[0]
-        guard let deviceOrientation: BSDeviceOrientation = .init(rawValue: rawDeviceOrientation) else {
-            fatalError("invalid rawDeviceOrientation: \(rawDeviceOrientation)")
+        guard let deviceOrientation = BSDeviceOrientation.parse(data) else {
+            return
         }
         logger.debug("deviceOrientation: \(deviceOrientation.name) (\(timestamp)ms")
         deviceOrientationSubject.send((deviceOrientation, timestamp))

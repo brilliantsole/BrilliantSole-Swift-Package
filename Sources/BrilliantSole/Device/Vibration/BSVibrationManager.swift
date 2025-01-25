@@ -24,7 +24,6 @@ class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
             logger.debug("empty data - nothing to sen")
             return
         }
-        let message = createMessage(.triggerVibration, data: data)
-        sendTxMessages([message], sendImmediately: sendImmediately)
+        createAndSendMessage(.triggerVibration, data: data, sendImmediately: sendImmediately)
     }
 }

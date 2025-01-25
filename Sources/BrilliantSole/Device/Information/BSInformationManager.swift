@@ -115,9 +115,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     }
 
     func parseDeviceType(_ data: Data) {
-        let rawDeviceType = data[0]
-        guard let newDeviceType: BSDeviceType = .init(rawValue: rawDeviceType) else {
-            logger.error("invalid raw deviceType \(rawDeviceType)")
+        guard let newDeviceType = BSDeviceType.parse(data) else {
             return
         }
         logger.debug("parsed deviceType: \(newDeviceType.name)")

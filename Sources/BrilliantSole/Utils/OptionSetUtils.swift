@@ -13,6 +13,8 @@ extension Array where Element: RawRepresentable, Element.RawValue == UInt8 {
             result |= flag.rawValue
         }
     }
+
+    var data: Data { rawValue.data }
 }
 
 extension OptionSet where Self: CaseIterable, Self.RawValue == UInt8 {

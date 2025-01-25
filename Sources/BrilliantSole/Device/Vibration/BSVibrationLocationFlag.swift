@@ -12,6 +12,7 @@ public struct BSVibrationLocationFlag: OptionSet, Sendable, CaseIterable {
     public static let allCases: [BSVibrationLocationFlag] = [.front, .rear]
 
     public let rawValue: UInt8
+    var data: Data { rawValue.data }
 
     public init(rawValue: UInt8) {
         self.rawValue = rawValue

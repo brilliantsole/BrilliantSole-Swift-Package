@@ -33,9 +33,7 @@ extension BSSensorConfiguration {
                 continue
             }
 
-            let rawSensorRate: UInt16 = data.parse(at: index + 1)
-            guard let sensorRate = BSSensorRate(rawValue: rawSensorRate) else {
-                logger.error("Invalid sensor rate \(rawSensorRate)")
+            guard let sensorRate = BSSensorRate.parse(data) else {
                 continue
             }
 
@@ -48,7 +46,7 @@ extension BSSensorConfiguration {
     func getData() -> Data {
         var data: Data = .init()
         for (sensorType, sensorRate) in self {
-            data += sensorType.rawValue.data
+            data += sensorType.data
             data += sensorRate.rawValue.getData(littleEndian: true)
         }
         return data

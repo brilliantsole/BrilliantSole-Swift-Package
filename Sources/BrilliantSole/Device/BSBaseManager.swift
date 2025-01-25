@@ -95,6 +95,11 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
         .init(type: Self.enumToTxRx![messageType]!, data: data)
     }
 
+    func createAndSendMessage(_ messageType: MessageType, data: Data? = nil, sendImmediately: Bool = true) {
+        let message = createMessage(messageType, data: data)
+        sendTxMessages([message], sendImmediately: sendImmediately)
+    }
+
     class var requiredMessageTypes: [MessageType]? { nil }
     static var requiredTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredMessageTypes!) : [] }
 }
