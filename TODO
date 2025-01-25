@@ -1,8 +1,10 @@
-Managers
-    SensorData
-        Motion
-    FileTransfer
+Managers (parsing)
     Tflite
+Managers (send messages)
+    battery
+    information
+    fileTransfer
+    tflite
 device
 scanner
 devicePair

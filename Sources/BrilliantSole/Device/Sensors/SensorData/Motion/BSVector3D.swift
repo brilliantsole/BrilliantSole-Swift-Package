@@ -25,7 +25,7 @@ private let vector3DNumberFormatter: NumberFormatter = {
     return nf
 }()
 
-public extension Vector3D {
+public extension BSVector3D {
     fileprivate var nf: NumberFormatter { vector3DNumberFormatter }
     var strings: [String] {
         [
@@ -44,7 +44,7 @@ public extension Vector3D {
     }
 }
 
-extension Vector3D {
+extension BSVector3D {
     static func parse(_ data: Data, scalar: Float) -> Self {
         let rawX: Int16 = .parse(data, at: 0)
         let rawY: Int16 = .parse(data, at: 2)

@@ -12,6 +12,7 @@ private let logger = getLogger(category: "BSFile")
 
 protocol BSFile {
     static var fileType: BSFileType { get }
+    var fileType: BSFileType { get }
     var fileName: String { get }
     var fileData: Data? { get set }
     mutating func getFileData(bundle: Bundle) -> Data?
@@ -39,4 +40,6 @@ extension BSFile {
             return nil
         }
     }
+
+    var fileType: BSFileType { Self.fileType }
 }
