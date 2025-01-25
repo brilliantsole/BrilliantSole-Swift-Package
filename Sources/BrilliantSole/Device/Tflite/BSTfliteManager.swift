@@ -35,7 +35,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         case .getTfliteSensorTypes, .setTfliteSensorTypes:
             parseTfliteSensorTypes(data)
         case .isTfliteReady:
-            print("FILL")
+            parseIsTfliteReady(data)
         case .getTfliteCaptureDelay, .setTfliteCaptureDelay:
             print("FILL")
         case .getTfliteThreshold, .setTfliteThreshold:
@@ -157,6 +157,21 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     // MARK: - isTfliteReady
+
+    let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isTfliteReady: Bool {
+        get { isTfliteReadySubject.value }
+        set {
+            isTfliteReadySubject.value = newValue
+            logger.debug("updated isTfliteReady to \(newValue)")
+        }
+    }
+
+    func parseIsTfliteReady(_ data: Data) {
+        let newIsTfliteReady: Bool = .parse(data)
+        logger.debug("parsed isTfliteReady \(newIsTfliteReady)")
+        isTfliteReady = newIsTfliteReady
+    }
 
     // MARK: - tfliteCaptureDelay
 

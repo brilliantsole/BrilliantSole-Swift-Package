@@ -108,6 +108,10 @@ extension Bool {
     var data: Data {
         return .init([self.number])
     }
+
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self {
+        data[offset] == 1
+    }
 }
 
 // MARK: - Data to [UInt8]
