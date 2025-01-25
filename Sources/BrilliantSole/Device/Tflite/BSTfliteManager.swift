@@ -71,6 +71,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         }
     }
 
+    func getTfliteName(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteName")
+        createAndSendMessage(.getTfliteName, sendImmediately: sendImmediately)
+    }
+
     func parseTfliteName(_ data: Data) {
         let newTfliteName: String = .parse(data)
         logger.debug("parsed tfliteName \(newTfliteName)")
@@ -95,6 +100,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             tfliteTaskSubject.value = newValue
             logger.debug("updated tfliteTask to \(newValue.name)")
         }
+    }
+
+    func getTfliteTask(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteTask")
+        createAndSendMessage(.getTfliteTask, sendImmediately: sendImmediately)
     }
 
     func parseTfliteTask(_ data: Data) {
@@ -125,6 +135,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         }
     }
 
+    func getTfliteSensorRate(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteSensorRate")
+        createAndSendMessage(.getTfliteSensorRate, sendImmediately: sendImmediately)
+    }
+
     func parseTfliteSensorRate(_ data: Data) {
         guard let newTfliteSensorRate = BSSensorRate.parse(data) else {
             return
@@ -151,6 +166,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             tfliteSensorTypesSubject.value = newValue
             logger.debug("updated tfliteSensorTypes to \(newValue)")
         }
+    }
+
+    func getTfliteSensorTypes(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteSensorTypes")
+        createAndSendMessage(.getTfliteSensorTypes, sendImmediately: sendImmediately)
     }
 
     func parseTfliteSensorTypes(_ data: Data) {
@@ -181,6 +201,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         }
     }
 
+    func getIsTfliteReady(sendImmediately: Bool = true) {
+        logger.debug("getting isTfliteReady")
+        createAndSendMessage(.isTfliteReady, sendImmediately: sendImmediately)
+    }
+
     func parseIsTfliteReady(_ data: Data) {
         let newIsTfliteReady: Bool = .parse(data)
         logger.debug("parsed isTfliteReady \(newIsTfliteReady)")
@@ -196,6 +221,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             tfliteCaptureDelaySubject.value = newValue
             logger.debug("updated tfliteCaptureDelay to \(newValue)")
         }
+    }
+
+    func getTfliteCaptureDelay(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteCaptureDelay")
+        createAndSendMessage(.getTfliteCaptureDelay, sendImmediately: sendImmediately)
     }
 
     func parseTfliteCaptureDelay(_ data: Data) {
@@ -224,6 +254,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         }
     }
 
+    func getTfliteThreshold(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteThreshold")
+        createAndSendMessage(.getTfliteThreshold, sendImmediately: sendImmediately)
+    }
+
     func parseTfliteThreshold(_ data: Data) {
         let newTfliteThreshold: Float = .parse(data)
         logger.debug("parsed tfliteThreshold: \(newTfliteThreshold)")
@@ -248,6 +283,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             tfliteInferencingEnabledSubject.value = newValue
             logger.debug("updated tfliteInferencingEnabled to \(newValue)")
         }
+    }
+
+    func getTfliteInferencingEnabled(sendImmediately: Bool = true) {
+        logger.debug("getting tfliteInferencingEnabled")
+        createAndSendMessage(.getTfliteInferencingEnabled, sendImmediately: sendImmediately)
     }
 
     func parseTfliteInferencingEnabled(_ data: Data) {

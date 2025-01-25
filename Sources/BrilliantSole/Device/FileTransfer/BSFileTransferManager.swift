@@ -70,6 +70,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         }
     }
 
+    func getMaxFileLength(sendImmediately: Bool = true) {
+        logger.debug("getting maxFileLength")
+        createAndSendMessage(.getMaxFileLength, sendImmediately: sendImmediately)
+    }
+
     func parseMaxFileLength(_ data: Data) {
         let newMaxFileLength: UInt16 = .parse(data)
         logger.debug("parsed maxFileLength \(newMaxFileLength)")
@@ -85,6 +90,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             fileTypeSubject.value = newValue
             logger.debug("updated fileType to \(newValue.name)")
         }
+    }
+
+    func getFileType(sendImmediately: Bool = true) {
+        logger.debug("getting fileTransferType")
+        createAndSendMessage(.getFileTransferType, sendImmediately: sendImmediately)
     }
 
     func parseFileTransferType(_ data: Data) {
@@ -114,6 +124,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         }
     }
 
+    func getFileLength(sendImmediately: Bool = true) {
+        logger.debug("getting fileLength")
+        createAndSendMessage(.getFileLength, sendImmediately: sendImmediately)
+    }
+
     func parseFileLength(_ data: Data) {
         let newFileLength: UInt16 = .parse(data)
         logger.debug("parsed fileLength \(newFileLength)")
@@ -137,6 +152,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             fileChecksumSubject.value = newValue
             logger.debug("updated checksum to \(newValue)")
         }
+    }
+
+    func getFileChecksum(sendImmediately: Bool = true) {
+        logger.debug("getting fileChecksum")
+        createAndSendMessage(.getFileChecksum, sendImmediately: sendImmediately)
     }
 
     func parseChecksum(_ data: Data) {
@@ -170,6 +190,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             fileTransferStatusSubject.value = newValue
             logger.debug("updated fileTransferStatus to \(newValue.name)")
         }
+    }
+
+    func getFileTransferStatus(sendImmediately: Bool = true) {
+        logger.debug("getting fileTransferStatus")
+        createAndSendMessage(.getFileTransferStatus, sendImmediately: sendImmediately)
     }
 
     func parseFileTransferStatus(_ data: Data) {
