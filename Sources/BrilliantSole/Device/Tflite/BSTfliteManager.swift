@@ -284,6 +284,60 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             logger.error("no tfliteFile defined")
             return
         }
-        // FILL
+
+        var offset: Data.Index = 0
+
+        let timestamp = parseTimestamp(data, at: &offset)
+        logger.debug("timestamp: \(timestamp)ms")
+
+        let inferenceData = data[offset...]
+        let inferenceSize = 4
+        guard (inferenceData.count % inferenceSize) == 0 else {
+            logger.error("inferenceData length is not a multiple of \(inferenceSize) (got \(inferenceData.count)")
+            return
+        }
+
+        let numberOfInferences = inferenceData.count / inferenceSize
+
+        var inferenceMap: [String: Float]?
+        if let tfliteClasses = tfliteFile.classes {
+            if tfliteClasses.count == numberOfInferences {
+                inferenceMap = .init()
+            }
+            else {
+                logger.error("numberOfInferences doesn't match tfliteFile (expected \(tfliteClasses.count), got \(numberOfInferences)")
+            }
+        }
+
+        var inference: [Float] = []
+        var maxValue: Float = -Float.infinity
+        var maxIndex: Int = -1
+        var maxClassName: String?
+        for offset in stride(from: 0, to: inferenceData.count, by: inferenceSize) {
+            let index = inference.count
+            let value: Float = .parse(inferenceData, at: offset)
+            logger.debug("class #\(index) value: \(value)")
+            inference.append(value)
+
+            if var inferenceMap, let tfliteClasses = tfliteFile.classes {
+                let className = tfliteClasses[index]
+                inferenceMap[className] = value
+                logger.debug("#\(index) \(className): \(value)")
+                if tfliteTask == .classification {
+                    if value > maxValue {
+                        maxValue = value
+                        maxIndex = index
+                        maxClassName = className
+                    }
+                }
+            }
+        }
+        logger.debug("parsed inference with \(inference.count) classes at \(timestamp)ms")
+
+        tfliteInferenceSubject.send((inference, inferenceMap, timestamp))
+        if tfliteTask == .classification, let maxClassName {
+            logger.debug("maxClass \(maxClassName) (#\(maxIndex) with \(maxValue)")
+            tfliteClassificationSubject.send((maxClassName, maxValue, timestamp))
+        }
     }
 }
