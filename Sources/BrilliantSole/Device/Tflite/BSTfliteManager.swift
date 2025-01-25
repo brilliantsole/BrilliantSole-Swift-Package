@@ -37,14 +37,27 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         case .isTfliteReady:
             parseIsTfliteReady(data)
         case .getTfliteCaptureDelay, .setTfliteCaptureDelay:
-            print("FILL")
+            parseTfliteCaptureDelay(data)
         case .getTfliteThreshold, .setTfliteThreshold:
-            print("FILL")
+            parseTfliteThreshold(data)
         case .getTfliteInferencingEnabled, .setTfliteInferencingEnabled:
-            print("FILL")
+            parseTfliteInferencingEnabled(data)
         case .tfliteInference:
-            print("FILL")
+            parseTfliteInference(data)
         }
+    }
+
+    override func reset() {
+        super.reset()
+
+        tfliteName = ""
+        tfliteTask = .classification
+        tfliteSensorRate = ._0ms
+        tfliteSensorTypes = .init()
+        isTfliteReady = false
+        tfliteCaptureDelay = 0
+        tfliteThreshold = 0
+        tfliteInferencingEnabled = false
     }
 
     // MARK: - tfliteName
@@ -153,6 +166,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             logger.debug("redundant tfliteSensorTypes assignment \(newTfliteSensorTypes)")
             return
         }
+        logger.debug("setting tfliteSensorTypes to \(newTfliteSensorTypes)")
         createAndSendMessage(.setTfliteSensorTypes, data: newTfliteSensorTypes.data, sendImmediately: sendImmediately)
     }
 
@@ -175,9 +189,101 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteCaptureDelay
 
+    let tfliteCaptureDelaySubject: CurrentValueSubject<UInt16, Never> = .init(0)
+    var tfliteCaptureDelay: UInt16 {
+        get { tfliteCaptureDelaySubject.value }
+        set {
+            tfliteCaptureDelaySubject.value = newValue
+            logger.debug("updated tfliteCaptureDelay to \(newValue)")
+        }
+    }
+
+    func parseTfliteCaptureDelay(_ data: Data) {
+        let newTfliteCaptureDelay: UInt16 = .parse(data)
+        logger.debug("parsed tfliteCaptureDelay \(newTfliteCaptureDelay)")
+        tfliteCaptureDelay = newTfliteCaptureDelay
+    }
+
+    func setTfliteCaptureDelay(_ newTfliteCaptureDelay: UInt16, sendImmediately: Bool = true) {
+        guard newTfliteCaptureDelay != tfliteCaptureDelay else {
+            logger.debug("redundant tfliteCaptureDelay assignment \(newTfliteCaptureDelay)")
+            return
+        }
+        logger.debug("setting tfliteCaptureDelay to \(newTfliteCaptureDelay)")
+        createAndSendMessage(.setTfliteCaptureDelay, data: newTfliteCaptureDelay.getData(), sendImmediately: sendImmediately)
+    }
+
     // MARK: - tfliteThreshold
+
+    let tfliteThresholdSubject: CurrentValueSubject<Float, Never> = .init(0)
+    var tfliteThreshold: Float {
+        get { tfliteThresholdSubject.value }
+        set {
+            tfliteThresholdSubject.value = newValue
+            logger.debug("updated tfliteThreshold to \(newValue)")
+        }
+    }
+
+    func parseTfliteThreshold(_ data: Data) {
+        let newTfliteThreshold: Float = .parse(data)
+        logger.debug("parsed tfliteThreshold: \(newTfliteThreshold)")
+        tfliteThreshold = newTfliteThreshold
+    }
+
+    func setTfliteThreshold(_ newTfliteThreshold: Float, sendImmediately: Bool = true) {
+        guard newTfliteThreshold != tfliteThreshold else {
+            logger.debug("redundant tfliteThreshold assignment \(newTfliteThreshold)")
+            return
+        }
+        logger.debug("setting tfliteThreshold to \(newTfliteThreshold)")
+        createAndSendMessage(.setTfliteThreshold, data: newTfliteThreshold.getData(), sendImmediately: sendImmediately)
+    }
 
     // MARK: - tfliteInferencingEnabled
 
+    let tfliteInferencingEnabledSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var tfliteInferencingEnabled: Bool {
+        get { tfliteInferencingEnabledSubject.value }
+        set {
+            tfliteInferencingEnabledSubject.value = newValue
+            logger.debug("updated tfliteInferencingEnabled to \(newValue)")
+        }
+    }
+
+    func parseTfliteInferencingEnabled(_ data: Data) {
+        let newTfliteInferencingEnabled: Bool = data.parse()
+        logger.debug("parsed tfliteInferencingEnabled: \(newTfliteInferencingEnabled)")
+        tfliteInferencingEnabled = newTfliteInferencingEnabled
+    }
+
+    func setTfliteInferencingEnabled(_ newTfliteInferencingEnabled: Bool, sendImmediately: Bool = true) {
+        guard newTfliteInferencingEnabled != tfliteInferencingEnabled else {
+            logger.debug("redundant tfliteInferencingEnabled assignment \(newTfliteInferencingEnabled)")
+            return
+        }
+        guard isTfliteReady else {
+            logger.error("tflite is not ready")
+            return
+        }
+        logger.debug("setting tfliteInferencingEnabled to \(newTfliteInferencingEnabled)")
+        createAndSendMessage(.setTfliteInferencingEnabled, data: newTfliteInferencingEnabled.data, sendImmediately: sendImmediately)
+    }
+
     // MARK: - tfliteInference
+
+    var tfliteFile: BSTfliteFile?
+
+    typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
+    typealias BSClassification = (String, Float, BSTimestamp)
+
+    let tfliteInferenceSubject: PassthroughSubject<BSInference, Never> = .init()
+    let tfliteClassificationSubject: PassthroughSubject<BSClassification, Never> = .init()
+
+    func parseTfliteInference(_ data: Data) {
+        guard let tfliteFile else {
+            logger.error("no tfliteFile defined")
+            return
+        }
+        // FILL
+    }
 }

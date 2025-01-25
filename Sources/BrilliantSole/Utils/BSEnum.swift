@@ -31,8 +31,8 @@ extension BSEnum {
 extension Array where Element: BSEnum {
     static func parse(_ data: Data) -> [Element]? {
         var array: [Element] = []
-        for item in data {
-            guard let value = Element.parse(data) else {
+        for rawValue in data {
+            guard let value = Element(rawValue: rawValue) else {
                 return nil
             }
             array.append(value)

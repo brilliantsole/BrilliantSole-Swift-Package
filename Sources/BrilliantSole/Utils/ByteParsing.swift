@@ -67,6 +67,20 @@ extension FixedWidthInteger {
     }
 }
 
+extension BinaryFloatingPoint {
+    func getData(littleEndian: Bool = true) -> Data {
+        if let value = self as? Float {
+            var bitPattern = littleEndian ? value.bitPattern.littleEndian : value.bitPattern.bigEndian
+            return withUnsafeBytes(of: &bitPattern) { Data($0) }
+        } else if let value = self as? Double {
+            var bitPattern = littleEndian ? value.bitPattern.littleEndian : value.bitPattern.bigEndian
+            return withUnsafeBytes(of: &bitPattern) { Data($0) }
+        } else {
+            fatalError("Unsupported type: \(type(of: self))")
+        }
+    }
+}
+
 // MARK: - Data to String
 
 extension Data {
