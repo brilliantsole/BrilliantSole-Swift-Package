@@ -5,10 +5,13 @@
 //  Created by Zack Qattan on 1/21/25.
 //
 
+typealias BSTfliteCaptureDelay = UInt16
+typealias BSTfliteThreshold = Float
+
 class BSTfliteFile: BSBaseFile {
     override class var fileType: BSFileType { .tflite }
 
-    let modelName: String
+    let tfliteName: String
     let sensorTypes: Set<BSTfliteSensorType>
     func getSensorTypes() -> Set<BSSensorType> {
         .init(sensorTypes.map { $0.sensorType })
@@ -17,15 +20,15 @@ class BSTfliteFile: BSBaseFile {
     let task: BSTfliteTask
     let sensorRate: BSSensorRate
 
-    static let maxCaptureDelay: UInt16 = 5000
-    var captureDelay: UInt16 {
+    static let maxCaptureDelay: BSTfliteCaptureDelay = 5000
+    var captureDelay: BSTfliteCaptureDelay {
         didSet {
             captureDelay = min(captureDelay, Self.maxCaptureDelay)
         }
     }
 
-    static let maxThreshold: Float = 1.0
-    var threshold: Float {
+    static let maxThreshold: BSTfliteThreshold = 1.0
+    var threshold: BSTfliteThreshold {
         didSet {
             threshold = min(threshold, Self.maxThreshold)
         }
@@ -33,8 +36,8 @@ class BSTfliteFile: BSBaseFile {
 
     let classes: [String]?
 
-    init(fileName: String, modelName: String, sensorTypes: Set<BSTfliteSensorType>, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: UInt16 = 0, threshold: Float = 0.0, classes: [String]?) {
-        self.modelName = modelName
+    init(fileName: String, modelName: String, sensorTypes: BSTfliteSensorTypes, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]?) {
+        self.tfliteName = modelName
         self.sensorTypes = sensorTypes
         self.task = task
         self.sensorRate = sensorRate

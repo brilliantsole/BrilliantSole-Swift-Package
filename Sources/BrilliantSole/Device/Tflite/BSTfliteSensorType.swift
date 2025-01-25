@@ -34,7 +34,7 @@ public enum BSTfliteSensorType: CaseIterable {
         }
     }
 
-    init?(_ sensorType: BSSensorType) {
+    init?(sensorType: BSSensorType) {
         switch sensorType {
         case .pressure:
             self = .pressure
@@ -49,11 +49,21 @@ public enum BSTfliteSensorType: CaseIterable {
         }
     }
 
+    init?(rawValue: BSSensorType.RawValue) {
+        guard let sensorType = BSSensorType(rawValue: rawValue) else {
+            return nil
+        }
+        guard let tfliteSensorType = Self(sensorType: sensorType) else {
+            return nil
+        }
+        self = tfliteSensorType
+    }
+
     static func parse(_ data: Data, at offset: Data.Index = 0) -> Self? {
         guard let sensorType = BSSensorType.parse(data, at: offset), sensorType.isTfliteSensorType() else {
             return nil
         }
-        return .init(sensorType)
+        return .init(sensorType: sensorType)
     }
 }
 
@@ -62,8 +72,8 @@ typealias BSTfliteSensorTypes = Set<BSTfliteSensorType>
 extension Set where Element == BSTfliteSensorType {
     static func parse(_ data: Data) -> Set<Element>? {
         var set: Set<Element> = []
-        for item in data {
-            guard let value = Element.parse(data) else {
+        for rawValue in data {
+            guard let value = Element(rawValue: rawValue) else {
                 return nil
             }
             set.insert(value)

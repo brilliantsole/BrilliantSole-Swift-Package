@@ -58,6 +58,30 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         tfliteCaptureDelay = 0
         tfliteThreshold = 0
         tfliteInferencingEnabled = false
+
+        tfliteFile = nil
+    }
+
+    // MARK: - tfliteFile
+
+    public private(set) var tfliteFile: BSTfliteFile?
+    func sendTfliteFile(_ newTfliteFile: BSTfliteFile, sendImmediately: Bool = true) {
+        guard newTfliteFile !== tfliteFile else {
+            logger.debug("redundant tfliteFile assignent \(newTfliteFile.tfliteName)")
+            return
+        }
+
+        tfliteFile = newTfliteFile
+        guard let tfliteFile else {
+            logger.error("nil tfliteFile")
+            return
+        }
+        setTfliteName(tfliteFile.tfliteName, sendImmediately: false)
+        setTfliteTask(tfliteFile.task, sendImmediately: false)
+        setTfliteCaptureDelay(tfliteFile.captureDelay, sendImmediately: false)
+        setTfliteSensorRate(tfliteFile.sensorRate, sendImmediately: false)
+        setTfliteThreshold(tfliteFile.threshold, sendImmediately: false)
+        setTfliteSensorTypes(tfliteFile.sensorTypes, sendImmediately: sendImmediately)
     }
 
     // MARK: - tfliteName
@@ -214,8 +238,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteCaptureDelay
 
-    let tfliteCaptureDelaySubject: CurrentValueSubject<UInt16, Never> = .init(0)
-    var tfliteCaptureDelay: UInt16 {
+    let tfliteCaptureDelaySubject: CurrentValueSubject<BSTfliteCaptureDelay, Never> = .init(0)
+    var tfliteCaptureDelay: BSTfliteCaptureDelay {
         get { tfliteCaptureDelaySubject.value }
         set {
             tfliteCaptureDelaySubject.value = newValue
@@ -229,12 +253,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     func parseTfliteCaptureDelay(_ data: Data) {
-        let newTfliteCaptureDelay: UInt16 = .parse(data)
+        let newTfliteCaptureDelay: BSTfliteCaptureDelay = .parse(data)
         logger.debug("parsed tfliteCaptureDelay \(newTfliteCaptureDelay)")
         tfliteCaptureDelay = newTfliteCaptureDelay
     }
 
-    func setTfliteCaptureDelay(_ newTfliteCaptureDelay: UInt16, sendImmediately: Bool = true) {
+    func setTfliteCaptureDelay(_ newTfliteCaptureDelay: BSTfliteCaptureDelay, sendImmediately: Bool = true) {
         guard newTfliteCaptureDelay != tfliteCaptureDelay else {
             logger.debug("redundant tfliteCaptureDelay assignment \(newTfliteCaptureDelay)")
             return
@@ -245,8 +269,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteThreshold
 
-    let tfliteThresholdSubject: CurrentValueSubject<Float, Never> = .init(0)
-    var tfliteThreshold: Float {
+    let tfliteThresholdSubject: CurrentValueSubject<BSTfliteThreshold, Never> = .init(0)
+    var tfliteThreshold: BSTfliteThreshold {
         get { tfliteThresholdSubject.value }
         set {
             tfliteThresholdSubject.value = newValue
@@ -260,12 +284,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     func parseTfliteThreshold(_ data: Data) {
-        let newTfliteThreshold: Float = .parse(data)
+        let newTfliteThreshold: BSTfliteThreshold = .parse(data)
         logger.debug("parsed tfliteThreshold: \(newTfliteThreshold)")
         tfliteThreshold = newTfliteThreshold
     }
 
-    func setTfliteThreshold(_ newTfliteThreshold: Float, sendImmediately: Bool = true) {
+    func setTfliteThreshold(_ newTfliteThreshold: BSTfliteThreshold, sendImmediately: Bool = true) {
         guard newTfliteThreshold != tfliteThreshold else {
             logger.debug("redundant tfliteThreshold assignment \(newTfliteThreshold)")
             return
@@ -310,8 +334,6 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     // MARK: - tfliteInference
-
-    var tfliteFile: BSTfliteFile?
 
     typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
     typealias BSClassification = (String, Float, BSTimestamp)
