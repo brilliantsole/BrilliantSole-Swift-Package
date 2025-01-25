@@ -37,6 +37,11 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
 
     // MARK: - pressurePositions
 
+    func getPressurePositions(sendImmediately: Bool = true) {
+        logger.debug("getting pressurePositions")
+        createAndSendMessage(.getPressurePositions, sendImmediately: sendImmediately)
+    }
+
     func parsePressurePositions(_ data: Data) {
         pressureSensorDataManager.parsePressurePositions(data)
     }
@@ -51,6 +56,11 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
             sensorScalarsSubject.value = newValue
             logger.debug("updated sensorScalars to \(newValue)")
         }
+    }
+
+    func getSensorScalars(sendImmediately: Bool = true) {
+        logger.debug("getting sensorScalars")
+        createAndSendMessage(.getSensorScalars, sendImmediately: sendImmediately)
     }
 
     func parseSensorScalars(_ data: Data) {
@@ -79,11 +89,11 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")
         parseMessages(data, messageCallback: { [self] (sensorType: BSSensorType, data: Data) in
-            onSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
+            parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
         }, at: offset)
     }
 
-    func onSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {
+    func parseSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {
         let scalar = sensorScalars[sensorType] ?? 1
         for sensorDataManager in sensorDataManagers {
             if sensorDataManager.canParseSensorData(sensorType) {

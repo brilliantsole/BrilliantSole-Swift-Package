@@ -48,6 +48,11 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
         sensorConfiguration = newSensorConfiguration
     }
 
+    func getSensorConfiguration(sendImmediately: Bool = true) {
+        logger.debug("getting sensorConfiguration")
+        createAndSendMessage(.getSensorConfiguration, sendImmediately: sendImmediately)
+    }
+
     func setSensorConfiguration(_ newSensorConfiguration: BSSensorConfiguration, clearRest: Bool = false, sendImmediately: Bool = true) {
         guard !newSensorConfiguration.isEmpty else {
             logger.warning("ignoring empty sensorConfiguration")
@@ -76,7 +81,6 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
     func isSensorRateNonzero(_ sensorType: BSSensorType) -> Bool { containsSensorType(sensorType) && sensorConfiguration[sensorType] != ._0ms }
     func getSensorRate(_ sensorType: BSSensorType) -> BSSensorRate? { sensorConfiguration[sensorType] }
     func setSensorRate(_ sensorType: BSSensorType, _ sensorRate: BSSensorRate, sendImmediately: Bool = true) {
-        // FILL
         guard containsSensorType(sensorType) else {
             logger.debug("sensorConfiguration does not contain \(sensorType.name)")
             return

@@ -349,7 +349,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             logger.warning("fileTransferStatus already idle - no need to cancel")
             return
         }
-        logger.debug("cancelling file transfer...")
+        logger.debug("cancelling file transfer")
         setFileTransferCommand(.cancel, sendImmediately: sendImmediately)
     }
 }

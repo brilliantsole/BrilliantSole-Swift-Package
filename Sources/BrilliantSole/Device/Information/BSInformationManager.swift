@@ -56,6 +56,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         }
     }
 
+    func getMtu(sendImmediately: Bool = true) {
+        logger.debug("getting mtu")
+        createAndSendMessage(.getMtu, sendImmediately: sendImmediately)
+    }
+
     var maxMtuMessageLength: UInt16 { max(0, mtu - 3) }
 
     func parseMtu(_ data: Data) {
@@ -75,6 +80,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         }
     }
 
+    func getId(sendImmediately: Bool = true) {
+        logger.debug("getting id")
+        createAndSendMessage(.getId, sendImmediately: sendImmediately)
+    }
+
     func parseId(_ data: Data) {
         let newId: String = .parse(data)
         logger.debug("parsed id: \(newId)")
@@ -90,6 +100,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
             nameSubject.value = newValue
             logger.debug("updated name to \(newValue)")
         }
+    }
+
+    func getName(sendImmediately: Bool = true) {
+        logger.debug("getting name")
+        createAndSendMessage(.getName, sendImmediately: sendImmediately)
     }
 
     func parseName(_ data: Data) {
@@ -114,6 +129,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         }
     }
 
+    func getDeviceType(sendImmediately: Bool = true) {
+        logger.debug("getting deviceType")
+        createAndSendMessage(.getDeviceType, sendImmediately: sendImmediately)
+    }
+
     func parseDeviceType(_ data: Data) {
         guard let newDeviceType = BSDeviceType.parse(data) else {
             return
@@ -124,8 +144,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - currentTime
 
-    let currentTimeSubject = CurrentValueSubject<UInt32, Never>(0)
-    private(set) var currentTime: UInt32 {
+    let currentTimeSubject = CurrentValueSubject<BSTimestamp, Never>(0)
+    private(set) var currentTime: BSTimestamp {
         get { currentTimeSubject.value }
         set {
             currentTimeSubject.value = newValue
@@ -136,16 +156,29 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         }
     }
 
+    func getCurrentTime(sendImmediately: Bool = true) {
+        logger.debug("getting currentTime")
+        createAndSendMessage(.getCurrentTime, sendImmediately: sendImmediately)
+    }
+
     func parseCurrentTime(_ data: Data) {
-        let newCurrentTime: UInt32 = .parse(data)
+        let newCurrentTime: BSTimestamp = .parse(data)
         logger.debug("parsed currentTime: \(newCurrentTime)")
         currentTime = newCurrentTime
     }
 
-    func updateCurrentTime() {
+    func setCurrentTime(_ newCurrentTime: BSTimestamp, sendImmediately: Bool = true) {
+        guard newCurrentTime != currentTime else {
+            logger.debug("redundant currentTime assignment \(newCurrentTime)")
+            return
+        }
+        logger.debug("setting currentTime \(newCurrentTime)")
+        createAndSendMessage(.setCurrentTime, data: newCurrentTime.getData(), sendImmediately: sendImmediately)
+    }
+
+    func updateCurrentTime(sendImmediately: Bool = true) {
         let newCurrentTime = getUtcTime()
-        logger.debug("updating currentTime to \(newCurrentTime)...")
-        let messages = createMessage(.setCurrentTime, data: newCurrentTime.getData())
-        sendTxMessages([messages], sendImmediately: false)
+        logger.debug("updating currentTime to \(newCurrentTime)")
+        setCurrentTime(newCurrentTime, sendImmediately: sendImmediately)
     }
 }

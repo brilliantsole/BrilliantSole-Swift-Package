@@ -41,6 +41,11 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
         }
     }
 
+    func getIsBatteryCharging(sendImmediately: Bool = true) {
+        logger.debug("getting isBatteryCharging")
+        createAndSendMessage(.getIsBatteryCharging, sendImmediately: sendImmediately)
+    }
+
     func parseIsBatteryCharging(_ data: Data) {
         let newIsBatteryCharging: Bool = data[0] == 1
         logger.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
@@ -56,6 +61,11 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
             batteryCurrentSubject.value = newValue
             logger.debug("updated batteryCurrent to \(newValue)")
         }
+    }
+
+    func getBatteryCurrent(sendImmediately: Bool = true) {
+        logger.debug("getting batteryCurrent")
+        createAndSendMessage(.getBatteryCurrent, sendImmediately: sendImmediately)
     }
 
     func parseBatteryCurrent(_ data: Data) {

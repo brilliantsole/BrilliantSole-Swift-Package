@@ -11,10 +11,10 @@ import OSLog
 private let logger = getLogger(category: "BSParseUtils")
 
 func parseMessages<MessageType: BSEnum>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index, parseMessageLengthAs2Bytes: Bool = false) {
-    logger.debug("parsing \(data.count) bytes at \(initialoffset)...")
+    logger.debug("parsing \(data.count) bytes at \(initialoffset)")
     var offset = initialoffset
     while offset < data.count {
-        logger.debug("parsing message at \(offset)...")
+        logger.debug("parsing message at \(offset)")
 
         guard let messageType = MessageType.parse(data, at: offset) else {
             return

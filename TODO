@@ -1,6 +1,4 @@
 Managers (send messages)
-    battery
-    information
     fileTransfer
     tflite
 device
