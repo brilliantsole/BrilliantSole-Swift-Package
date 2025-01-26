@@ -52,4 +52,15 @@ enum BSTests {
             print("vibrationWaveformEffects data: \(configurationData.bytes)")
         }
     }
+
+    struct BSBleTests {
+        @Test func bleUtilsTest() async throws {
+            for service in BSBleServiceUUID.allCases {
+                print("service \(service), uuid \(service.uuid)")
+            }
+            for characteristic in BSBleCharacteristicUUID.allCases {
+                print("characteristic \(characteristic), uuid \(characteristic.uuid)")
+            }
+        }
+    }
 }
