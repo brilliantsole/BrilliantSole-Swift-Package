@@ -9,7 +9,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSEnum")
 
-protocol BSEnum: RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {
+protocol BSEnum: BSMessageType, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {
     var name: String { get }
 }
 
@@ -18,7 +18,7 @@ extension BSEnum {
         rawValue.data
     }
 
-    static func parse(_ data: Data, at offset: Data.Index = 0) -> Self? {
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
         let rawValue = data[offset]
         guard let value = Self(rawValue: rawValue) else {
             logger.error("invalid \(self) rawValue \(rawValue)")

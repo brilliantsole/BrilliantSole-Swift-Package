@@ -85,7 +85,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     var sensorDataManagers: [BSBaseSensorDataManager] { [pressureSensorDataManager, motionSensorDataManager, barometerSensorDataManager] }
 
     func parseSensorData(_ data: Data) {
-        var offset: Data.Index = 0
+        var offset: Data.Index = .zero
         let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")
         parseMessages(data, messageCallback: { [self] (sensorType: BSSensorType, data: Data) in

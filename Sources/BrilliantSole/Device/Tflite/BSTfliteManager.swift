@@ -347,7 +347,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             return
         }
 
-        var offset: Data.Index = 0
+        var offset: Data.Index = .zero
 
         let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")

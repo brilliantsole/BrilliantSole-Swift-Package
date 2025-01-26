@@ -10,7 +10,7 @@ import OSLog
 
 private let logger = getLogger(category: "BSParseUtils")
 
-func parseMessages<MessageType: BSEnum>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index, parseMessageLengthAs2Bytes: Bool = false) {
+func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index = .zero, parseMessageLengthAs2Bytes: Bool = false) {
     logger.debug("parsing \(data.count) bytes at \(initialoffset)")
     var offset = initialoffset
     while offset < data.count {
@@ -20,7 +20,7 @@ func parseMessages<MessageType: BSEnum>(_ data: Data, messageCallback: @escaping
             return
         }
         offset += 1
-        logger.debug("messageType \(messageType.name)")
+        logger.debug("messageType \(String(describing: messageType))")
 
         let messageDataLength: UInt16
         if parseMessageLengthAs2Bytes {
@@ -30,7 +30,7 @@ func parseMessages<MessageType: BSEnum>(_ data: Data, messageCallback: @escaping
             messageDataLength = UInt16(data[offset])
             offset += 1
         }
-        logger.debug("messageType: \(messageType.name), messageDataLength: \(messageDataLength)")
+        logger.debug("messageType: \(String(describing: messageType)), messageDataLength: \(messageDataLength)")
 
         let endIndex = Data.Index(offset) + Data.Index(messageDataLength)
         guard endIndex <= data.count else {

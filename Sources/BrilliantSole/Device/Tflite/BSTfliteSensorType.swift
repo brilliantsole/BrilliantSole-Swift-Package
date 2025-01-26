@@ -59,7 +59,7 @@ public enum BSTfliteSensorType: CaseIterable {
         self = tfliteSensorType
     }
 
-    static func parse(_ data: Data, at offset: Data.Index = 0) -> Self? {
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
         guard let sensorType = BSSensorType.parse(data, at: offset), sensorType.isTfliteSensorType() else {
             return nil
         }

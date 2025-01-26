@@ -8,12 +8,14 @@
 import OSLog
 import UkatonMacros
 
+typealias BSDeviceInformationValue = String
+
 @StaticLogger
 struct BSDeviceInformation {
-    private var dictionary: [BSDeviceInformationType: String] = .init()
+    private var dictionary: [BSDeviceInformationType: BSDeviceInformationValue] = .init()
     public private(set) var hasAllInformation: Bool = false
 
-    subscript(key: BSDeviceInformationType) -> String? {
+    subscript(key: BSDeviceInformationType) -> BSDeviceInformationValue? {
         get {
             return dictionary[key]
         }
