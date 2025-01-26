@@ -56,10 +56,10 @@ enum BSTests {
     struct BSBleTests {
         @Test func bleUtilsTest() async throws {
             for service in BSBleServiceUUID.allCases {
-                print("service \(service), uuid \(service.uuid)")
+                print("service \(service), uuid \(service.uuid), characteristics: \(service.characteristics)")
             }
             for characteristic in BSBleCharacteristicUUID.allCases {
-                print("characteristic \(characteristic), uuid \(characteristic.uuid)")
+                print("characteristic \(characteristic), uuid \(characteristic.uuid), service: \(characteristic.service)")
             }
         }
     }
