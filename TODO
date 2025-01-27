@@ -1,7 +1,8 @@
+scanner
+    ble
 connectionManager
     ble
     client
 device
-scanner
 devicePair
 client

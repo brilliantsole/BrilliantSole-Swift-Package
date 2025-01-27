@@ -76,8 +76,8 @@ class BSBaseConnectionManager: BSConnectionManager {
 
     func parseRxData(_ data: Data) {
         logger.debug("parsing \(data.count) bytes")
-        parseMessages(data, messageCallback: { [self] (messageType: UInt8, data: Data) in
-            parseRxMessage(messageType: messageType, data: data)
+        parseMessages(data, messageCallback: { (messageType: UInt8, data: Data) in
+            self.parseRxMessage(messageType: messageType, data: data)
         })
     }
 

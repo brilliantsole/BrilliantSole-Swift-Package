@@ -11,4 +11,6 @@ import UkatonMacros
 @StaticLogger
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
+    
+    
 }

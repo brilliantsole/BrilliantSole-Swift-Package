@@ -63,4 +63,13 @@ enum BSTests {
             }
         }
     }
+
+    struct BSScannerTests {
+        @Test func discoveredDeviceJsonTest() async throws {
+            let discoveredDeviceJson = BSDiscoveredDeviceJson(jsonString: "{\"name\":\"Brilliant Sole\",\"bluetoothId\":\"0b68679a6951bda8ca8fe31356f4e189\",\"deviceType\":\"leftInsole\",\"rssi\":-46}")
+            #expect(discoveredDeviceJson != nil)
+            print(discoveredDeviceJson!)
+            print("discoveredDeviceJson \(discoveredDeviceJson!), deviceType \(discoveredDeviceJson!.deviceType?.name ?? "nil")")
+        }
+    }
 }

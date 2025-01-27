@@ -18,6 +18,16 @@ extension BSEnum {
         rawValue.data
     }
 
+    init?(name: String, useCamelCase: Bool = true) {
+        if let matchingCase = Self.allCases.first(where: { $0.name == (useCamelCase ? camelCaseToSpaces(name) : name) }) {
+            // logger.debug("parsed \(name) as \(matchingCase.name)")
+            self = matchingCase
+        } else {
+            // logger.debug("failed to parse \(name)")
+            return nil
+        }
+    }
+
     static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
         let rawValue = data[offset]
         guard let value = Self(rawValue: rawValue) else {

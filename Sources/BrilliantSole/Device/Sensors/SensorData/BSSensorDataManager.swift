@@ -88,8 +88,8 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         var offset: Data.Index = .zero
         let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")
-        parseMessages(data, messageCallback: { [self] (sensorType: BSSensorType, data: Data) in
-            parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
+        parseMessages(data, messageCallback: { (sensorType: BSSensorType, data: Data) in
+            self.parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
         }, at: offset)
     }
 
