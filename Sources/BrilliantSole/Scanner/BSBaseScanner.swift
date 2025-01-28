@@ -160,7 +160,9 @@ class BSBaseScanner: NSObject, BSScanner {
     }
 
     func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
-        getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
+        let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
+        device.connect()
+        return device
     }
 
     func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
@@ -224,7 +226,7 @@ class BSBaseScanner: NSObject, BSScanner {
     }
 
     private var deviceIsConnectedCancellables = Set<AnyCancellable>()
-    private func createDevice(discoveredDevice: BSDiscoveredDevice) {
+    func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         logger.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device
@@ -236,5 +238,6 @@ class BSBaseScanner: NSObject, BSScanner {
                 self?.devices[discoveredDevice.id] = nil
             }
         }.store(in: &deviceIsConnectedCancellables)
+        return device
     }
 }

@@ -77,4 +77,18 @@ class BSBleScanner: BSBaseScanner {
             add(discoveredDevice: discoveredDevice!)
         }
     }
+
+    // MARK: - device
+
+    private var connectionManagers: [String: BSBleConnectionManager] = .init()
+    override func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+        guard let peripheral = peripherals[discoveredDevice.id] else {
+            fatalError("no peripheral found for discoveredDevice \(discoveredDevice)")
+        }
+        let device = super.createDevice(discoveredDevice: discoveredDevice)
+        let connectionManager: BSBleConnectionManager = .init(discoveredDevice: discoveredDevice, peripheral: peripheral)
+        connectionManagers[discoveredDevice.id] = connectionManager
+        device.connectionManager = connectionManager
+        return device
+    }
 }

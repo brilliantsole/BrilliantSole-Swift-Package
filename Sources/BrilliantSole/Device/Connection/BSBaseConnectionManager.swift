@@ -13,6 +13,13 @@ private let logger = getLogger(category: "BSBaseConnectionManager")
 class BSBaseConnectionManager: NSObject, BSConnectionManager {
     class var connectionType: BSConnectionType { fatalError("Must override") }
 
+    // MARK: - discoveredDevice
+
+    let discoveredDevice: BSDiscoveredDevice
+    init(discoveredDevice: BSDiscoveredDevice) {
+        self.discoveredDevice = discoveredDevice
+    }
+
     // MARK: - device information
 
     var name: String?

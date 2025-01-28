@@ -1,6 +1,5 @@
-bleScanner
-    connection
-bleConnectionManager
+bleScanner+bleConnectionManager
+    connect
 device
 devicePair
 client

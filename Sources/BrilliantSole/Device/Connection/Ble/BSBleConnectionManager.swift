@@ -12,4 +12,11 @@ import UkatonMacros
 @StaticLogger
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
+
+    let peripheral: CBPeripheral
+
+    init(discoveredDevice: BSDiscoveredDevice, peripheral: CBPeripheral) {
+        self.peripheral = peripheral
+        super.init(discoveredDevice: discoveredDevice)
+    }
 }
