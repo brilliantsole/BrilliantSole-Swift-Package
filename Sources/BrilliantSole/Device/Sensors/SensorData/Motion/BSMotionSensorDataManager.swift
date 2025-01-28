@@ -53,11 +53,31 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     // MARK: - vector
 
     typealias BSVector3DSubject = PassthroughSubject<(BSVector3D, BSTimestamp), Never>
-    let accelerationSubject: BSVector3DSubject = .init()
-    let gravitySubject: BSVector3DSubject = .init()
-    let linearAccelerationSubject: BSVector3DSubject = .init()
-    let gyroscopeSubject: BSVector3DSubject = .init()
-    let magnetometerSubject: BSVector3DSubject = .init()
+    private let accelerationSubject: BSVector3DSubject = .init()
+    var accelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+        accelerationSubject.eraseToAnyPublisher()
+    }
+
+    private let gravitySubject: BSVector3DSubject = .init()
+    var gravityPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+        gravitySubject.eraseToAnyPublisher()
+    }
+
+    private let linearAccelerationSubject: BSVector3DSubject = .init()
+    var linearAccelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+        linearAccelerationSubject.eraseToAnyPublisher()
+    }
+
+    private let gyroscopeSubject: BSVector3DSubject = .init()
+    var gyroscopePublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+        gyroscopeSubject.eraseToAnyPublisher()
+    }
+
+    private let magnetometerSubject: BSVector3DSubject = .init()
+    var magnetometerPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+        magnetometerSubject.eraseToAnyPublisher()
+    }
+
     func getVectorSubject(for sensorType: BSSensorType) -> BSVector3DSubject? {
         switch sensorType {
         case .acceleration:
@@ -87,8 +107,16 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     // MARK: - quaternion
 
     typealias BSQuaternionSubject = PassthroughSubject<(BSQuaternion, BSTimestamp), Never>
-    let gameRotationSubject: BSQuaternionSubject = .init()
-    let rotationSubject: BSQuaternionSubject = .init()
+    private let gameRotationSubject: BSQuaternionSubject = .init()
+    var gameRotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+        gameRotationSubject.eraseToAnyPublisher()
+    }
+
+    private let rotationSubject: BSQuaternionSubject = .init()
+    var rotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+        rotationSubject.eraseToAnyPublisher()
+    }
+
     func getQuaternionSubject(for sensorType: BSSensorType) -> BSQuaternionSubject? {
         switch sensorType {
         case .gameRotation:
@@ -111,7 +139,10 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - orientation
 
-    let orientationSubject = PassthroughSubject<(BSRotation3D, BSTimestamp), Never>()
+    private let orientationSubject = PassthroughSubject<(BSRotation3D, BSTimestamp), Never>()
+    var orientationPublisher: AnyPublisher<(BSRotation3D, BSTimestamp), Never> {
+        orientationSubject.eraseToAnyPublisher()
+    }
 
     func parseOrientation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
         let orientation: BSRotation3D = .parse(data, scalar: scalar)
@@ -121,7 +152,10 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - activity
 
-    let activitySubject = PassthroughSubject<([BSActivityFlag], BSTimestamp), Never>()
+    private let activitySubject = PassthroughSubject<([BSActivityFlag], BSTimestamp), Never>()
+    var activityPublisher: AnyPublisher<([BSActivityFlag], BSTimestamp), Never> {
+        activitySubject.eraseToAnyPublisher()
+    }
 
     func parseActivity(data: Data, timestamp: BSTimestamp) {
         let activity = BSActivityFlag.parse(data)
@@ -131,7 +165,10 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - stepDetection
 
-    let stepDetectionSubject = PassthroughSubject<BSTimestamp, Never>()
+    private let stepDetectionSubject = PassthroughSubject<BSTimestamp, Never>()
+    var stepDetectionPublisher: AnyPublisher<BSTimestamp, Never> {
+        stepDetectionSubject.eraseToAnyPublisher()
+    }
 
     func parseStepDetection(data: Data, timestamp: BSTimestamp) {
         logger.debug("step detected (\(timestamp)ms)")
@@ -140,7 +177,10 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - stepCount
 
-    let stepCountSubject = PassthroughSubject<(UInt32, BSTimestamp), Never>()
+    private let stepCountSubject = PassthroughSubject<(UInt32, BSTimestamp), Never>()
+    var stepCountPublisher: AnyPublisher<(UInt32, BSTimestamp), Never> {
+        stepCountSubject.eraseToAnyPublisher()
+    }
 
     func parseStepCount(data: Data, timestamp: BSTimestamp) {
         let stepCount: UInt32 = .parse(data, littleEndian: false)
@@ -150,7 +190,11 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - deviceOrientation
 
-    let deviceOrientationSubject = PassthroughSubject<(BSDeviceOrientation, BSTimestamp), Never>()
+    private let deviceOrientationSubject = PassthroughSubject<(BSDeviceOrientation, BSTimestamp), Never>()
+    var deviceOrientationPublisher: AnyPublisher<(BSDeviceOrientation, BSTimestamp), Never> {
+        deviceOrientationSubject.eraseToAnyPublisher()
+    }
+
     func parseDeviceOrientation(data: Data, timestamp: BSTimestamp) {
         guard let deviceOrientation = BSDeviceOrientation.parse(data) else {
             return

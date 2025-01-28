@@ -18,13 +18,24 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     var name: String?
     var deviceType: BSDeviceType?
 
-    let batteryLevelSubject: PassthroughSubject<BSBatteryLevel, Never> = .init()
-    let deviceInformationSubject: PassthroughSubject<(BSDeviceInformationType, BSDeviceInformationValue), Never> = .init()
+    private let batteryLevelSubject: PassthroughSubject<BSBatteryLevel, Never> = .init()
+    var batteryLevelPublisher: AnyPublisher<BSBatteryLevel, Never> {
+        batteryLevelSubject.eraseToAnyPublisher()
+    }
+
+    private let deviceInformationSubject: PassthroughSubject<(BSDeviceInformationType, BSDeviceInformationValue), Never> = .init()
+    var deviceInformationPublisher: AnyPublisher<(BSDeviceInformationType, BSDeviceInformationValue), Never> {
+        deviceInformationSubject.eraseToAnyPublisher()
+    }
 
     // MARK: - connection
 
-    var connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(.notConnected)
-    var connectionStatus: BSConnectionStatus {
+    private let connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(.notConnected)
+    var connectionStatusPublisher: AnyPublisher<BSConnectionStatus, Never> {
+        connectionStatusSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
             logger.debug("updated connectionStatus to \(newValue.name)")
@@ -32,7 +43,8 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         }
     }
 
-    var isConnected: Bool = false
+    private(set) var isConnected: Bool = false
+
     func connect() {
         var _continue = true
         connect(_continue: &_continue)
@@ -70,9 +82,20 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
 
     // MARK: - messaging
 
-    let rxMessageSubject: PassthroughSubject<(UInt8, Data), Never> = .init()
-    let rxMessagesSubject: PassthroughSubject<Void, Never> = .init()
-    let sendTxDataSubject: PassthroughSubject<Void, Never> = .init()
+    private let rxMessageSubject: PassthroughSubject<(UInt8, Data), Never> = .init()
+    var rxMessagePublisher: AnyPublisher<(UInt8, Data), Never> {
+        rxMessageSubject.eraseToAnyPublisher()
+    }
+
+    private let rxMessagesSubject: PassthroughSubject<Void, Never> = .init()
+    var rxMessagesPublisher: AnyPublisher<Void, Never> {
+        rxMessagesSubject.eraseToAnyPublisher()
+    }
+
+    private let sendTxDataSubject: PassthroughSubject<Void, Never> = .init()
+    var sendTxDataPublisher: AnyPublisher<Void, Never> {
+        sendTxDataSubject.eraseToAnyPublisher()
+    }
 
     func parseRxData(_ data: Data) {
         logger.debug("parsing \(data.count) bytes")

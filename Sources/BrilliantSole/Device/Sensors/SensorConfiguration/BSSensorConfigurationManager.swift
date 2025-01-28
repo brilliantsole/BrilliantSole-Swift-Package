@@ -30,7 +30,11 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
 
     // MARK: sensorConfiguration
 
-    let sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.zero)
+    private let sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.zero)
+    var sensorConfigurationPublisher: AnyPublisher<BSSensorConfiguration, Never> {
+        sensorConfigurationSubject.eraseToAnyPublisher()
+    }
+
     private(set) var sensorConfiguration: BSSensorConfiguration {
         get { sensorConfigurationSubject.value }
         set {
@@ -39,7 +43,7 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
         }
     }
 
-    func parseSensorConfiguration(_ data: Data) {
+    private func parseSensorConfiguration(_ data: Data) {
         guard let newSensorConfiguration: BSSensorConfiguration = .parse(data) else {
             logger.error("failed to parse sensorConfiguration")
             return

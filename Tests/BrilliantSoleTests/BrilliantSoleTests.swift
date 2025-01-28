@@ -79,13 +79,13 @@ enum BSTests {
                 BSBleScanner.shared.startScanning()
             }
             else {
-                BSBleScanner.shared.isScanningAvailableSubject.sink { isScanningAvailable in
+                BSBleScanner.shared.isScanningAvailablePublisher.sink { isScanningAvailable in
                     if isScanningAvailable {
                         BSBleScanner.shared.startScanning()
                     }
                 }.store(in: &cancellables)
             }
-            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
             BSBleScanner.shared.stopScanning()
         }
     }

@@ -13,7 +13,7 @@ typealias BSDeviceInformationValue = String
 @StaticLogger
 struct BSDeviceInformation {
     private var dictionary: [BSDeviceInformationType: BSDeviceInformationValue] = .init()
-    public private(set) var hasAllInformation: Bool = false
+    private(set) var hasAllInformation: Bool = false
 
     subscript(key: BSDeviceInformationType) -> BSDeviceInformationValue? {
         get {
@@ -25,7 +25,7 @@ struct BSDeviceInformation {
         }
     }
 
-    mutating func remove() {
+    mutating func removeAll() {
         dictionary.removeAll()
         hasAllInformation = false
     }

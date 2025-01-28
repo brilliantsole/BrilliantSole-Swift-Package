@@ -15,7 +15,12 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - isScanningAvailable
 
-    let isScanningAvailableSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    private let isScanningAvailableSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isScanningAvailablePublisher: AnyPublisher<Bool, Never> {
+        isScanningAvailableSubject
+            .eraseToAnyPublisher()
+    }
+
     var isScanningAvailable: Bool {
         get { isScanningAvailableSubject.value }
         set {
@@ -30,12 +35,26 @@ class BSBaseScanner: NSObject, BSScanner {
         }
     }
 
-    let scanningIsAvailableSubject: PassthroughSubject<Void, Never> = .init()
-    let scanningIsUnavailableSubject: PassthroughSubject<Void, Never> = .init()
+    private let scanningIsAvailableSubject: PassthroughSubject<Void, Never> = .init()
+    var scanningIsAvailablePublisher: AnyPublisher<Void, Never> {
+        scanningIsAvailableSubject
+            .eraseToAnyPublisher()
+    }
+
+    private let scanningIsUnavailableSubject: PassthroughSubject<Void, Never> = .init()
+    var scanningIsUnavailablePublisher: AnyPublisher<Void, Never> {
+        scanningIsUnavailableSubject
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - isScanning
 
     let isScanningSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isScanningPublisher: AnyPublisher<Bool, Never> {
+        isScanningSubject
+            .eraseToAnyPublisher()
+    }
+
     var isScanning: Bool {
         get { isScanningSubject.value }
         set {
@@ -53,7 +72,16 @@ class BSBaseScanner: NSObject, BSScanner {
     }
 
     let scanStartSubject: PassthroughSubject<Void, Never> = .init()
+    var scanStartPublisher: AnyPublisher<Void, Never> {
+        scanStartSubject
+            .eraseToAnyPublisher()
+    }
+
     let scanStopSubject: PassthroughSubject<Void, Never> = .init()
+    var scanStopPublisher: AnyPublisher<Void, Never> {
+        scanStopSubject
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - scan
 
@@ -99,7 +127,16 @@ class BSBaseScanner: NSObject, BSScanner {
     private(set) var discoveredDevices: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
     let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        discoveredDeviceSubject
+            .eraseToAnyPublisher()
+    }
+
     let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        expiredDeviceSubject
+            .eraseToAnyPublisher()
+    }
 
     func add(discoveredDevice: BSDiscoveredDevice) {
         logger.debug("adding discoveredDevice \(discoveredDevice.name)")
@@ -187,7 +224,7 @@ class BSBaseScanner: NSObject, BSScanner {
         logger.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device
-        device.isConnectedSubject.sink { [weak self] connected in
+        device.isConnectedPublisher.sink { [weak self] connected in
             if connected {
                 self?.devices[discoveredDevice.id] = device
             }

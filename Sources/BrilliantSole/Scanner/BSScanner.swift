@@ -14,18 +14,18 @@ protocol BSScanner {
 
     // MARK: - isScanningAvailable
 
-    var isScanningAvailableSubject: CurrentValueSubject<Bool, Never> { get }
+    var isScanningAvailablePublisher: AnyPublisher<Bool, Never> { get }
     var isScanningAvailable: Bool { get }
 
-    var scanningIsAvailableSubject: PassthroughSubject<Void, Never> { get }
-    var scanningIsUnavailableSubject: PassthroughSubject<Void, Never> { get }
+    var scanningIsAvailablePublisher: AnyPublisher<Void, Never> { get }
+    var scanningIsUnavailablePublisher: AnyPublisher<Void, Never> { get }
 
     // MARK: - isScanning
 
-    var isScanningSubject: CurrentValueSubject<Bool, Never> { get }
+    var isScanningPublisher: AnyPublisher<Bool, Never> { get }
     var isScanning: Bool { get }
-    var scanStartSubject: PassthroughSubject<Void, Never> { get }
-    var scanStopSubject: PassthroughSubject<Void, Never> { get }
+    var scanStartPublisher: AnyPublisher<Void, Never> { get }
+    var scanStopPublisher: AnyPublisher<Void, Never> { get }
 
     // MARK: - scan
 
@@ -36,8 +36,8 @@ protocol BSScanner {
     // MARK: - discoveredDevices
 
     var discoveredDevices: [String: BSDiscoveredDevice] { get }
-    var discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> { get }
-    var expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> { get }
+    var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
+    var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
 
     mutating func connect(to device: BSDiscoveredDevice) -> BSDevice
     func disconnect(from device: BSDiscoveredDevice) -> BSDevice?
@@ -49,9 +49,6 @@ protocol BSScanner {
 }
 
 extension BSScanner {
-    var isScanningAvailable: Bool { isScanningAvailableSubject.value }
-    var isScanning: Bool { isScanningSubject.value }
-
     func toggleScan() {
         logger.debug("toggling scan")
         isScanning ? stopScanning() : startScanning()

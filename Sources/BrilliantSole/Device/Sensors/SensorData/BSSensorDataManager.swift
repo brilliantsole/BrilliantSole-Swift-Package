@@ -42,14 +42,18 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         createAndSendMessage(.getPressurePositions, sendImmediately: sendImmediately)
     }
 
-    func parsePressurePositions(_ data: Data) {
+    private func parsePressurePositions(_ data: Data) {
         pressureSensorDataManager.parsePressurePositions(data)
     }
 
     // MARK: - sensorScalars
 
     typealias BSSensorScalars = [BSSensorType: Float]
-    let sensorScalarsSubject = CurrentValueSubject<BSSensorScalars, Never>(.init())
+    private let sensorScalarsSubject = CurrentValueSubject<BSSensorScalars, Never>(.init())
+    var sensorScalarsPublisher: AnyPublisher<BSSensorScalars, Never> {
+        sensorScalarsSubject.eraseToAnyPublisher()
+    }
+
     private(set) var sensorScalars: BSSensorScalars {
         get { sensorScalarsSubject.value }
         set {
@@ -63,7 +67,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         createAndSendMessage(.getSensorScalars, sendImmediately: sendImmediately)
     }
 
-    func parseSensorScalars(_ data: Data) {
+    private func parseSensorScalars(_ data: Data) {
         var newSensorScalars: BSSensorScalars = .init()
         for index in stride(from: 0, to: data.count, by: 5) {
             guard let sensorType = BSSensorType.parse(data, at: index) else {
@@ -84,7 +88,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     let barometerSensorDataManager: BSBarometerSensorDataManager = .init()
     var sensorDataManagers: [BSBaseSensorDataManager] { [pressureSensorDataManager, motionSensorDataManager, barometerSensorDataManager] }
 
-    func parseSensorData(_ data: Data) {
+    private func parseSensorData(_ data: Data) {
         var offset: Data.Index = .zero
         let timestamp = parseTimestamp(data, at: &offset)
         logger.debug("timestamp: \(timestamp)ms")
@@ -93,7 +97,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         }, at: offset)
     }
 
-    func parseSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {
+    private func parseSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {
         let scalar = sensorScalars[sensorType] ?? 1
         for sensorDataManager in sensorDataManagers {
             if sensorDataManager.canParseSensorData(sensorType) {

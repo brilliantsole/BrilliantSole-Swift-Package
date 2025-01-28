@@ -61,8 +61,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - maxFileLength
 
-    let maxFileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
-    var maxFileLength: UInt16 {
+    private let maxFileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
+    var maxFileLengthPublisher: AnyPublisher<UInt16, Never> {
+        maxFileLengthSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var maxFileLength: UInt16 {
         get { maxFileLengthSubject.value }
         set {
             maxFileLengthSubject.value = newValue
@@ -75,7 +79,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         createAndSendMessage(.getMaxFileLength, sendImmediately: sendImmediately)
     }
 
-    func parseMaxFileLength(_ data: Data) {
+    private func parseMaxFileLength(_ data: Data) {
         let newMaxFileLength: UInt16 = .parse(data)
         logger.debug("parsed maxFileLength \(newMaxFileLength)")
         maxFileLength = newMaxFileLength
@@ -83,8 +87,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileTransferType
 
-    let fileTypeSubject: CurrentValueSubject<BSFileType, Never> = .init(.tflite)
-    var fileType: BSFileType {
+    private let fileTypeSubject: CurrentValueSubject<BSFileType, Never> = .init(.tflite)
+    var fileTypePublisher: AnyPublisher<BSFileType, Never> {
+        fileTypeSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var fileType: BSFileType {
         get { fileTypeSubject.value }
         set {
             fileTypeSubject.value = newValue
@@ -97,7 +105,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         createAndSendMessage(.getFileTransferType, sendImmediately: sendImmediately)
     }
 
-    func parseFileTransferType(_ data: Data) {
+    private func parseFileTransferType(_ data: Data) {
         guard let newFileType = BSFileType.parse(data) else {
             return
         }
@@ -115,8 +123,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileLength
 
-    let fileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
-    var fileLength: UInt16 {
+    private let fileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
+    var fileLengthPublisher: AnyPublisher<UInt16, Never> {
+        fileLengthSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var fileLength: UInt16 {
         get { fileLengthSubject.value }
         set {
             fileLengthSubject.value = newValue
@@ -129,7 +141,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         createAndSendMessage(.getFileLength, sendImmediately: sendImmediately)
     }
 
-    func parseFileLength(_ data: Data) {
+    private func parseFileLength(_ data: Data) {
         let newFileLength: UInt16 = .parse(data)
         logger.debug("parsed fileLength \(newFileLength)")
         fileLength = newFileLength
@@ -145,8 +157,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileChecksum
 
-    let fileChecksumSubject: CurrentValueSubject<BSFileChecksum, Never> = .init(0)
-    var fileChecksum: BSFileChecksum {
+    private let fileChecksumSubject: CurrentValueSubject<BSFileChecksum, Never> = .init(0)
+    var fileChecksumPublisher: AnyPublisher<BSFileChecksum, Never> {
+        fileChecksumSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var fileChecksum: BSFileChecksum {
         get { fileChecksumSubject.value }
         set {
             fileChecksumSubject.value = newValue
@@ -159,7 +175,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         createAndSendMessage(.getFileChecksum, sendImmediately: sendImmediately)
     }
 
-    func parseChecksum(_ data: Data) {
+    private func parseChecksum(_ data: Data) {
         let newFileChecksum: BSFileChecksum = .parse(data)
         logger.debug("parsed fileChecksum \(newFileChecksum)")
         fileChecksum = newFileChecksum
@@ -176,15 +192,19 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileTransferCommand
 
-    func setFileTransferCommand(_ fileTransferCommand: BSFileTransferCommand, sendImmediately: Bool = true) {
+    private func setFileTransferCommand(_ fileTransferCommand: BSFileTransferCommand, sendImmediately: Bool = true) {
         logger.debug("setting fileTransferCommand \(fileTransferCommand.name)")
         createAndSendMessage(.setFileTransferCommand, data: fileTransferCommand.data, sendImmediately: sendImmediately)
     }
 
     // MARK: - fileTransferStatus
 
-    let fileTransferStatusSubject: CurrentValueSubject<BSFileTransferStatus, Never> = .init(.idle)
-    var fileTransferStatus: BSFileTransferStatus {
+    private let fileTransferStatusSubject: CurrentValueSubject<BSFileTransferStatus, Never> = .init(.idle)
+    var fileTransferStatusPublisher: AnyPublisher<BSFileTransferStatus, Never> {
+        fileTransferStatusSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var fileTransferStatus: BSFileTransferStatus {
         get { fileTransferStatusSubject.value }
         set {
             fileTransferStatusSubject.value = newValue
@@ -197,7 +217,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         createAndSendMessage(.getFileTransferStatus, sendImmediately: sendImmediately)
     }
 
-    func parseFileTransferStatus(_ data: Data) {
+    private func parseFileTransferStatus(_ data: Data) {
         guard let newFileTransferStatus = BSFileTransferStatus.parse(data) else {
             return
         }
@@ -207,7 +227,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileTransferBlock
 
-    func parseFileTransferBlock(_ data: Data) {
+    private func parseFileTransferBlock(_ data: Data) {
         guard fileTransferStatus == .receiving else {
             logger.error("cannot parse fileTransferBlock when fileTransferStatus is not .receiving")
             return
@@ -250,10 +270,10 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileBytesTransferred
 
-    var waitingToSendMoreData: Bool = false
-    var bytesTransferred: UInt16 = 0
+    private var waitingToSendMoreData: Bool = false
+    private var bytesTransferred: UInt16 = 0
 
-    func parseFileBytesTransferred(_ data: Data) {
+    private func parseFileBytesTransferred(_ data: Data) {
         guard fileTransferStatus == .sending else {
             logger.debug("currently not sending file")
             return
@@ -277,12 +297,23 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileTransfer
 
-    let fileTransferProgressSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection, Float), Never> = .init()
-    let fileTransferCompleteSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection), Never> = .init()
-    let fileReceivedSubject: PassthroughSubject<(BSFileType, Data), Never> = .init()
+    private let fileTransferProgressSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection, Float), Never> = .init()
+    var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
+        fileTransferProgressSubject.eraseToAnyPublisher()
+    }
 
-    var fileDataToReceive: Data = .init()
-    var fileDataToSend: Data?
+    private let fileTransferCompleteSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection), Never> = .init()
+    var fileTransferCompletePublisher: AnyPublisher<(BSFileType, BSFileTransferDirection), Never> {
+        fileTransferCompleteSubject.eraseToAnyPublisher()
+    }
+
+    private let fileReceivedSubject: PassthroughSubject<(BSFileType, Data), Never> = .init()
+    var fileReceivedPublisher: AnyPublisher<(BSFileType, Data), Never> {
+        fileReceivedSubject.eraseToAnyPublisher()
+    }
+
+    private var fileDataToReceive: Data = .init()
+    private var fileDataToSend: Data?
 
     func sendFile(_ file: inout BSFile, sendImmediately: Bool = true) -> Bool {
         guard fileTransferStatus == .idle else {
@@ -324,9 +355,9 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     var mtu: UInt16 = 0
-    var maxMessageLength: UInt16 { .init(mtu - 3 - 3) }
+    private var maxMessageLength: UInt16 { .init(mtu - 3 - 3) }
 
-    func sendFileBlock(sendImmediately: Bool = true) {
+    private func sendFileBlock(sendImmediately: Bool = true) {
         guard fileTransferStatus == .sending else {
             logger.error("cannot send block when fileTransferStatus is \(self.fileTransferStatus.name)")
             return

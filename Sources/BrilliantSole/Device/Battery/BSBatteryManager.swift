@@ -32,7 +32,11 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
 
     // MARK: - isBatteryCharging
 
-    let isBatteryChargingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let isBatteryChargingSubject = CurrentValueSubject<Bool, Never>(false)
+    var isBatteryChargingPublisher: AnyPublisher<Bool, Never> {
+        isBatteryChargingSubject.eraseToAnyPublisher()
+    }
+
     var isBatteryCharging: Bool {
         get { isBatteryChargingSubject.value }
         set {
@@ -46,7 +50,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
         createAndSendMessage(.getIsBatteryCharging, sendImmediately: sendImmediately)
     }
 
-    func parseIsBatteryCharging(_ data: Data) {
+    private func parseIsBatteryCharging(_ data: Data) {
         let newIsBatteryCharging: Bool = data[0] == 1
         logger.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
         isBatteryCharging = newIsBatteryCharging
@@ -54,7 +58,11 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
 
     // MARK: - batteryCurrent
 
-    let batteryCurrentSubject = CurrentValueSubject<Float, Never>(0)
+    private let batteryCurrentSubject = CurrentValueSubject<Float, Never>(0)
+    var batteryCurrentPublisher: AnyPublisher<Float, Never> {
+        batteryCurrentSubject.eraseToAnyPublisher()
+    }
+
     private(set) var batteryCurrent: Float {
         get { batteryCurrentSubject.value }
         set {
@@ -68,7 +76,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
         createAndSendMessage(.getBatteryCurrent, sendImmediately: sendImmediately)
     }
 
-    func parseBatteryCurrent(_ data: Data) {
+    private func parseBatteryCurrent(_ data: Data) {
         let newBatteryCurrent: Float = .parse(data)
         logger.debug("parsed batteryCurrent: \(newBatteryCurrent)")
         batteryCurrent = newBatteryCurrent

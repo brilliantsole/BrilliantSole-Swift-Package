@@ -64,7 +64,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteFile
 
-    public private(set) var tfliteFile: BSTfliteFile?
+    private(set) var tfliteFile: BSTfliteFile?
     func sendTfliteFile(_ newTfliteFile: BSTfliteFile, sendImmediately: Bool = true) {
         guard newTfliteFile !== tfliteFile else {
             logger.debug("redundant tfliteFile assignent \(newTfliteFile.tfliteName)")
@@ -86,8 +86,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteName
 
-    let tfliteNameSubject: CurrentValueSubject<String, Never> = .init("")
-    var tfliteName: String {
+    private let tfliteNameSubject: CurrentValueSubject<String, Never> = .init("")
+    var tfliteNamePublisher: AnyPublisher<String, Never> {
+        tfliteNameSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteName: String {
         get { tfliteNameSubject.value }
         set {
             logger.debug("updated tfliteName to \(newValue)")
@@ -100,7 +104,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteName, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteName(_ data: Data) {
+    private func parseTfliteName(_ data: Data) {
         let newTfliteName: String = .parse(data)
         logger.debug("parsed tfliteName \(newTfliteName)")
         tfliteName = newTfliteName
@@ -117,8 +121,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteTask
 
-    let tfliteTaskSubject: CurrentValueSubject<BSTfliteTask, Never> = .init(.classification)
-    var tfliteTask: BSTfliteTask {
+    private let tfliteTaskSubject: CurrentValueSubject<BSTfliteTask, Never> = .init(.classification)
+    var tfliteTaskPublisher: AnyPublisher<BSTfliteTask, Never> {
+        tfliteTaskSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteTask: BSTfliteTask {
         get { tfliteTaskSubject.value }
         set {
             logger.debug("updated tfliteTask to \(newValue.name)")
@@ -131,7 +139,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteTask, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteTask(_ data: Data) {
+    private func parseTfliteTask(_ data: Data) {
         guard let newTfliteTask = BSTfliteTask.parse(data) else {
             return
         }
@@ -150,8 +158,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteSensorRate
 
-    let tfliteSensorRateSubject: CurrentValueSubject<BSSensorRate, Never> = .init(._0ms)
-    var tfliteSensorRate: BSSensorRate {
+    private let tfliteSensorRateSubject: CurrentValueSubject<BSSensorRate, Never> = .init(._0ms)
+    var tfliteSensorsRatePublisher: AnyPublisher<BSSensorRate, Never> {
+        tfliteSensorRateSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteSensorRate: BSSensorRate {
         get { tfliteSensorRateSubject.value }
         set {
             logger.debug("updated tfliteSensorRate to \(newValue.name)")
@@ -164,7 +176,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteSensorRate, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteSensorRate(_ data: Data) {
+    private func parseTfliteSensorRate(_ data: Data) {
         guard let newTfliteSensorRate = BSSensorRate.parse(data) else {
             return
         }
@@ -183,8 +195,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteSensorTypes
 
-    let tfliteSensorTypesSubject: CurrentValueSubject<BSTfliteSensorTypes, Never> = .init(.init())
-    var tfliteSensorTypes: BSTfliteSensorTypes {
+    private let tfliteSensorTypesSubject: CurrentValueSubject<BSTfliteSensorTypes, Never> = .init(.init())
+    var tfliteSensorTypesPublisher: AnyPublisher<BSTfliteSensorTypes, Never> {
+        tfliteSensorTypesSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteSensorTypes: BSTfliteSensorTypes {
         get { tfliteSensorTypesSubject.value }
         set {
             logger.debug("updated tfliteSensorTypes to \(newValue)")
@@ -197,7 +213,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteSensorTypes, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteSensorTypes(_ data: Data) {
+    private func parseTfliteSensorTypes(_ data: Data) {
         guard let newTfliteSensorTypes = BSTfliteSensorTypes.parse(data) else {
             return
         }
@@ -216,8 +232,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - isTfliteReady
 
-    let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
-    var isTfliteReady: Bool {
+    private let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isTfliteReadyPublisher: AnyPublisher<Bool, Never> {
+        isTfliteReadySubject.eraseToAnyPublisher()
+    }
+
+    private(set) var isTfliteReady: Bool {
         get { isTfliteReadySubject.value }
         set {
             logger.debug("updated isTfliteReady to \(newValue)")
@@ -230,7 +250,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.isTfliteReady, sendImmediately: sendImmediately)
     }
 
-    func parseIsTfliteReady(_ data: Data) {
+    private func parseIsTfliteReady(_ data: Data) {
         let newIsTfliteReady: Bool = .parse(data)
         logger.debug("parsed isTfliteReady \(newIsTfliteReady)")
         isTfliteReady = newIsTfliteReady
@@ -238,8 +258,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteCaptureDelay
 
-    let tfliteCaptureDelaySubject: CurrentValueSubject<BSTfliteCaptureDelay, Never> = .init(0)
-    var tfliteCaptureDelay: BSTfliteCaptureDelay {
+    private let tfliteCaptureDelaySubject: CurrentValueSubject<BSTfliteCaptureDelay, Never> = .init(0)
+    var tfliteCaptureDelayPublisher: AnyPublisher<BSTfliteCaptureDelay, Never> {
+        tfliteCaptureDelaySubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteCaptureDelay: BSTfliteCaptureDelay {
         get { tfliteCaptureDelaySubject.value }
         set {
             logger.debug("updated tfliteCaptureDelay to \(newValue)")
@@ -252,7 +276,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteCaptureDelay, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteCaptureDelay(_ data: Data) {
+    private func parseTfliteCaptureDelay(_ data: Data) {
         let newTfliteCaptureDelay: BSTfliteCaptureDelay = .parse(data)
         logger.debug("parsed tfliteCaptureDelay \(newTfliteCaptureDelay)")
         tfliteCaptureDelay = newTfliteCaptureDelay
@@ -269,8 +293,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteThreshold
 
-    let tfliteThresholdSubject: CurrentValueSubject<BSTfliteThreshold, Never> = .init(0)
-    var tfliteThreshold: BSTfliteThreshold {
+    private let tfliteThresholdSubject: CurrentValueSubject<BSTfliteThreshold, Never> = .init(0)
+    var tfliteThresholdPublisher: AnyPublisher<BSTfliteThreshold, Never> {
+        tfliteThresholdSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteThreshold: BSTfliteThreshold {
         get { tfliteThresholdSubject.value }
         set {
             logger.debug("updated tfliteThreshold to \(newValue)")
@@ -283,7 +311,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteThreshold, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteThreshold(_ data: Data) {
+    private func parseTfliteThreshold(_ data: Data) {
         let newTfliteThreshold: BSTfliteThreshold = .parse(data)
         logger.debug("parsed tfliteThreshold: \(newTfliteThreshold)")
         tfliteThreshold = newTfliteThreshold
@@ -300,8 +328,12 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteInferencingEnabled
 
-    let tfliteInferencingEnabledSubject: CurrentValueSubject<Bool, Never> = .init(false)
-    var tfliteInferencingEnabled: Bool {
+    private let tfliteInferencingEnabledSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var tfliteInferencingEnabledPublisher: AnyPublisher<Bool, Never> {
+        tfliteInferencingEnabledSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var tfliteInferencingEnabled: Bool {
         get { tfliteInferencingEnabledSubject.value }
         set {
             logger.debug("updated tfliteInferencingEnabled to \(newValue)")
@@ -314,7 +346,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.getTfliteInferencingEnabled, sendImmediately: sendImmediately)
     }
 
-    func parseTfliteInferencingEnabled(_ data: Data) {
+    private func parseTfliteInferencingEnabled(_ data: Data) {
         let newTfliteInferencingEnabled: Bool = data.parse()
         logger.debug("parsed tfliteInferencingEnabled: \(newTfliteInferencingEnabled)")
         tfliteInferencingEnabled = newTfliteInferencingEnabled
@@ -338,10 +370,17 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
     typealias BSClassification = (String, Float, BSTimestamp)
 
-    let tfliteInferenceSubject: PassthroughSubject<BSInference, Never> = .init()
-    let tfliteClassificationSubject: PassthroughSubject<BSClassification, Never> = .init()
+    private let tfliteInferenceSubject: PassthroughSubject<BSInference, Never> = .init()
+    var tfliteInferencePublisher: AnyPublisher<BSInference, Never> {
+        tfliteInferenceSubject.eraseToAnyPublisher()
+    }
 
-    func parseTfliteInference(_ data: Data) {
+    private let tfliteClassificationSubject: PassthroughSubject<BSClassification, Never> = .init()
+    var tfliteClassificationPublisher: AnyPublisher<BSClassification, Never> {
+        tfliteClassificationSubject.eraseToAnyPublisher()
+    }
+
+    private func parseTfliteInference(_ data: Data) {
         guard let tfliteFile else {
             logger.error("no tfliteFile defined")
             return

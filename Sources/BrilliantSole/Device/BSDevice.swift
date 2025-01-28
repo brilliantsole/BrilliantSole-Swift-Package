@@ -26,7 +26,7 @@ class BSDevice {
         self.init(name: discoveredDevice.name, deviceType: discoveredDevice.deviceType)
     }
 
-    // MARK: - connection
+    // MARK: - connectionManager
 
     var connectionManager: BSConnectionManager? {
         didSet {
@@ -34,7 +34,13 @@ class BSDevice {
         }
     }
 
-    let connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(.notConnected)
+    // MARK: - connectionStatus
+
+    private let connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(.notConnected)
+    var connectionStatusPublisher: AnyPublisher<BSConnectionStatus, Never> {
+        connectionStatusSubject.eraseToAnyPublisher()
+    }
+
     private(set) var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
@@ -54,12 +60,33 @@ class BSDevice {
         }
     }
 
-    let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
-    let connectedSubject: PassthroughSubject<Void, Never> = .init()
-    let connectingSubject: PassthroughSubject<Void, Never> = .init()
-    let disconnectingSubject: PassthroughSubject<Void, Never> = .init()
+    private let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
+    var notConnectedPublisher: AnyPublisher<Void, Never> {
+        notConnectedSubject.eraseToAnyPublisher()
+    }
 
-    let isConnectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    private let connectedSubject: PassthroughSubject<Void, Never> = .init()
+    var connectedPublisher: AnyPublisher<Void, Never> {
+        connectedSubject.eraseToAnyPublisher()
+    }
+
+    private let connectingSubject: PassthroughSubject<Void, Never> = .init()
+    var connectingPublisher: AnyPublisher<Void, Never> {
+        connectingSubject.eraseToAnyPublisher()
+    }
+
+    private let disconnectingSubject: PassthroughSubject<Void, Never> = .init()
+    var disconnectingPublisher: AnyPublisher<Void, Never> {
+        disconnectingSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - isConnected
+
+    private let isConnectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isConnectedPublisher: AnyPublisher<Bool, Never> {
+        isConnectedSubject.eraseToAnyPublisher()
+    }
+
     private(set) var isConnected: Bool {
         get { isConnectedSubject.value }
         set {

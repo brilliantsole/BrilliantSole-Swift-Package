@@ -19,7 +19,7 @@ class BSSmpManager: BSBaseManager<BSSmpMessageType> {
     override func onRxMessage(_ messageType: BSSmpMessageType, data: Data) {
         switch messageType {
         case .smp:
-            print("FILL")
+            break
         }
     }
 }

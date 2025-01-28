@@ -9,6 +9,8 @@ import Combine
 import OSLog
 import UkatonMacros
 
+private let defaultMtu: UInt16 = 23
+
 @StaticLogger
 class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     override class var requiredMessageTypes: [BSInformationMessageType]? {
@@ -38,7 +40,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     override func reset() {
         super.reset()
-        mtu = 0
+        mtu = defaultMtu
 //        id = ""
 //        name = ""
 //        deviceType = .leftInsole
@@ -47,8 +49,9 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - mtu
 
-    let mtuSubject = CurrentValueSubject<UInt16, Never>(0)
-    var mtu: UInt16 {
+    private let mtuSubject = CurrentValueSubject<UInt16, Never>(defaultMtu)
+    var mtuPublisher: AnyPublisher<UInt16, Never> { mtuSubject.eraseToAnyPublisher() }
+    private(set) var mtu: UInt16 {
         get { mtuSubject.value }
         set {
             logger.debug("updated mtu to \(newValue)")
@@ -63,7 +66,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     var maxMtuMessageLength: UInt16 { max(0, mtu - 3) }
 
-    func parseMtu(_ data: Data) {
+    private func parseMtu(_ data: Data) {
         let newMtu: UInt16 = .parse(data)
         logger.debug("parsed mtu: \(newMtu)")
         mtu = newMtu
@@ -71,7 +74,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - id
 
-    let idSubject = CurrentValueSubject<String, Never>("")
+    private let idSubject = CurrentValueSubject<String, Never>("")
+    var idPublisher: AnyPublisher<String, Never> { idSubject.eraseToAnyPublisher() }
     private(set) var id: String {
         get { idSubject.value }
         set {
@@ -85,7 +89,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         createAndSendMessage(.getId, sendImmediately: sendImmediately)
     }
 
-    func parseId(_ data: Data) {
+    private func parseId(_ data: Data) {
         let newId: String = .parse(data)
         logger.debug("parsed id: \(newId)")
         id = newId
@@ -93,7 +97,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - name
 
-    let nameSubject = CurrentValueSubject<String, Never>("")
+    private let nameSubject = CurrentValueSubject<String, Never>("")
+    var namePublisher: AnyPublisher<String, Never> { nameSubject.eraseToAnyPublisher() }
     private(set) var name: String {
         get { nameSubject.value }
         set {
@@ -107,7 +112,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         createAndSendMessage(.getName, sendImmediately: sendImmediately)
     }
 
-    func parseName(_ data: Data) {
+    private func parseName(_ data: Data) {
         let newName: String = .parse(data)
         logger.debug("parsed name: \(newName)")
         name = newName
@@ -120,7 +125,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - deviceType
 
-    let deviceTypeSubject = CurrentValueSubject<BSDeviceType, Never>(.leftInsole)
+    private let deviceTypeSubject = CurrentValueSubject<BSDeviceType, Never>(.leftInsole)
+    var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> {
+        deviceTypeSubject.eraseToAnyPublisher()
+    }
+
     private(set) var deviceType: BSDeviceType {
         get { deviceTypeSubject.value }
         set {
@@ -134,7 +143,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         createAndSendMessage(.getDeviceType, sendImmediately: sendImmediately)
     }
 
-    func parseDeviceType(_ data: Data) {
+    private func parseDeviceType(_ data: Data) {
         guard let newDeviceType = BSDeviceType.parse(data) else {
             return
         }
@@ -144,7 +153,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - currentTime
 
-    let currentTimeSubject = CurrentValueSubject<BSTimestamp, Never>(0)
+    private let currentTimeSubject = CurrentValueSubject<BSTimestamp, Never>(0)
+    var currentTimePublisher: AnyPublisher<BSTimestamp, Never> {
+        currentTimeSubject.eraseToAnyPublisher()
+    }
+
     private(set) var currentTime: BSTimestamp {
         get { currentTimeSubject.value }
         set {
@@ -161,7 +174,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         createAndSendMessage(.getCurrentTime, sendImmediately: sendImmediately)
     }
 
-    func parseCurrentTime(_ data: Data) {
+    private func parseCurrentTime(_ data: Data) {
         let newCurrentTime: BSTimestamp = .parse(data)
         logger.debug("parsed currentTime: \(newCurrentTime)")
         currentTime = newCurrentTime
@@ -176,7 +189,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         createAndSendMessage(.setCurrentTime, data: newCurrentTime.getData(), sendImmediately: sendImmediately)
     }
 
-    func updateCurrentTime(sendImmediately: Bool = true) {
+    private func updateCurrentTime(sendImmediately: Bool = true) {
         let newCurrentTime = getUtcTime()
         logger.debug("updating currentTime to \(newCurrentTime)")
         setCurrentTime(newCurrentTime, sendImmediately: sendImmediately)
