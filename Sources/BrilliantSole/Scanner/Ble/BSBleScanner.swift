@@ -31,9 +31,11 @@ class BSBleScanner: BSBaseScanner {
         guard _continue else {
             return
         }
-
         centralManager.scanForPeripherals(withServices: [BSBleServiceUUID.main.uuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         isScanning = centralManager.isScanning
+
+        let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [BSBleServiceUUID.main.uuid])
+        peripherals.forEach { addPeripheral($0) }
     }
 
     override func stopScanning(_continue: inout Bool) {
@@ -47,6 +49,20 @@ class BSBleScanner: BSBaseScanner {
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         logger.debug("discovered peripherial \(peripheral), advertisementData: \(advertisementData), rssi: \(RSSI)")
+        // FILL - create discoveredDevice
+    }
+
+    // MARK: - peripherals
+
+    private var peripheralDictionary: [CBPeripheral: BSDiscoveredDevice] = .init()
+    private func add(peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        guard !peripheralDictionary.keys.contains(peripheral) else {
+            logger.debug("already added peripherial \(peripheral)")
+            return
+        }
+    }
+
+    private func remove(peripheral: CBPeripheral) {
         // FILL
     }
 }

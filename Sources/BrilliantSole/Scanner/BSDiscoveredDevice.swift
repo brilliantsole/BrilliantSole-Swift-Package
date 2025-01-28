@@ -5,30 +5,80 @@
 //  Created by Zack Qattan on 1/26/25.
 //
 
+import Combine
 import OSLog
 import UkatonMacros
 
 @StaticLogger
 class BSDiscoveredDevice {
     let id: String
-    private(set) var name: String
-    private(set) var deviceType: BSDeviceType?
-    private(set) var rssi: Int?
+
+    private let nameSubject: CurrentValueSubject<String, Never> = .init("")
+    public var namePublisher: AnyPublisher<String, Never> {
+        nameSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var name: String {
+        get { nameSubject.value }
+        set {
+            guard name != newValue else {
+                logger.debug("redundant name assignment \(newValue)")
+                return
+            }
+            logger.debug("updated name \(newValue)")
+            nameSubject.value = newValue
+        }
+    }
+
+    private let deviceTypeSubject: CurrentValueSubject<BSDeviceType?, Never> = .init(nil)
+    public var deviceTypePublisher: AnyPublisher<BSDeviceType?, Never> {
+        deviceTypeSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var deviceType: BSDeviceType? {
+        get { deviceTypeSubject.value }
+        set {
+            guard newValue != nil else { return }
+            guard deviceType != newValue else {
+                logger.debug("redundant deviceType assignment \(newValue?.name ?? "nil")")
+                return
+            }
+            logger.debug("updated deviceType \(newValue?.name ?? "nil")")
+            deviceTypeSubject.value = newValue
+        }
+    }
+
+    private let rssiSubject: CurrentValueSubject<Int?, Never> = .init(nil)
+    public var rssiaPublisher: AnyPublisher<Int?, Never> {
+        rssiSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var rssi: Int? {
+        get { rssiSubject.value }
+        set {
+            guard newValue != nil else { return }
+            guard rssi != newValue else {
+                logger.debug("redundant rssi assignment \(newValue ?? 0)")
+                return
+            }
+            logger.debug("updated rssi \(newValue ?? 0)")
+            rssiSubject.value = newValue
+        }
+    }
 
     // MARK: - init
 
     init(scanner: BSScanner, id: String, name: String, deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
         self.scanner = scanner
         self.id = id
+        self.lastTimeUpdated = .now
         self.name = name
         self.deviceType = deviceType
         self.rssi = rssi
-
-        self.lastTimeUpdated = .now
     }
 
     convenience init(scanner: BSScanner, discoveredDeviceJson: BSDiscoveredDeviceJson) {
-        self.init(scanner: scanner, id: discoveredDeviceJson.bluetoothId, name: discoveredDeviceJson.name, deviceType: discoveredDeviceJson.deviceType, rssi: discoveredDeviceJson.rssi)
+        self.init(scanner: scanner, id: discoveredDeviceJson.id, name: discoveredDeviceJson.name, deviceType: discoveredDeviceJson.deviceType, rssi: discoveredDeviceJson.rssi)
     }
 
     // MARK: - update
@@ -38,7 +88,7 @@ class BSDiscoveredDevice {
         return Date().timeIntervalSince(lastTimeUpdated)
     }
 
-    func update(name: String?, deviceType: BSDeviceType?, rssi: Int?) {
+    func update(name: String? = nil, deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
         if let name {
             self.name = name
         }
@@ -49,7 +99,7 @@ class BSDiscoveredDevice {
             self.rssi = rssi
         }
         lastTimeUpdated = .now
-        logger.debug("updated \(self.name)")
+        logger.debug("updated \(self.id)")
     }
 
     func update(discoveredDeivceJson: BSDiscoveredDeviceJson) {

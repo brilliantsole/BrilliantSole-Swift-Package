@@ -85,7 +85,7 @@ enum BSTests {
                     }
                 }.store(in: &cancellables)
             }
-            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
             BSBleScanner.shared.stopScanning()
         }
     }

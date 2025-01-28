@@ -11,7 +11,7 @@ import UkatonMacros
 
 @StaticLogger
 struct BSDiscoveredDeviceJson: Codable {
-    let bluetoothId: String
+    let id: String
     let name: String
     let rssi: Int
     let deviceTypeString: String
@@ -20,7 +20,7 @@ struct BSDiscoveredDeviceJson: Codable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case bluetoothId
+        case id = "bluetoothId"
         case name
         case rssi
         case deviceTypeString = "deviceType"
