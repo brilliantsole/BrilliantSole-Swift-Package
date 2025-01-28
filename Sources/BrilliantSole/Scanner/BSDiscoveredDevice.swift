@@ -57,10 +57,10 @@ class BSDiscoveredDevice {
         get { rssiSubject.value }
         set {
             guard newValue != nil else { return }
-            guard rssi != newValue else {
-                logger.debug("redundant rssi assignment \(newValue ?? 0)")
-                return
-            }
+//            guard rssi != newValue else {
+//                logger.debug("redundant rssi assignment \(newValue ?? 0)")
+//                return
+//            }
             logger.debug("updated rssi \(newValue ?? 0)")
             rssiSubject.value = newValue
         }

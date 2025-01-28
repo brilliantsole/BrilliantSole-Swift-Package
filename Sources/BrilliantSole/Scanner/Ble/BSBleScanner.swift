@@ -35,7 +35,7 @@ class BSBleScanner: BSBaseScanner {
         isScanning = centralManager.isScanning
 
         let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [BSBleServiceUUID.main.uuid])
-        peripherals.forEach { addPeripheral($0) }
+        peripherals.forEach { onPeripheral($0) }
     }
 
     override func stopScanning(_continue: inout Bool) {
@@ -49,20 +49,32 @@ class BSBleScanner: BSBaseScanner {
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         logger.debug("discovered peripherial \(peripheral), advertisementData: \(advertisementData), rssi: \(RSSI)")
-        // FILL - create discoveredDevice
+        onDiscoveredPeripheral(peripheral, advertisementData: advertisementData, rssi: RSSI)
     }
 
     // MARK: - peripherals
 
-    private var peripheralDictionary: [CBPeripheral: BSDiscoveredDevice] = .init()
-    private func add(peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard !peripheralDictionary.keys.contains(peripheral) else {
-            logger.debug("already added peripherial \(peripheral)")
-            return
+    private var peripherals: [String: CBPeripheral] = .init()
+
+    private func onPeripheral(_ peripheral: CBPeripheral) {
+        var discoveredDevice = allDiscoveredDevices[peripheral.id]
+        if let discoveredDevice {
+            discoveredDevice.update(peripheral: peripheral)
+        }
+        else {
+            discoveredDevice = .init(scanner: self, peripheral: peripheral)
+            add(discoveredDevice: discoveredDevice!)
         }
     }
 
-    private func remove(peripheral: CBPeripheral) {
-        // FILL
+    private func onDiscoveredPeripheral(_ peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        var discoveredDevice = allDiscoveredDevices[peripheral.id]
+        if let discoveredDevice {
+            discoveredDevice.update(peripheral: peripheral, advertisementData: advertisementData, rssi: RSSI)
+        }
+        else {
+            discoveredDevice = .init(scanner: self, peripheral: peripheral)
+            add(discoveredDevice: discoveredDevice!)
+        }
     }
 }

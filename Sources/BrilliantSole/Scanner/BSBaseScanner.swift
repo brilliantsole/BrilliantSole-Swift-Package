@@ -49,7 +49,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - isScanning
 
-    let isScanningSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    private let isScanningSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var isScanningPublisher: AnyPublisher<Bool, Never> {
         isScanningSubject
             .eraseToAnyPublisher()
@@ -71,13 +71,13 @@ class BSBaseScanner: NSObject, BSScanner {
         }
     }
 
-    let scanStartSubject: PassthroughSubject<Void, Never> = .init()
+    private let scanStartSubject: PassthroughSubject<Void, Never> = .init()
     var scanStartPublisher: AnyPublisher<Void, Never> {
         scanStartSubject
             .eraseToAnyPublisher()
     }
 
-    let scanStopSubject: PassthroughSubject<Void, Never> = .init()
+    private let scanStopSubject: PassthroughSubject<Void, Never> = .init()
     var scanStopPublisher: AnyPublisher<Void, Never> {
         scanStopSubject
             .eraseToAnyPublisher()
@@ -126,13 +126,13 @@ class BSBaseScanner: NSObject, BSScanner {
 
     private(set) var discoveredDevices: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
-    let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
         discoveredDeviceSubject
             .eraseToAnyPublisher()
     }
 
-    let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    private let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
         expiredDeviceSubject
             .eraseToAnyPublisher()
@@ -140,9 +140,13 @@ class BSBaseScanner: NSObject, BSScanner {
 
     func add(discoveredDevice: BSDiscoveredDevice) {
         logger.debug("adding discoveredDevice \(discoveredDevice.name)")
-        discoveredDevices[discoveredDevice.id] = discoveredDevice
-        allDiscoveredDevices[discoveredDevice.id] = discoveredDevice
-        discoveredDeviceSubject.send(discoveredDevice)
+        if allDiscoveredDevices[discoveredDevice.id] !== discoveredDevice {
+            allDiscoveredDevices[discoveredDevice.id] = discoveredDevice
+        }
+        if discoveredDevices[discoveredDevice.id] !== discoveredDevice {
+            discoveredDevices[discoveredDevice.id] = discoveredDevice
+            discoveredDeviceSubject.send(discoveredDevice)
+        }
     }
 
     func remove(discoveredDevice: BSDiscoveredDevice) {

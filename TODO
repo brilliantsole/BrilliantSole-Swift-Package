@@ -1,8 +1,6 @@
 bleScanner
-    parse peripheral
-connectionManager
-    ble
-    client
+    connection
+bleConnectionManager
 device
 devicePair
 client
