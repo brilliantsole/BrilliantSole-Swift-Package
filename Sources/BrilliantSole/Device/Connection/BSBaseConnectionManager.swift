@@ -10,7 +10,7 @@ import OSLog
 
 private let logger = getLogger(category: "BSBaseConnectionManager")
 
-class BSBaseConnectionManager: BSConnectionManager {
+class BSBaseConnectionManager: NSObject, BSConnectionManager {
     class var connectionType: BSConnectionType { fatalError("Must override") }
 
     // MARK: - device information

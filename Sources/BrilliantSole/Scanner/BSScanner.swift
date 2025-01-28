@@ -10,6 +10,8 @@ import Combine
 private let logger = getLogger(category: "BSScanner")
 
 protocol BSScanner {
+    static var connectionType: BSConnectionType { get }
+
     // MARK: - isScanningAvailable
 
     var isScanningAvailableSubject: CurrentValueSubject<Bool, Never> { get }

@@ -71,5 +71,11 @@ enum BSTests {
             print(discoveredDeviceJson!)
             print("discoveredDeviceJson \(discoveredDeviceJson!), deviceType \(discoveredDeviceJson!.deviceType?.name ?? "nil")")
         }
+
+        @Test func bleScannerTest() async throws {
+            BSBleScanner.shared.startScanning()
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+            BSBleScanner.shared.stopScanning()
+        }
     }
 }

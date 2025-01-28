@@ -6,11 +6,13 @@
 //
 
 import Combine
-import OSLog
-import UkatonMacros
+import Foundation
 
-@StaticLogger
-class BSBaseScanner: BSScanner {
+private let logger = getLogger(category: "BSBaseScanner")
+
+class BSBaseScanner: NSObject, BSScanner {
+    class var connectionType: BSConnectionType { fatalError("not implemented") }
+
     // MARK: - isScanningAvailable
 
     let isScanningAvailableSubject: CurrentValueSubject<Bool, Never> = .init(false)
@@ -55,12 +57,12 @@ class BSBaseScanner: BSScanner {
 
     // MARK: - scan
 
-    func startScanning() {
+    public func startScanning() {
         var _continue = true
         startScanning(_continue: &_continue)
     }
 
-    private func startScanning(_continue: inout Bool) {
+    func startScanning(_continue: inout Bool) {
         guard !isScanning else {
             logger.debug("already scanning")
             _continue = false
@@ -77,12 +79,12 @@ class BSBaseScanner: BSScanner {
         _continue = true
     }
 
-    func stopScanning() {
+    public func stopScanning() {
         var _continue = true
         stopScanning(_continue: &_continue)
     }
 
-    private func stopScanning(_continue: inout Bool) {
+    func stopScanning(_continue: inout Bool) {
         guard isScanning else {
             logger.debug("already not scanning")
             _continue = false
