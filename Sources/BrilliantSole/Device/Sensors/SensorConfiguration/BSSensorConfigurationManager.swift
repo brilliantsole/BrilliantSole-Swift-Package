@@ -34,8 +34,8 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
     private(set) var sensorConfiguration: BSSensorConfiguration {
         get { sensorConfigurationSubject.value }
         set {
-            sensorConfigurationSubject.value = newValue
             logger.debug("updated sensorConfiguration to \(newValue)")
+            sensorConfigurationSubject.value = newValue
         }
     }
 

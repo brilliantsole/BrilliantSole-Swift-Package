@@ -23,16 +23,10 @@ class BSBleScanner: BSBaseScanner {
     // MARK: - CBCentralManager
 
     lazy var centralManager: CBCentralManager = .init(delegate: self, queue: .main)
-    var scanForDevicesWhenPoweredOn: Bool = false
 
     // MARK: - scanning
 
     override func startScanning(_continue: inout Bool) {
-        guard centralManager.state == .poweredOn else {
-            logger.debug("centralManager state is not powered on - waiting until it's on")
-            scanForDevicesWhenPoweredOn = true
-            return
-        }
         super.startScanning(_continue: &_continue)
         guard _continue else {
             return

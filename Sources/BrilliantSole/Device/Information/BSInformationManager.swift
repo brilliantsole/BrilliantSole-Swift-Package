@@ -51,8 +51,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     var mtu: UInt16 {
         get { mtuSubject.value }
         set {
-            mtuSubject.value = newValue
             logger.debug("updated mtu to \(newValue)")
+            mtuSubject.value = newValue
         }
     }
 
@@ -75,8 +75,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var id: String {
         get { idSubject.value }
         set {
-            idSubject.value = newValue
             logger.debug("updated id to \(newValue)")
+            idSubject.value = newValue
         }
     }
 
@@ -97,8 +97,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var name: String {
         get { nameSubject.value }
         set {
-            nameSubject.value = newValue
             logger.debug("updated name to \(newValue)")
+            nameSubject.value = newValue
         }
     }
 
@@ -124,8 +124,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var deviceType: BSDeviceType {
         get { deviceTypeSubject.value }
         set {
-            deviceTypeSubject.value = newValue
             logger.debug("updated deviceType to \(newValue.name)")
+            deviceTypeSubject.value = newValue
         }
     }
 
@@ -148,8 +148,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var currentTime: BSTimestamp {
         get { currentTimeSubject.value }
         set {
-            currentTimeSubject.value = newValue
             logger.debug("updated currentTime to \(newValue)")
+            currentTimeSubject.value = newValue
             if currentTime == 0 {
                 updateCurrentTime()
             }

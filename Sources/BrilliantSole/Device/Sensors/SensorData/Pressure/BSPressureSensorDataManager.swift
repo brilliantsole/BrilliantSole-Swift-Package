@@ -56,8 +56,8 @@ class BSPressureSensorDataManager: BSBaseSensorDataManager {
     var pressurePositions: [BSPressureSensorPosition] {
         get { pressurePositionsSubject.value }
         set {
-            pressurePositionsSubject.value = newValue
             logger.debug("updated pressurePositions to \(newValue)")
+            pressurePositionsSubject.value = newValue
 
             pressureSensorRanges = .init(repeating: .init(), count: pressurePositions.count)
             centerOfPressureRange.reset()

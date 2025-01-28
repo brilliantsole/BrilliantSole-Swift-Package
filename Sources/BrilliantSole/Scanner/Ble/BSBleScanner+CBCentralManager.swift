@@ -11,11 +11,5 @@ extension BSBleScanner: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.debug("centralManager state: \(String(describing: central.state))")
         isScanningAvailable = centralManager.state == .poweredOn
-        if isScanningAvailable {
-            if scanForDevicesWhenPoweredOn {
-                startScanning()
-                scanForDevicesWhenPoweredOn = false
-            }
-        }
     }
 }

@@ -27,8 +27,8 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
-            connectionStatusSubject.value = newValue
             logger.debug("updated connectionStatus to \(newValue.name)")
+            connectionStatusSubject.value = newValue
         }
     }
 

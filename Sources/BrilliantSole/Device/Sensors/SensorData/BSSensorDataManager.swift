@@ -53,8 +53,8 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     private(set) var sensorScalars: BSSensorScalars {
         get { sensorScalarsSubject.value }
         set {
-            sensorScalarsSubject.value = newValue
             logger.debug("updated sensorScalars to \(newValue)")
+            sensorScalarsSubject.value = newValue
         }
     }
 

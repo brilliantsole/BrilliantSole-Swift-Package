@@ -19,8 +19,8 @@ class BSBaseScanner: NSObject, BSScanner {
     var isScanningAvailable: Bool {
         get { isScanningAvailableSubject.value }
         set {
+            logger.debug("updated isScanningAvailable \(newValue)")
             isScanningAvailableSubject.value = newValue
-            logger.debug("updated isScanningAvailable \(self.isScanningAvailable)")
             if isScanningAvailable {
                 scanningIsAvailableSubject.send()
             }
@@ -39,8 +39,8 @@ class BSBaseScanner: NSObject, BSScanner {
     var isScanning: Bool {
         get { isScanningSubject.value }
         set {
+            logger.debug("updated isScannng \(newValue)")
             isScanningSubject.value = newValue
-            logger.debug("updated isScannng \(self.isScanning)")
             if isScanning {
                 scanStartSubject.send()
                 startCheckingExpiredDiscoveredDevices()

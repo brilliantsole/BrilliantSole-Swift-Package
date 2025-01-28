@@ -38,8 +38,8 @@ class BSDevice {
     private(set) var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
+            logger.debug("updated connectionStatus \(newValue.name)")
             connectionStatusSubject.value = newValue
-            logger.debug("updated connectionStatus \(self.connectionStatus.name)")
 
             switch connectionStatus {
             case .notConnected:
@@ -63,8 +63,8 @@ class BSDevice {
     private(set) var isConnected: Bool {
         get { isConnectedSubject.value }
         set {
+            logger.debug("updated isConnected \(newValue)")
             isConnectedSubject.value = newValue
-            logger.debug("updated isConnected \(self.isConnected)")
         }
     }
 }

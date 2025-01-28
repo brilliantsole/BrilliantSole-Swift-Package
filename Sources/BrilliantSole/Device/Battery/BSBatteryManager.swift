@@ -36,8 +36,8 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     var isBatteryCharging: Bool {
         get { isBatteryChargingSubject.value }
         set {
-            isBatteryChargingSubject.value = newValue
             logger.debug("updated isBatteryCharging to \(newValue)")
+            isBatteryChargingSubject.value = newValue
         }
     }
 
@@ -58,8 +58,8 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     private(set) var batteryCurrent: Float {
         get { batteryCurrentSubject.value }
         set {
-            batteryCurrentSubject.value = newValue
             logger.debug("updated batteryCurrent to \(newValue)")
+            batteryCurrentSubject.value = newValue
         }
     }
 

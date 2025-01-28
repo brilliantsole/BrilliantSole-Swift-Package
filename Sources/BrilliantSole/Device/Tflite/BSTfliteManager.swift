@@ -90,8 +90,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteName: String {
         get { tfliteNameSubject.value }
         set {
-            tfliteNameSubject.value = newValue
             logger.debug("updated tfliteName to \(newValue)")
+            tfliteNameSubject.value = newValue
         }
     }
 
@@ -121,8 +121,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteTask: BSTfliteTask {
         get { tfliteTaskSubject.value }
         set {
-            tfliteTaskSubject.value = newValue
             logger.debug("updated tfliteTask to \(newValue.name)")
+            tfliteTaskSubject.value = newValue
         }
     }
 
@@ -154,8 +154,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteSensorRate: BSSensorRate {
         get { tfliteSensorRateSubject.value }
         set {
-            tfliteSensorRateSubject.value = newValue
             logger.debug("updated tfliteSensorRate to \(newValue.name)")
+            tfliteSensorRateSubject.value = newValue
         }
     }
 
@@ -187,8 +187,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteSensorTypes: BSTfliteSensorTypes {
         get { tfliteSensorTypesSubject.value }
         set {
-            tfliteSensorTypesSubject.value = newValue
             logger.debug("updated tfliteSensorTypes to \(newValue)")
+            tfliteSensorTypesSubject.value = newValue
         }
     }
 
@@ -220,8 +220,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var isTfliteReady: Bool {
         get { isTfliteReadySubject.value }
         set {
-            isTfliteReadySubject.value = newValue
             logger.debug("updated isTfliteReady to \(newValue)")
+            isTfliteReadySubject.value = newValue
         }
     }
 
@@ -242,8 +242,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteCaptureDelay: BSTfliteCaptureDelay {
         get { tfliteCaptureDelaySubject.value }
         set {
-            tfliteCaptureDelaySubject.value = newValue
             logger.debug("updated tfliteCaptureDelay to \(newValue)")
+            tfliteCaptureDelaySubject.value = newValue
         }
     }
 
@@ -273,8 +273,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteThreshold: BSTfliteThreshold {
         get { tfliteThresholdSubject.value }
         set {
-            tfliteThresholdSubject.value = newValue
             logger.debug("updated tfliteThreshold to \(newValue)")
+            tfliteThresholdSubject.value = newValue
         }
     }
 
@@ -304,8 +304,8 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     var tfliteInferencingEnabled: Bool {
         get { tfliteInferencingEnabledSubject.value }
         set {
-            tfliteInferencingEnabledSubject.value = newValue
             logger.debug("updated tfliteInferencingEnabled to \(newValue)")
+            tfliteInferencingEnabledSubject.value = newValue
         }
     }
 

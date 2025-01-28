@@ -1,4 +1,5 @@
 @testable import BrilliantSole
+import Combine
 import Testing
 
 enum BSTests {
@@ -73,7 +74,17 @@ enum BSTests {
         }
 
         @Test func bleScannerTest() async throws {
-            BSBleScanner.shared.startScanning()
+            var cancellables = Set<AnyCancellable>()
+            if BSBleScanner.shared.isScanningAvailable {
+                BSBleScanner.shared.startScanning()
+            }
+            else {
+                BSBleScanner.shared.isScanningAvailableSubject.sink { isScanningAvailable in
+                    if isScanningAvailable {
+                        BSBleScanner.shared.startScanning()
+                    }
+                }.store(in: &cancellables)
+            }
             try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
             BSBleScanner.shared.stopScanning()
         }
