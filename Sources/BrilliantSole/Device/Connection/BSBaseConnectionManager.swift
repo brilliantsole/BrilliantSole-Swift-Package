@@ -67,8 +67,6 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         }
     }
 
-    var isConnected: Bool { connectionStatus == .connected }
-
     private let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
     var notConnectedPublisher: AnyPublisher<Void, Never> {
         notConnectedSubject.eraseToAnyPublisher()
@@ -124,7 +122,7 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         _continue = true
     }
 
-    // MARK: - messaging
+    // MARK: - messaging (receive
 
     private let rxMessageSubject: PassthroughSubject<(UInt8, Data), Never> = .init()
     var rxMessagePublisher: AnyPublisher<(UInt8, Data), Never> {
@@ -134,11 +132,6 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     private let rxMessagesSubject: PassthroughSubject<Void, Never> = .init()
     var rxMessagesPublisher: AnyPublisher<Void, Never> {
         rxMessagesSubject.eraseToAnyPublisher()
-    }
-
-    private let sendTxDataSubject: PassthroughSubject<Void, Never> = .init()
-    var sendTxDataPublisher: AnyPublisher<Void, Never> {
-        sendTxDataSubject.eraseToAnyPublisher()
     }
 
     func parseRxData(_ data: Data) {
@@ -151,5 +144,16 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     func parseRxMessage(messageType: UInt8, data: Data) {
         logger.debug("parsing rxMessage \(messageType) \(data)")
         rxMessageSubject.send((messageType, data))
+    }
+
+    // MARK: - messaging (send)
+
+    let sendTxDataSubject: PassthroughSubject<Void, Never> = .init()
+    var sendTxDataPublisher: AnyPublisher<Void, Never> {
+        sendTxDataSubject.eraseToAnyPublisher()
+    }
+
+    func sendTxData(_ data: Data) {
+        logger.log("sending \(data.count) bytes...")
     }
 }

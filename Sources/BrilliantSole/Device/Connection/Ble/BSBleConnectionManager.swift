@@ -37,6 +37,8 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         }.store(in: &cancellables)
     }
 
+    // MARK: - connection
+
     override func connect(_continue: inout Bool) {
         super.connect(_continue: &_continue)
         guard _continue else { return }
@@ -47,5 +49,16 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         super.disconnect(_continue: &_continue)
         guard _continue else { return }
         centralManager.cancelPeripheralConnection(peripheral)
+    }
+
+    // MARK: - messaging
+
+    override func sendTxData(_ data: Data) {
+        super.sendTxData(data)
+        guard let characteristic = characteristics[BSBleCharacteristicUUID.tx] else {
+            fatalError("Characteristic not found")
+        }
+        logger.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name)")
+        peripheral.writeValue(data, for: characteristic, type: BSBleCharacteristicUUID.tx.writeType)
     }
 }

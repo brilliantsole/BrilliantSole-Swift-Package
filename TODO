@@ -1,10 +1,6 @@
-bleConnectionManager
-    batteryLevelCallbacks
-    deviceInformationCallbacks
-    rxDataCallbacks
-    sendTxData
 device
     connectionManager
+    sendRequiredMessages
     parse
 devicePair
 client

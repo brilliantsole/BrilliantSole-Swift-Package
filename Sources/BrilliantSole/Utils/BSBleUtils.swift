@@ -123,6 +123,17 @@ enum BSBleCharacteristicUUID: String, BSBleUUID {
         }
     }
 
+    var writeType: CBCharacteristicWriteType {
+        switch self {
+        case .smp:
+            .withResponse
+        case .tx:
+            .withResponse
+        default:
+            .withoutResponse
+        }
+    }
+
     var deviceInformationType: BSDeviceInformationType? {
         switch self {
         case .systemIdString:

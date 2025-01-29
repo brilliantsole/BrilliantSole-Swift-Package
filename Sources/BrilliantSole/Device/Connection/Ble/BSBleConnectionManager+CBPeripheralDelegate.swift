@@ -99,6 +99,9 @@ extension BSBleConnectionManager: CBPeripheralDelegate {
             return
         }
         logger.debug("wrote characteristic \(characteristicEnum.name)")
+        if characteristicEnum == .tx {
+            sendTxDataSubject.send()
+        }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: (any Error)?) {

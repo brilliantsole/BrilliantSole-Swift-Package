@@ -42,9 +42,5 @@ protocol BSConnectionManager {
 }
 
 extension BSConnectionManager {
-    func sendTxData(_ data: Data) {
-        logger.log("sending \(data.count) bytes")
-    }
-
     var isConnected: Bool { connectionStatus == .connected }
 }
