@@ -9,11 +9,12 @@ import UkatonMacros
 
 @EnumName
 public enum BSDeviceInformationType: CaseIterable, Sendable {
-    case manufacturerName
-    case modelNumber
-    case softwareRevision
-    case hardwareRevision
-    case firmwareRevision
+    case manufacturerNameString
+    case modelNumberString
+    case softwareRevisionString
+    case hardwareRevisionString
+    case firmwareRevisionString
     case pnpId
-    case serialNumber
+    case serialNumberString
+    case systemIdString
 }

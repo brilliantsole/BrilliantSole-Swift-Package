@@ -1,5 +1,6 @@
 @testable import BrilliantSole
 import Combine
+import Foundation
 import Testing
 
 enum BSTests {

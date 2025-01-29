@@ -27,12 +27,12 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     var name: String?
     var deviceType: BSDeviceType?
 
-    private let batteryLevelSubject: PassthroughSubject<BSBatteryLevel, Never> = .init()
+    let batteryLevelSubject: PassthroughSubject<BSBatteryLevel, Never> = .init()
     var batteryLevelPublisher: AnyPublisher<BSBatteryLevel, Never> {
         batteryLevelSubject.eraseToAnyPublisher()
     }
 
-    private let deviceInformationSubject: PassthroughSubject<(BSDeviceInformationType, BSDeviceInformationValue), Never> = .init()
+    let deviceInformationSubject: PassthroughSubject<(BSDeviceInformationType, BSDeviceInformationValue), Never> = .init()
     var deviceInformationPublisher: AnyPublisher<(BSDeviceInformationType, BSDeviceInformationValue), Never> {
         deviceInformationSubject.eraseToAnyPublisher()
     }

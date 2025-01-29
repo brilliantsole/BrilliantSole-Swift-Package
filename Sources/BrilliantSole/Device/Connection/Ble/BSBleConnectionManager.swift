@@ -14,24 +14,26 @@ import UkatonMacros
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
 
-    var peripheral: CBPeripheral {
-        didSet {
-            oldValue.delegate = nil
-            peripheral.delegate = self
-        }
-    }
-
+    let peripheral: CBPeripheral
     let centralManager: CBCentralManager
-
     private var cancellables: Set<AnyCancellable> = []
+
+    var services: [BSBleServiceUUID: CBService] = .init()
+    var characteristics: [BSBleCharacteristicUUID: CBCharacteristic] = .init()
 
     init(discoveredDevice: BSDiscoveredDevice, peripheral: CBPeripheral, centralManager: CBCentralManager) {
         self.peripheral = peripheral
         self.centralManager = centralManager
         super.init(discoveredDevice: discoveredDevice)
+        self.peripheral.delegate = self
 
         connectedPublisher.sink { [weak self] _ in
-            // FILL - get services, characteristics, etc
+            self?.peripheral.discoverServices(BSBleServiceUUID.allUuids)
+        }.store(in: &cancellables)
+
+        notConnectedPublisher.sink { [weak self] _ in
+            self?.services.removeAll()
+            self?.characteristics.removeAll()
         }.store(in: &cancellables)
     }
 

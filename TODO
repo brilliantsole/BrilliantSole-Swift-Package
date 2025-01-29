@@ -1,8 +1,8 @@
 bleConnectionManager
-    get services/characteristics
-    read characteristics
-    enable notifications
-    define messaging
+    batteryLevelCallbacks
+    deviceInformationCallbacks
+    rxDataCallbacks
+    sendTxData
 device
     connectionManager
     parse

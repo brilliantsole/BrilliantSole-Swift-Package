@@ -17,7 +17,7 @@ extension BSMessageType {
 }
 
 extension FixedWidthInteger where Self: BSMessageType {
-    static func parse(_ data: Data, at offset: Data.Index) -> Self? { .parse(data, at: offset) }
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? { .parse(data, at: offset, littleEndian: true) }
 }
 
 extension UInt8: BSMessageType {}

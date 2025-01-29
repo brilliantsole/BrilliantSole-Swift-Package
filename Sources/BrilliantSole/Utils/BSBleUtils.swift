@@ -24,6 +24,7 @@ protocol BSBleUUID: Hashable, Sendable, CaseIterable, RawRepresentable where Raw
     var uuid: CBUUID { get }
 
     static var uuids: [Self: CBUUID] { get }
+    static var allUuids: [CBUUID] { get }
 
     var type: BSBleUUIDType { get }
     static func cases(for type: BSBleUUIDType) -> [Self]
@@ -40,6 +41,8 @@ extension BSBleUUID {
     }
 
     var uuid: CBUUID { Self.uuids[self]! }
+
+    static var allUuids: [CBUUID] { allCases.map(\.uuid) }
 
     static func cases(for type: BSBleUUIDType) -> [Self] {
         allCases.compactMap { $0.type == type ? $0 : nil }
@@ -75,6 +78,15 @@ enum BSBleServiceUUID: String, BSBleUUID {
     }
 
     var characteristics: [BSBleCharacteristicUUID] { BSBleCharacteristicUUID.cases(for: type) }
+    var characteristicUUIDs: [CBUUID] { characteristics.map(\.uuid) }
+
+    init?(service: CBService) {
+        guard let value = Self.allCases.first(where: { $0.uuid == service.uuid }) else {
+            logger.error("unknown service \(service.uuid)")
+            return nil
+        }
+        self = value
+    }
 }
 
 @EnumName
@@ -100,14 +112,65 @@ enum BSBleCharacteristicUUID: String, BSBleUUID {
         switch self {
         case .batteryLevel:
             .batteryLevel
-        case .systemIdString, .modelNumberString, .serialNumberString, .firmwareRevisionString, .hardwareRevisionString, .softwareRevisionString, .manufacturerNameString:
+        case let s where s.isDeviceInformation:
             .deviceInformation
         case .smp:
             .smp
         case .tx, .rx:
             .main
+        default:
+            fatalError("uncaught case: \(self)")
+        }
+    }
+
+    var deviceInformationType: BSDeviceInformationType? {
+        switch self {
+        case .systemIdString:
+            .systemIdString
+        case .modelNumberString:
+            .modelNumberString
+        case .serialNumberString:
+            .serialNumberString
+        case .firmwareRevisionString:
+            .firmwareRevisionString
+        case .hardwareRevisionString:
+            .hardwareRevisionString
+        case .softwareRevisionString:
+            .softwareRevisionString
+        case .manufacturerNameString:
+            .manufacturerNameString
+        default:
+            nil
+        }
+    }
+
+    var isDeviceInformation: Bool {
+        deviceInformationType != nil
+    }
+
+    var readOnConnection: Bool {
+        switch self {
+        default:
+            true
+        }
+    }
+
+    var notifyOnConnection: Bool {
+        switch self {
+        case .smp:
+            false
+        default:
+            true
         }
     }
 
     var service: BSBleServiceUUID { BSBleServiceUUID.cases(for: type).first! }
+
+    init?(characteristic: CBCharacteristic) {
+        guard let value = Self.allCases.first(where: { $0.uuid == characteristic.uuid }) else {
+            logger.error("unknown characteristic \(characteristic.uuid)")
+            return nil
+        }
+        self = value
+    }
 }
