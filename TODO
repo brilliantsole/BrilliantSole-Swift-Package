@@ -1,5 +1,11 @@
-bleScanner+bleConnectionManager
-    connect
+bleConnectionManager
+    listen for connection
+    get services/characteristics
+    read characteristics
+    enable notifications
+    define messaging
 device
+    connectionManager
+    parse
 devicePair
 client

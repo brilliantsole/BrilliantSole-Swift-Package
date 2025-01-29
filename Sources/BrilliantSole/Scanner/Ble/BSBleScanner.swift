@@ -57,6 +57,10 @@ class BSBleScanner: BSBaseScanner {
     private var peripherals: [String: CBPeripheral] = .init()
 
     private func onPeripheral(_ peripheral: CBPeripheral) {
+        if peripherals[peripheral.id] == nil {
+            peripherals[peripheral.id] = peripheral
+        }
+
         var discoveredDevice = allDiscoveredDevices[peripheral.id]
         if let discoveredDevice {
             discoveredDevice.update(peripheral: peripheral)
@@ -68,6 +72,10 @@ class BSBleScanner: BSBaseScanner {
     }
 
     private func onDiscoveredPeripheral(_ peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        if peripherals[peripheral.id] == nil {
+            peripherals[peripheral.id] = peripheral
+        }
+
         var discoveredDevice = allDiscoveredDevices[peripheral.id]
         if let discoveredDevice {
             discoveredDevice.update(peripheral: peripheral, advertisementData: advertisementData, rssi: RSSI)
@@ -81,14 +89,36 @@ class BSBleScanner: BSBaseScanner {
     // MARK: - device
 
     private var connectionManagers: [String: BSBleConnectionManager] = .init()
+    func getConnectionManager(for peripheral: CBPeripheral) -> BSBleConnectionManager? {
+        guard let connectionManager = connectionManagers[peripheral.id] else {
+            logger.error("connectionManager not found for peripheral \(peripheral)")
+            return nil
+        }
+        return connectionManager
+    }
+
     override func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         guard let peripheral = peripherals[discoveredDevice.id] else {
             fatalError("no peripheral found for discoveredDevice \(discoveredDevice)")
         }
         let device = super.createDevice(discoveredDevice: discoveredDevice)
-        let connectionManager: BSBleConnectionManager = .init(discoveredDevice: discoveredDevice, peripheral: peripheral)
+        let connectionManager: BSBleConnectionManager = .init(discoveredDevice: discoveredDevice, peripheral: peripheral, centralManager: centralManager)
         connectionManagers[discoveredDevice.id] = connectionManager
         device.connectionManager = connectionManager
+        return device
+    }
+
+    // MARK: - connection
+
+    override func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+        let device = super.connect(to: discoveredDevice)
+        device.connectionManager!.connect()
+        return device
+    }
+
+    override func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
+        let device = super.disconnect(from: discoveredDevice)
+        device?.connectionManager?.disconnect()
         return device
     }
 }

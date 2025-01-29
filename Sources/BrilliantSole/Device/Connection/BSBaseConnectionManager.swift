@@ -18,6 +18,8 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     let discoveredDevice: BSDiscoveredDevice
     init(discoveredDevice: BSDiscoveredDevice) {
         self.discoveredDevice = discoveredDevice
+        self.name = discoveredDevice.name
+        self.deviceType = discoveredDevice.deviceType
     }
 
     // MARK: - device information
@@ -42,22 +44,26 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
-    private(set) var connectionStatus: BSConnectionStatus {
+    var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
+            guard newValue != connectionStatus else {
+                logger.debug("redundant update to connectionStatus \(newValue.name)")
+                return
+            }
             logger.debug("updated connectionStatus to \(newValue.name)")
             connectionStatusSubject.value = newValue
         }
     }
 
-    private(set) var isConnected: Bool = false
+    var isConnected: Bool { connectionStatus == .connected }
 
     func connect() {
         var _continue = true
         connect(_continue: &_continue)
     }
 
-    private func connect(_continue: inout Bool) {
+    func connect(_continue: inout Bool) {
         guard !isConnected else {
             logger.debug("already connected")
             _continue = false
@@ -72,7 +78,7 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         disconnect(_continue: &_continue)
     }
 
-    private func disconnect(_continue: inout Bool) {
+    func disconnect(_continue: inout Bool) {
         guard connectionStatus != .notConnected else {
             logger.debug("already disconnected")
             _continue = false

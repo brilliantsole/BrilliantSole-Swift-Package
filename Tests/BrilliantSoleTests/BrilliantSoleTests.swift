@@ -74,6 +74,7 @@ enum BSTests {
         }
 
         @Test func bleScannerTest() async throws {
+            var isConnecting = false
             var cancellables = Set<AnyCancellable>()
             if BSBleScanner.shared.isScanningAvailable {
                 BSBleScanner.shared.startScanning()
@@ -85,6 +86,20 @@ enum BSTests {
                     }
                 }.store(in: &cancellables)
             }
+            BSBleScanner.shared.discoveredDevicePublisher.sink { discoveredDevice in
+                guard !isConnecting else { return }
+                isConnecting = true
+                BSBleScanner.shared.stopScanning()
+                print("connecting to discoveredDevice \(discoveredDevice)")
+                let device = discoveredDevice.connect()
+                device.connectedPublisher.sink { _ in
+                    print("connected")
+                    device.disconnect()
+                }.store(in: &cancellables)
+                device.notConnectedPublisher.sink { _ in
+                    print("disconnected")
+                }.store(in: &cancellables)
+            }.store(in: &cancellables)
             try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
             BSBleScanner.shared.stopScanning()
         }
