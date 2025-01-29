@@ -36,7 +36,9 @@ public struct BSPressureData {
         var normalizedSum: Float = 0
 
         for index in ranges.indices {
-            let rawValue: UInt16 = .parse(data, at: index * 2)
+            guard let rawValue = UInt16.parse(data, at: index * 2) else {
+                break
+            }
             logger.debug("#\(index) rawValue: \(rawValue)")
 
             let scaledValue = Float(rawValue) * scalar

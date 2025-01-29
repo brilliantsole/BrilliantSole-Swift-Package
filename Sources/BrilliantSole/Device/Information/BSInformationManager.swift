@@ -67,7 +67,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     var maxMtuMessageLength: UInt16 { max(0, mtu - 3) }
 
     private func parseMtu(_ data: Data) {
-        let newMtu: UInt16 = .parse(data)
+        guard let newMtu = UInt16.parse(data) else { return }
         logger.debug("parsed mtu: \(newMtu)")
         mtu = newMtu
     }
@@ -175,7 +175,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     }
 
     private func parseCurrentTime(_ data: Data) {
-        let newCurrentTime: BSTimestamp = .parse(data)
+        guard let newCurrentTime = BSTimestamp.parse(data) else { return }
         logger.debug("parsed currentTime: \(newCurrentTime)")
         currentTime = newCurrentTime
     }

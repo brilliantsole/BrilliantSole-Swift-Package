@@ -29,7 +29,7 @@ class BSBarometerSensorDataManager: BSBaseSensorDataManager {
     let barometerSubject = PassthroughSubject<(BSBarometer, BSTimestamp), Never>()
 
     func parseBarometer(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
-        let barometer: BSBarometer = .parse(data, scalar: scalar)
+        guard let barometer: BSBarometer = .parse(data, scalar: scalar) else { return }
         logger.debug("barometer: \(barometer) \(timestamp)ms")
         barometerSubject.send((barometer, timestamp))
     }

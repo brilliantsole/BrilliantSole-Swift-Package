@@ -44,6 +44,10 @@ class BSDevice {
     private(set) var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
+            guard newValue != connectionStatus else {
+                logger.debug("redundant update to connectionStatus \(newValue.name)")
+                return
+            }
             logger.debug("updated connectionStatus \(newValue.name)")
             connectionStatusSubject.value = newValue
 

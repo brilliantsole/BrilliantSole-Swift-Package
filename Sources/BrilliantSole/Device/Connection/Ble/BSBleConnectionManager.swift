@@ -5,6 +5,7 @@
 //  Created by Zack Qattan on 1/25/25.
 //
 
+import Combine
 import CoreBluetooth
 import OSLog
 import UkatonMacros
@@ -22,12 +23,16 @@ class BSBleConnectionManager: BSBaseConnectionManager {
 
     let centralManager: CBCentralManager
 
+    private var cancellables: Set<AnyCancellable> = []
+
     init(discoveredDevice: BSDiscoveredDevice, peripheral: CBPeripheral, centralManager: CBCentralManager) {
         self.peripheral = peripheral
         self.centralManager = centralManager
         super.init(discoveredDevice: discoveredDevice)
 
-        // FILL - listen for connection
+        connectedPublisher.sink { [weak self] _ in
+            // FILL - get services, characteristics, etc
+        }.store(in: &cancellables)
     }
 
     override func connect(_continue: inout Bool) {

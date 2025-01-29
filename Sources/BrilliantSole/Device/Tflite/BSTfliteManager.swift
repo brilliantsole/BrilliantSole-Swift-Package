@@ -251,7 +251,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     private func parseIsTfliteReady(_ data: Data) {
-        let newIsTfliteReady: Bool = .parse(data)
+        guard let newIsTfliteReady = Bool.parse(data) else { return }
         logger.debug("parsed isTfliteReady \(newIsTfliteReady)")
         isTfliteReady = newIsTfliteReady
     }
@@ -277,7 +277,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     private func parseTfliteCaptureDelay(_ data: Data) {
-        let newTfliteCaptureDelay: BSTfliteCaptureDelay = .parse(data)
+        guard let newTfliteCaptureDelay = BSTfliteCaptureDelay.parse(data) else { return }
         logger.debug("parsed tfliteCaptureDelay \(newTfliteCaptureDelay)")
         tfliteCaptureDelay = newTfliteCaptureDelay
     }
@@ -312,7 +312,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     private func parseTfliteThreshold(_ data: Data) {
-        let newTfliteThreshold: BSTfliteThreshold = .parse(data)
+        guard let newTfliteThreshold = BSTfliteThreshold.parse(data) else { return }
         logger.debug("parsed tfliteThreshold: \(newTfliteThreshold)")
         tfliteThreshold = newTfliteThreshold
     }
@@ -347,7 +347,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     private func parseTfliteInferencingEnabled(_ data: Data) {
-        let newTfliteInferencingEnabled: Bool = data.parse()
+        guard let newTfliteInferencingEnabled = Bool.parse(data) else { return }
         logger.debug("parsed tfliteInferencingEnabled: \(newTfliteInferencingEnabled)")
         tfliteInferencingEnabled = newTfliteInferencingEnabled
     }
@@ -388,7 +388,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
         var offset: Data.Index = .zero
 
-        let timestamp = parseTimestamp(data, at: &offset)
+        guard let timestamp = parseTimestamp(data, at: &offset) else { return }
         logger.debug("timestamp: \(timestamp)ms")
 
         let inferenceData = data[offset...]
@@ -416,7 +416,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         var maxClassName: String?
         for offset in stride(from: 0, to: inferenceData.count, by: inferenceSize) {
             let index = inference.count
-            let value: Float = .parse(inferenceData, at: offset)
+            guard let value = Float.parse(inferenceData, at: offset) else { return }
             logger.debug("class #\(index) value: \(value)")
             inference.append(value)
 

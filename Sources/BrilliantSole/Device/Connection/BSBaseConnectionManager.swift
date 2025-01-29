@@ -51,12 +51,43 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
                 logger.debug("redundant update to connectionStatus \(newValue.name)")
                 return
             }
-            logger.debug("updated connectionStatus to \(newValue.name)")
+            logger.debug("updated connectionStatus \(newValue.name)")
             connectionStatusSubject.value = newValue
+
+            switch connectionStatus {
+            case .notConnected:
+                notConnectedSubject.send()
+            case .connecting:
+                connectingSubject.send()
+            case .connected:
+                connectedSubject.send()
+            case .disconnecting:
+                disconnectingSubject.send()
+            }
         }
     }
 
     var isConnected: Bool { connectionStatus == .connected }
+
+    private let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
+    var notConnectedPublisher: AnyPublisher<Void, Never> {
+        notConnectedSubject.eraseToAnyPublisher()
+    }
+
+    private let connectedSubject: PassthroughSubject<Void, Never> = .init()
+    var connectedPublisher: AnyPublisher<Void, Never> {
+        connectedSubject.eraseToAnyPublisher()
+    }
+
+    private let connectingSubject: PassthroughSubject<Void, Never> = .init()
+    var connectingPublisher: AnyPublisher<Void, Never> {
+        connectingSubject.eraseToAnyPublisher()
+    }
+
+    private let disconnectingSubject: PassthroughSubject<Void, Never> = .init()
+    var disconnectingPublisher: AnyPublisher<Void, Never> {
+        disconnectingSubject.eraseToAnyPublisher()
+    }
 
     func connect() {
         var _continue = true

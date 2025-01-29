@@ -80,7 +80,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     private func parseMaxFileLength(_ data: Data) {
-        let newMaxFileLength: UInt16 = .parse(data)
+        guard let newMaxFileLength = UInt16.parse(data) else { return }
         logger.debug("parsed maxFileLength \(newMaxFileLength)")
         maxFileLength = newMaxFileLength
     }
@@ -142,7 +142,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     private func parseFileLength(_ data: Data) {
-        let newFileLength: UInt16 = .parse(data)
+        guard let newFileLength: UInt16 = .parse(data) else { return }
         logger.debug("parsed fileLength \(newFileLength)")
         fileLength = newFileLength
     }
@@ -176,7 +176,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     private func parseChecksum(_ data: Data) {
-        let newFileChecksum: BSFileChecksum = .parse(data)
+        guard let newFileChecksum = BSFileChecksum.parse(data) else { return }
         logger.debug("parsed fileChecksum \(newFileChecksum)")
         fileChecksum = newFileChecksum
     }
@@ -283,7 +283,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             return
         }
 
-        let currentBytesTransferred: UInt16 = .parse(data)
+        guard let currentBytesTransferred = UInt16.parse(data) else { return }
         logger.debug("currentBytesTransferred: \(currentBytesTransferred)")
 
         guard currentBytesTransferred == bytesTransferred else {

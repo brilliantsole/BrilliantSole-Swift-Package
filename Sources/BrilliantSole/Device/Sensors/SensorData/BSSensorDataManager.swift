@@ -73,7 +73,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
             guard let sensorType = BSSensorType.parse(data, at: index) else {
                 return
             }
-            let sensorScalar: Float = .parse(data, at: index + 1)
+            guard let sensorScalar: Float = .parse(data, at: index + 1) else { return }
             logger.debug("\(sensorType.name) scalar: \(sensorScalar)")
             newSensorScalars[sensorType] = sensorScalar
         }
@@ -90,7 +90,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
 
     private func parseSensorData(_ data: Data) {
         var offset: Data.Index = .zero
-        let timestamp = parseTimestamp(data, at: &offset)
+        guard let timestamp = parseTimestamp(data, at: &offset) else { return }
         logger.debug("timestamp: \(timestamp)ms")
         parseMessages(data, messageCallback: { (sensorType: BSSensorType, data: Data) in
             self.parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)

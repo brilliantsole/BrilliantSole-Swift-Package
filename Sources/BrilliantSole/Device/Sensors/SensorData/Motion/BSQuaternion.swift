@@ -44,11 +44,13 @@ public extension BSQuaternion {
 }
 
 extension BSQuaternion {
-    static func parse(_ data: Data, scalar: Float) -> Self {
-        let rawX: Int16 = .parse(data, at: 0)
-        let rawY: Int16 = .parse(data, at: 2)
-        let rawZ: Int16 = .parse(data, at: 4)
-        let rawW: Int16 = .parse(data, at: 6)
+    static func parse(_ data: Data, scalar: Float) -> Self? {
+        let rawX = Int16.parse(data, at: 0)
+        let rawY = Int16.parse(data, at: 2)
+        let rawZ = Int16.parse(data, at: 4)
+        let rawW = Int16.parse(data, at: 6)
+
+        guard let rawX, let rawY, let rawZ, let rawW else { return nil }
 
         let x = Double(rawX)
         let y = Double(rawY)

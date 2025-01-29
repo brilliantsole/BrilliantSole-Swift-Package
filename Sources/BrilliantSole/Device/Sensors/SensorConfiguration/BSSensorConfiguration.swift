@@ -33,7 +33,7 @@ extension BSSensorConfiguration {
                 continue
             }
 
-            guard let sensorRate = BSSensorRate.parse(data) else {
+            guard let sensorRate = BSSensorRate.parse(data, at: index + 1) else {
                 continue
             }
 

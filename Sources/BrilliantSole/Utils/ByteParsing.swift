@@ -1,36 +1,32 @@
-//
-//  ByteParsing.swift
-//  BrilliantSole
-//
-//  Created by Zack Qattan on 1/15/25.
-//
-
 import Foundation
+
+private let logger = getLogger(category: "ByteParsing")
 
 // MARK: - Data to Object
 
 extension Data {
-    func parse<T>(at offset: Data.Index = .zero) -> T {
+    func parse<T>(at offset: Data.Index = .zero) -> T? {
         let size = MemoryLayout<T>.size
-        let value = subdata(in: Data.Index(offset) ..< self.index(Data.Index(offset), offsetBy: size))
-            .withUnsafeBytes { $0.load(as: T.self) }
-        return value
+        guard offset + size <= count else {
+            logger.error("Insufficient bytes: required \(size), available \(count - offset)")
+            return nil
+        }
+        return subdata(in: offset ..< offset + size).withUnsafeBytes { $0.load(as: T.self) }
     }
 }
 
 // MARK: - Data to Number
 
 extension FixedWidthInteger {
-    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
-        let value: Self = data.parse(at: offset)
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self? {
+        guard let value: Self = data.parse(at: offset) else { return nil }
         return littleEndian ? value.littleEndian : value.bigEndian
     }
 }
 
 extension Float32 {
-    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
-        var value: Self = data.parse(at: offset)
-
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self? {
+        guard var value: Self = data.parse(at: offset) else { return nil }
         if littleEndian != (UInt32(littleEndian: 1) == 1) {
             value = .init(bitPattern: value.bitPattern.byteSwapped)
         }
@@ -39,9 +35,8 @@ extension Float32 {
 }
 
 extension Float64 {
-    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self {
-        var value: Self = data.parse(at: offset)
-
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self? {
+        guard var value: Self = data.parse(at: offset) else { return nil }
         if littleEndian != (UInt64(littleEndian: 1) == 1) {
             value = .init(bitPattern: value.bitPattern.byteSwapped)
         }
@@ -54,7 +49,6 @@ extension Float64 {
 extension Numeric {
     var data: Data {
         var source = self
-        // return Data(bytes: &source, count: MemoryLayout<Self>.size)
         return withUnsafeBytes(of: &source) { Data($0) }
     }
 }
@@ -62,7 +56,6 @@ extension Numeric {
 extension FixedWidthInteger {
     func getData(littleEndian: Bool = true) -> Data {
         var source = littleEndian ? self.littleEndian : self.bigEndian
-        // return Data(bytes: &source, count: MemoryLayout<Self>.size)
         return withUnsafeBytes(of: &source) { Data($0) }
     }
 }
@@ -86,15 +79,12 @@ extension BinaryFloatingPoint {
 extension Data {
     func parseString(offset: Data.Index = .zero, until finalOffset: Data.Index) -> String {
         guard offset < finalOffset, finalOffset <= count else {
+            logger.error("Invalid string range: offset \(offset), finalOffset \(finalOffset), data count \(count)")
             return ""
         }
 
-        let nameDataRange = Data.Index(offset) ..< Data.Index(finalOffset)
-        let nameData = subdata(in: nameDataRange)
-        guard let newName = String(data: nameData, encoding: .utf8) else {
-            return ""
-        }
-        return newName
+        let nameData = subdata(in: offset ..< finalOffset)
+        return String(data: nameData, encoding: .utf8) ?? ""
     }
 }
 
@@ -108,7 +98,7 @@ extension String {
 
 extension String {
     var data: Data {
-        return self.data(using: .utf8)!
+        return self.data(using: .utf8) ?? Data()
     }
 }
 
@@ -123,8 +113,12 @@ extension Bool {
         return .init([self.number])
     }
 
-    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self {
-        data[offset] == 1
+    static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
+        guard offset < data.count else {
+            logger.error("Invalid offset \(offset) for data size \(data.count)")
+            return nil
+        }
+        return data[offset] == 1
     }
 }
 

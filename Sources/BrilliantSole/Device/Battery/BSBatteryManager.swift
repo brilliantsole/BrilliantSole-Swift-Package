@@ -51,7 +51,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     }
 
     private func parseIsBatteryCharging(_ data: Data) {
-        let newIsBatteryCharging: Bool = data[0] == 1
+        guard let newIsBatteryCharging = Bool.parse(data) else { return }
         logger.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
         isBatteryCharging = newIsBatteryCharging
     }
@@ -77,7 +77,7 @@ class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     }
 
     private func parseBatteryCurrent(_ data: Data) {
-        let newBatteryCurrent: Float = .parse(data)
+        guard let newBatteryCurrent = Float.parse(data) else { return }
         logger.debug("parsed batteryCurrent: \(newBatteryCurrent)")
         batteryCurrent = newBatteryCurrent
     }

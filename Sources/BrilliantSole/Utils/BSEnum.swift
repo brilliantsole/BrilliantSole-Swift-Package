@@ -29,6 +29,10 @@ extension BSEnum {
     }
 
     static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
+        guard offset < data.count else {
+            logger.error("invalid offset \(offset)")
+            return nil
+        }
         let rawValue = data[offset]
         guard let value = Self(rawValue: rawValue) else {
             logger.error("invalid \(self) rawValue \(rawValue)")

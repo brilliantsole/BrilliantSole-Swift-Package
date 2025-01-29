@@ -45,10 +45,14 @@ public extension BSVector3D {
 }
 
 extension BSVector3D {
-    static func parse(_ data: Data, scalar: Float) -> Self {
-        let rawX: Int16 = .parse(data, at: 0)
-        let rawY: Int16 = .parse(data, at: 2)
-        let rawZ: Int16 = .parse(data, at: 4)
+    static func parse(_ data: Data, scalar: Float) -> Self? {
+        let rawX = Int16.parse(data, at: 0)
+        let rawY = Int16.parse(data, at: 2)
+        let rawZ = Int16.parse(data, at: 4)
+
+        guard let rawX, let rawY, let rawZ else {
+            return nil
+        }
 
         let x = Double(rawX)
         let y = Double(rawY)

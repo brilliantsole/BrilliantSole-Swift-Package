@@ -7,6 +7,8 @@
 
 import Foundation
 
+private let logger = getLogger(category: "OptionSetUtils")
+
 extension Array where Element: RawRepresentable, Element.RawValue == UInt8 {
     var rawValue: UInt8 {
         reduce(into: 0) { result, flag in
@@ -19,6 +21,10 @@ extension Array where Element: RawRepresentable, Element.RawValue == UInt8 {
 
 extension OptionSet where Self: CaseIterable, Self.RawValue == UInt8 {
     static func parse(_ data: Data) -> [Self] {
+        guard !data.isEmpty else {
+            logger.error("invalid data \(data)")
+            return []
+        }
         let rawValue = data[0]
         return allCases
             .compactMap { flag in

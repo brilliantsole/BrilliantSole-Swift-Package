@@ -32,8 +32,10 @@ extension BSDiscoveredDevice {
         var deviceType: BSDeviceType?
         if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data, !manufacturerData.isEmpty {
             logger.debug("manufacturerData \(manufacturerData)")
-            logger.debug("deviceType byte: \(manufacturerData.last!)")
-            deviceType = .parse(manufacturerData, at: manufacturerData.endIndex - 1)
+            if manufacturerData.count >= 5 {
+                logger.debug("deviceType byte: \(manufacturerData[4])")
+                deviceType = .parse(manufacturerData, at: 4)
+            }
         } else {
             logger.debug("no serviceData found in advertisementData")
         }

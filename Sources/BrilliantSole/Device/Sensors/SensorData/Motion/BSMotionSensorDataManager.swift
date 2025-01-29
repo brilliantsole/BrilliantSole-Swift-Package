@@ -96,7 +96,7 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     func parseVector(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
-        let vector: BSVector3D = .parse(data, scalar: scalar)
+        guard let vector = BSVector3D.parse(data, scalar: scalar) else { return }
         logger.debug("parsed \(sensorType.name) vector: \(vector) (\(timestamp)ms")
         guard let vectorSubject = getVectorSubject(for: sensorType) else {
             fatalError("no vectorSubject defined for sensorType \(sensorType.name)")
@@ -129,7 +129,7 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     func parseQuaternion(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
-        let quaternion: BSQuaternion = .parse(data, scalar: scalar)
+        guard let quaternion = BSQuaternion.parse(data, scalar: scalar) else { return }
         logger.debug("parsed \(sensorType.name) quaternion: \(String(describing: quaternion)) (\(timestamp)ms")
         guard let quaternionSubject = getQuaternionSubject(for: sensorType) else {
             fatalError("no quaternionSubject defined for sensorType \(sensorType.name)")
@@ -145,7 +145,7 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     func parseOrientation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
-        let orientation: BSRotation3D = .parse(data, scalar: scalar)
+        guard let orientation = BSRotation3D.parse(data, scalar: scalar) else { return }
         logger.debug("parsed orientation: \(orientation) (\(timestamp)ms")
         orientationSubject.send((orientation, timestamp))
     }
@@ -183,7 +183,7 @@ class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     func parseStepCount(data: Data, timestamp: BSTimestamp) {
-        let stepCount: UInt32 = .parse(data, littleEndian: false)
+        guard let stepCount = UInt32.parse(data, littleEndian: false) else { return }
         logger.debug("stepCount: \(stepCount) (\(timestamp)ms)")
         stepCountSubject.send((stepCount, timestamp))
     }

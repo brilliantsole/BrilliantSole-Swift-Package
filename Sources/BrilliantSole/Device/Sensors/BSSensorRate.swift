@@ -22,8 +22,8 @@ public enum BSSensorRate: UInt16, CaseIterable, Sendable {
 }
 
 extension BSSensorRate {
-    static func parse(_ data: Data, littleEndian: Bool = true) -> Self? {
-        let rawValue: Self.RawValue = .parse(data, littleEndian: littleEndian)
+    static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self? {
+        guard let rawValue = RawValue.parse(data, at: offset, littleEndian: littleEndian) else { return nil }
         guard let value = Self(rawValue: rawValue) else {
             logger.error("invalid \(self) rawValue \(rawValue)")
             return nil

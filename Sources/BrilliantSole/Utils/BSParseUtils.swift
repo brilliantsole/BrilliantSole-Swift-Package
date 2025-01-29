@@ -24,7 +24,10 @@ func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @e
 
         let messageDataLength: UInt16
         if parseMessageLengthAs2Bytes {
-            messageDataLength = .parse(data, at: offset)
+            guard let paredMessageDataLength = UInt16.parse(data, at: offset) else {
+                break
+            }
+            messageDataLength = paredMessageDataLength
             offset += 2
         } else {
             messageDataLength = UInt16(data[offset])
