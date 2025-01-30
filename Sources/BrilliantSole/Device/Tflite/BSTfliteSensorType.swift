@@ -67,7 +67,7 @@ public enum BSTfliteSensorType: CaseIterable {
     }
 }
 
-typealias BSTfliteSensorTypes = Set<BSTfliteSensorType>
+public typealias BSTfliteSensorTypes = Set<BSTfliteSensorType>
 
 extension Set where Element == BSTfliteSensorType {
     static func parse(_ data: Data) -> Set<Element>? {

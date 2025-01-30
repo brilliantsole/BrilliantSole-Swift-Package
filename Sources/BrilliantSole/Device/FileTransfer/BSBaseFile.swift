@@ -10,15 +10,15 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBaseFile: BSFile {
-    class var fileType: BSFileType {
+public class BSBaseFile: BSFile {
+    public class var fileType: BSFileType {
         fatalError("Subclasses must implement `fileType`")
     }
 
-    let fileName: String
-    var fileData: Data?
+    public let fileName: String
+    public var fileData: Data?
 
-    init(fileName: String) {
+    public init(fileName: String) {
         self.fileName = fileName
     }
 }

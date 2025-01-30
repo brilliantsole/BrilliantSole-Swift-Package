@@ -9,6 +9,8 @@ import Combine
 import OSLog
 import UkatonMacros
 
+public typealias BSFileLength = UInt16
+
 @StaticLogger
 class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
@@ -61,12 +63,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - maxFileLength
 
-    private let maxFileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
-    var maxFileLengthPublisher: AnyPublisher<UInt16, Never> {
+    private let maxFileLengthSubject: CurrentValueSubject<BSFileLength, Never> = .init(0)
+    var maxFileLengthPublisher: AnyPublisher<BSFileLength, Never> {
         maxFileLengthSubject.eraseToAnyPublisher()
     }
 
-    private(set) var maxFileLength: UInt16 {
+    private(set) var maxFileLength: BSFileLength {
         get { maxFileLengthSubject.value }
         set {
             maxFileLengthSubject.value = newValue
@@ -80,7 +82,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     private func parseMaxFileLength(_ data: Data) {
-        guard let newMaxFileLength = UInt16.parse(data) else { return }
+        guard let newMaxFileLength = BSFileLength.parse(data) else { return }
         logger.debug("parsed maxFileLength \(newMaxFileLength)")
         maxFileLength = newMaxFileLength
     }
@@ -123,12 +125,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileLength
 
-    private let fileLengthSubject: CurrentValueSubject<UInt16, Never> = .init(0)
-    var fileLengthPublisher: AnyPublisher<UInt16, Never> {
+    private let fileLengthSubject: CurrentValueSubject<BSFileLength, Never> = .init(0)
+    var fileLengthPublisher: AnyPublisher<BSFileLength, Never> {
         fileLengthSubject.eraseToAnyPublisher()
     }
 
-    private(set) var fileLength: UInt16 {
+    private(set) var fileLength: BSFileLength {
         get { fileLengthSubject.value }
         set {
             fileLengthSubject.value = newValue
@@ -142,12 +144,12 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     }
 
     private func parseFileLength(_ data: Data) {
-        guard let newFileLength: UInt16 = .parse(data) else { return }
+        guard let newFileLength: BSFileLength = .parse(data) else { return }
         logger.debug("parsed fileLength \(newFileLength)")
         fileLength = newFileLength
     }
 
-    func setFileLength(_ newFileLength: UInt16, sendImmediately: Bool = true) {
+    func setFileLength(_ newFileLength: BSFileLength, sendImmediately: Bool = true) {
         guard newFileLength != fileLength else {
             logger.debug("redundant fileLength assignment \(newFileLength)")
             return

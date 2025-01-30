@@ -8,7 +8,7 @@
 import Foundation
 import zlib
 
-typealias BSFileChecksum = UInt32
+public typealias BSFileChecksum = UInt32
 
 extension Data {
     func crc32() -> BSFileChecksum {

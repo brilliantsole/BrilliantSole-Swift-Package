@@ -9,6 +9,9 @@ import Combine
 import OSLog
 import UkatonMacros
 
+public typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
+public typealias BSClassification = (String, Float, BSTimestamp)
+
 @StaticLogger
 class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
@@ -365,10 +368,11 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.setTfliteInferencingEnabled, data: newTfliteInferencingEnabled.data, sendImmediately: sendImmediately)
     }
 
-    // MARK: - tfliteInference
+    func toggleTfliteInferencingEnabled(sendImmediately: Bool = true) {
+        setTfliteInferencingEnabled(!tfliteInferencingEnabled, sendImmediately: sendImmediately)
+    }
 
-    typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
-    typealias BSClassification = (String, Float, BSTimestamp)
+    // MARK: - tfliteInference
 
     private let tfliteInferenceSubject: PassthroughSubject<BSInference, Never> = .init()
     var tfliteInferencePublisher: AnyPublisher<BSInference, Never> {

@@ -159,4 +159,8 @@ public class BSDevice {
     // MARK: - rxMessage
 
     var receivedTxRxMessages: Set<BSTxMessageType> = .init()
+
+    // MARK: - tfliteManager
+
+    let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
 }

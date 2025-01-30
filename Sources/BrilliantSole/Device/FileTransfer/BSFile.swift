@@ -10,7 +10,7 @@ import UkatonMacros
 
 private let logger = getLogger(category: "BSFile")
 
-protocol BSFile {
+public protocol BSFile {
     static var fileType: BSFileType { get }
     var fileType: BSFileType { get }
     var fileName: String { get }
@@ -18,7 +18,7 @@ protocol BSFile {
     mutating func getFileData(bundle: Bundle) -> Data?
 }
 
-extension BSFile {
+public extension BSFile {
     mutating func getFileData(bundle: Bundle = .main) -> Data? {
         if fileData != nil {
             return fileData

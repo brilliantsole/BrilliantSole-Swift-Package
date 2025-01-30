@@ -1,7 +1,6 @@
-device
-    device+manager
-    device+txMessage
-    device+rxMessage
+device+vibration
+device+txMessage
+device+rxMessage
 devicePair
 tests
     sensorData

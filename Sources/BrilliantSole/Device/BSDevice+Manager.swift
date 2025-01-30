@@ -19,6 +19,7 @@ extension BSDevice {
 
     func setupManagers() {
         setupFileTransfer()
+        setupTfliteManager()
         for manager in managers {
             manager.setSendTxMessages { txMessages, sendImmediately in
                 self.sendTxMessages(txMessages, sendImmediately: sendImmediately)
