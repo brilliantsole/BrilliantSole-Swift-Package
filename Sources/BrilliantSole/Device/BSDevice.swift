@@ -147,6 +147,8 @@ public class BSDevice {
     let tfliteManager: BSTfliteManager = .init()
     let smpManager: BSSmpManager = .init()
 
+    var managerCancellables: Set<AnyCancellable> = []
+
     // MARK: - txMessage
 
     var pendingTxMessages: [BSTxMessage] = .init()

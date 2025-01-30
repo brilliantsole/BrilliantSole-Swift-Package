@@ -18,7 +18,7 @@ extension BSDevice {
     }
 
     func setupManagers() {
-        // FILL
+        setupFileTransfer()
         for manager in managers {
             manager.setSendTxMessages { txMessages, sendImmediately in
                 self.sendTxMessages(txMessages, sendImmediately: sendImmediately)

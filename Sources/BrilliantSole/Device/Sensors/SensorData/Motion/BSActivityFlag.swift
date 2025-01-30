@@ -24,3 +24,5 @@ public struct BSActivityFlag: OptionSet, Sendable, CaseIterable {
     public static let vehicle = BSActivityFlag(rawValue: 1 << 4)
     public static let tilting = BSActivityFlag(rawValue: 1 << 5)
 }
+
+public typealias BSActivityFlags = [BSActivityFlag]

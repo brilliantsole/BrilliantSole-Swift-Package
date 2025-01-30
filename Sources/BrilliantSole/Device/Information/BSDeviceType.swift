@@ -12,4 +12,24 @@ import UkatonMacros
 public enum BSDeviceType: UInt8, BSEnum {
     case leftInsole
     case rightInsole
+
+    var isInsole: Bool {
+        switch self {
+        case .leftInsole, .rightInsole:
+            true
+        default:
+            false
+        }
+    }
+
+    var insoleSide: BSInsoleSide? {
+        switch self {
+        case .leftInsole:
+            .left
+        case .rightInsole:
+            .right
+        default:
+            nil
+        }
+    }
 }

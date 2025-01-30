@@ -82,9 +82,9 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
 
     var sensorTypes: [BSSensorType] { sensorConfiguration.sensorTypes }
     func containsSensorType(_ sensorType: BSSensorType) -> Bool { sensorTypes.contains(sensorType) }
-    func isSensorRateNonzero(_ sensorType: BSSensorType) -> Bool { containsSensorType(sensorType) && sensorConfiguration[sensorType] != ._0ms }
+    func isSensorRateNonzero(sensorType: BSSensorType) -> Bool { containsSensorType(sensorType) && sensorConfiguration[sensorType] != ._0ms }
     func getSensorRate(_ sensorType: BSSensorType) -> BSSensorRate? { sensorConfiguration[sensorType] }
-    func setSensorRate(_ sensorType: BSSensorType, _ sensorRate: BSSensorRate, sendImmediately: Bool = true) {
+    func setSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool = true) {
         guard containsSensorType(sensorType) else {
             logger.debug("sensorConfiguration does not contain \(sensorType.name)")
             return
@@ -97,4 +97,10 @@ class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageTy
         newSensorConfiguration[sensorType] = sensorRate
         setSensorConfiguration(newSensorConfiguration, sendImmediately: sendImmediately)
     }
+
+    func toggleSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool = true) {
+        setSensorRate(sensorType: sensorType, sensorRate: isSensorRateNonzero(sensorType: sensorType) ? ._0ms : sensorRate, sendImmediately: sendImmediately)
+    }
+
+    func clearSensorRate(sensorType: BSSensorType, sendImmediately: Bool = true) { setSensorRate(sensorType: sensorType, sensorRate: ._0ms, sendImmediately: sendImmediately) }
 }

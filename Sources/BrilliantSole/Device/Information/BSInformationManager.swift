@@ -9,7 +9,8 @@ import Combine
 import OSLog
 import UkatonMacros
 
-private let defaultMtu: UInt16 = 23
+public typealias BSMtu = UInt16
+private let defaultMtu: BSMtu = 23
 
 @StaticLogger
 class BSInformationManager: BSBaseManager<BSInformationMessageType> {
@@ -49,8 +50,8 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     // MARK: - mtu
 
-    private let mtuSubject = CurrentValueSubject<UInt16, Never>(defaultMtu)
-    var mtuPublisher: AnyPublisher<UInt16, Never> { mtuSubject.eraseToAnyPublisher() }
+    private let mtuSubject = CurrentValueSubject<BSMtu, Never>(defaultMtu)
+    var mtuPublisher: AnyPublisher<BSMtu, Never> { mtuSubject.eraseToAnyPublisher() }
     private(set) var mtu: UInt16 {
         get { mtuSubject.value }
         set {

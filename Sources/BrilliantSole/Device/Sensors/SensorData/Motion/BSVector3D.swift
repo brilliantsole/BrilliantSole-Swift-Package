@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import Spatial
 
-typealias BSVector3D = Vector3D
+public typealias BSVector3D = Vector3D
 
 private let logger = getLogger(category: "BSVector3D")
 

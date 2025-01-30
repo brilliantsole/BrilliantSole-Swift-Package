@@ -10,7 +10,7 @@ import simd
 
 private let logger = getLogger(category: "BSQuaternion")
 
-typealias BSQuaternion = simd_quatd
+public typealias BSQuaternion = simd_quatd
 private let quaternionNumberFormatter: NumberFormatter = {
     let nf = NumberFormatter()
     nf.numberStyle = .decimal

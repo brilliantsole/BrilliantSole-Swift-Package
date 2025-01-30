@@ -9,7 +9,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSBarometer")
 
-typealias BSBarometer = Float
+public typealias BSBarometer = Float
 
 extension BSBarometer {
     static func parse(_ data: Data, scalar: Float) -> Self? {

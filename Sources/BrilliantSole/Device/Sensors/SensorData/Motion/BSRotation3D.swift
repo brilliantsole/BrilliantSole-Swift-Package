@@ -10,7 +10,7 @@ import Spatial
 
 private let logger = getLogger(category: "BSRotation3D")
 
-typealias BSRotation3D = Rotation3D
+public typealias BSRotation3D = Rotation3D
 
 private let rotation3DNumberFormatter: NumberFormatter = {
     let nf = NumberFormatter()

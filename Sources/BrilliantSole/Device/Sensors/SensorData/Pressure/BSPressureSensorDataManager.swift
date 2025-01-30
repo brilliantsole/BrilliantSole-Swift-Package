@@ -34,7 +34,10 @@ class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - pressureData
 
-    let pressureDataSubject = PassthroughSubject<(BSPressureData, BSTimestamp), Never>()
+    private let pressureDataSubject = PassthroughSubject<(BSPressureData, BSTimestamp), Never>()
+    var pressureDataPublisher: AnyPublisher<(BSPressureData, BSTimestamp), Never> {
+        pressureDataSubject.eraseToAnyPublisher()
+    }
 
     func parsePressureData(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let pressureData = BSPressureData.parse(data, scalar: scalar, positions: pressurePositions, ranges: &pressureSensorRanges, centerOfPressureRange: &centerOfPressureRange) else {
@@ -52,7 +55,11 @@ class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - pressurePositions
 
-    let pressurePositionsSubject = CurrentValueSubject<[BSPressureSensorPosition], Never>([])
+    private let pressurePositionsSubject = CurrentValueSubject<[BSPressureSensorPosition], Never>([])
+    var pressurePositionsPublisher: AnyPublisher<[BSPressureSensorPosition], Never> {
+        pressurePositionsSubject.eraseToAnyPublisher()
+    }
+
     var pressurePositions: [BSPressureSensorPosition] {
         get { pressurePositionsSubject.value }
         set {

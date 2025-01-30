@@ -10,7 +10,7 @@ import OSLog
 
 private let logger = getLogger(category: "BSSensorConfiguration")
 
-typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
+public typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 
 extension BSSensorConfiguration {
     // MARK: - SensorTypes

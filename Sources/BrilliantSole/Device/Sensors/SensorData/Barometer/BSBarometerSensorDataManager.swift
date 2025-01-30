@@ -26,9 +26,12 @@ class BSBarometerSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - barometer
 
-    let barometerSubject = PassthroughSubject<(BSBarometer, BSTimestamp), Never>()
+    private let barometerSubject = PassthroughSubject<(BSBarometer, BSTimestamp), Never>()
+    var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
+        barometerSubject.eraseToAnyPublisher()
+    }
 
-    func parseBarometer(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
+    private func parseBarometer(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let barometer: BSBarometer = .parse(data, scalar: scalar) else { return }
         logger.debug("barometer: \(barometer) \(timestamp)ms")
         barometerSubject.send((barometer, timestamp))
