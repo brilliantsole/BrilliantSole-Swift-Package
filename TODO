@@ -1,4 +1,3 @@
-device+vibration
 device+txMessage
 device+rxMessage
 devicePair
