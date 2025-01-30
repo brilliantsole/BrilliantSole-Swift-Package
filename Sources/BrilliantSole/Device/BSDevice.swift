@@ -32,6 +32,7 @@ public class BSDevice {
 
     func reset() {
         batteryLevel = 0
+        didReceiveBatteryLevel = false
         resetTxMessaging()
         resetRxMessaging()
         deviceInformationManager.reset()
@@ -119,6 +120,8 @@ public class BSDevice {
         batteryLevelSubject.eraseToAnyPublisher()
     }
 
+    var didReceiveBatteryLevel: Bool = false
+
     public internal(set) var batteryLevel: BSBatteryLevel {
         get { batteryLevelSubject.value }
         set {
@@ -127,6 +130,7 @@ public class BSDevice {
                 return
             }
             batteryLevelSubject.value = newValue
+            didReceiveBatteryLevel = true
         }
     }
 

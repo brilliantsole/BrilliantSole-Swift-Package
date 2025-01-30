@@ -1,9 +1,7 @@
-device+txMessage
-device+rxMessage
-devicePair
 tests
     sensorData
     vibration
     tflite
+devicePair
 client
 firmware
