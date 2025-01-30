@@ -10,10 +10,11 @@ import Foundation
 
 private let logger = getLogger(category: "BSConnectionManager")
 
-typealias BSBatteryLevel = UInt8
+public typealias BSBatteryLevel = UInt8
 
-protocol BSConnectionManager {
+protocol BSConnectionManager: Identifiable & Hashable {
     static var connectionType: BSConnectionType { get }
+    var connectionType: BSConnectionType { get }
 
     // MARK: - device information
 
@@ -31,6 +32,7 @@ protocol BSConnectionManager {
     var isConnected: Bool { get }
     func connect()
     func disconnect()
+    func toggleConnection()
 
     // MARK: - messaging
 
@@ -42,5 +44,15 @@ protocol BSConnectionManager {
 }
 
 extension BSConnectionManager {
+    var connectionType: BSConnectionType { Self.connectionType }
     var isConnected: Bool { connectionStatus == .connected }
+
+    func toggleConnection() {
+        switch connectionStatus {
+        case .connected, .connecting:
+            disconnect()
+        default:
+            connect()
+        }
+    }
 }

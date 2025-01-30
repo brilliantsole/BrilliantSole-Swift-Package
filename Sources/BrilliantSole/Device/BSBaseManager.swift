@@ -21,6 +21,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     class var key: String { .init(describing: self) }
     typealias EnumToTxRx = BSEnumToTxRx<MessageType>
     class var enumToTxRx: EnumToTxRx? { allEnumToTxRx[key] as? EnumToTxRx }
+
     typealias TxRxToEnum = BSTxRxToEnum<MessageType>
     class var txRxToEnum: TxRxToEnum? { allTxRxToEnum[key] as? TxRxToEnum }
 
@@ -43,6 +44,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
             enumToTxRx[item] = offset
             txRxToEnum[offset] = item
             enumStrings.append(item.name)
+            offset += 1
         }
 
         allEnumToTxRx[key] = enumToTxRx
@@ -92,7 +94,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     }
 
     func createMessage(_ messageType: MessageType, data: Data? = nil) -> BSTxMessage {
-        .init(type: Self.enumToTxRx![messageType]!, data: data)
+        return .init(type: Self.enumToTxRx![messageType]!, data: data)
     }
 
     func createAndSendMessage(_ messageType: MessageType, data: Data? = nil, sendImmediately: Bool = true) {

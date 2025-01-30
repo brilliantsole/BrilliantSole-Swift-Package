@@ -20,36 +20,46 @@ class BSTxRxMessageUtils {
         BSFileTransferManager.self,
     ]
 
-    static let enumStrings: [String] = {
-        var enumStrings: [String] = .init()
+    static let enumStrings: [String] = initializeEnumStrings()
+    static let enumStringMap: [String: UInt8] = initializeEnumStringMap()
+    static let requiredTxRxMessageTypes: [UInt8] = initializeRequiredTxRxMessageTypes()
+    static let requiredTxRxMessages: [BSTxMessage] = initializeRequiredTxRxMessages()
+
+    private static func initializeEnumStrings() -> [String] {
+        logger.debug("initializeEnumStrings")
+        var enumStrings: [String] = []
         var offset: UInt8 = 0
         for manager in BSManagers {
             manager.initTxRxEnum(at: &offset, enumStrings: &enumStrings)
         }
         return enumStrings
-    }()
+    }
 
-    static let enumStringMap: [String: UInt8] = {
-        var enumStringMap: [String: UInt8] = .init()
+    private static func initializeEnumStringMap() -> [String: UInt8] {
+        logger.debug("initializeEnumStringMap")
+        var enumStringMap: [String: UInt8] = [:]
         for (index, enumString) in enumStrings.enumerated() {
             enumStringMap[enumString] = UInt8(index)
         }
         return enumStringMap
-    }()
+    }
 
-    static let requiredTxRxMessageTypes: [UInt8] = {
-        var requiredTxRxMessageTypes: [UInt8] = .init()
+    private static func initializeRequiredTxRxMessageTypes() -> [UInt8] {
+        logger.debug("initializeRequiredTxRxMessageTypes")
+        var requiredTxRxMessageTypes: [UInt8] = []
         for manager in BSManagers {
             requiredTxRxMessageTypes += manager.requiredTxRxMessageTypes
         }
         return requiredTxRxMessageTypes
-    }()
+    }
 
-    static let requiredTxRxMessages: [BSTxMessage] = {
-        var requiredTxRxMessages: [BSTxMessage] = .init()
+    private static func initializeRequiredTxRxMessages() -> [BSTxMessage] {
+        _ = enumStringMap
+        logger.debug("initializeRequiredTxRxMessages")
+        var requiredTxRxMessages: [BSTxMessage] = []
         for requiredTxRxMessageType in requiredTxRxMessageTypes {
             requiredTxRxMessages.append(.init(type: requiredTxRxMessageType))
         }
         return requiredTxRxMessages
-    }()
+    }
 }

@@ -44,7 +44,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 //        id = ""
 //        name = ""
 //        deviceType = .leftInsole
-        currentTime = 0
+        _currentTime = 0
     }
 
     // MARK: - mtu
@@ -151,6 +151,11 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         deviceType = newDeviceType
     }
 
+    func initDeviceType(_ newDeviceType: BSDeviceType) {
+        logger.debug("initializing deviceType to \(newDeviceType.name)")
+        deviceType = newDeviceType
+    }
+
     // MARK: - currentTime
 
     private let currentTimeSubject = CurrentValueSubject<BSTimestamp, Never>(0)
@@ -158,10 +163,12 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         currentTimeSubject.eraseToAnyPublisher()
     }
 
+    private var _currentTime: BSTimestamp = 0
     private(set) var currentTime: BSTimestamp {
-        get { currentTimeSubject.value }
+        get { _currentTime }
         set {
             logger.debug("updated currentTime to \(newValue)")
+            _currentTime = newValue
             currentTimeSubject.value = newValue
             if currentTime == 0 {
                 updateCurrentTime()
@@ -180,7 +187,7 @@ class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         currentTime = newCurrentTime
     }
 
-    func setCurrentTime(_ newCurrentTime: BSTimestamp, sendImmediately: Bool = true) {
+    private func setCurrentTime(_ newCurrentTime: BSTimestamp, sendImmediately: Bool = true) {
         guard newCurrentTime != currentTime else {
             logger.debug("redundant currentTime assignment \(newCurrentTime)")
             return

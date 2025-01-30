@@ -14,7 +14,5 @@ public enum BSDeviceInformationType: CaseIterable, Sendable {
     case softwareRevisionString
     case hardwareRevisionString
     case firmwareRevisionString
-    case pnpId
     case serialNumberString
-    case systemIdString
 }

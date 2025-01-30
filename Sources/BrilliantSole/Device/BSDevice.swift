@@ -10,28 +10,40 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSDevice {
+public class BSDevice {
     // MARK: - init
 
     init() {
-        // FILL
+        setupManagers()
+        // BSDeviceManager.shared.add(device: self) FILL
     }
 
     convenience init(name: String, deviceType: BSDeviceType?) {
-        // FILL
         self.init()
+        informationManager.initName(name)
+        if let deviceType {
+            informationManager.initDeviceType(deviceType)
+        }
     }
 
     convenience init(discoveredDevice: BSDiscoveredDevice) {
         self.init(name: discoveredDevice.name, deviceType: discoveredDevice.deviceType)
     }
 
+    func reset() {
+        batteryLevel = 0
+        resetTxMessaging()
+        resetRxMessaging()
+        deviceInformationManager.reset()
+        resetManagers()
+        connectionStatus = .notConnected
+    }
+
     // MARK: - connectionManager
 
-    var connectionManager: BSConnectionManager? {
-        didSet {
-            // FILL
-        }
+    var connectionManagerCancellables: Set<AnyCancellable> = []
+    var connectionManager: (any BSConnectionManager)? {
+        didSet { onConnectionManagerChanged() }
     }
 
     // MARK: - connectionStatus
@@ -41,7 +53,7 @@ class BSDevice {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
-    private(set) var connectionStatus: BSConnectionStatus {
+    public internal(set) var connectionStatus: BSConnectionStatus {
         get { connectionStatusSubject.value }
         set {
             guard newValue != connectionStatus else {
@@ -60,6 +72,13 @@ class BSDevice {
                 connectedSubject.send()
             case .disconnecting:
                 disconnectingSubject.send()
+            }
+
+            switch connectionStatus {
+            case .connected, .notConnected:
+                isConnectedSubject.send(isConnected)
+            default:
+                break
             }
         }
     }
@@ -91,11 +110,51 @@ class BSDevice {
         isConnectedSubject.eraseToAnyPublisher()
     }
 
-    private(set) var isConnected: Bool {
-        get { isConnectedSubject.value }
+    var isConnected: Bool { connectionStatus == .connected }
+
+    // MARK: - batteryLevel
+
+    private let batteryLevelSubject: CurrentValueSubject<BSBatteryLevel, Never> = .init(0)
+    var batteryLevelPublisher: AnyPublisher<BSBatteryLevel, Never> {
+        batteryLevelSubject.eraseToAnyPublisher()
+    }
+
+    public internal(set) var batteryLevel: BSBatteryLevel {
+        get { batteryLevelSubject.value }
         set {
-            logger.debug("updated isConnected \(newValue)")
-            isConnectedSubject.value = newValue
+            guard newValue != batteryLevel else {
+                logger.debug("redundant batteryLevel \(newValue)")
+                return
+            }
+            batteryLevelSubject.value = newValue
         }
     }
+
+    // MARK: - deviceInformation
+
+    let deviceInformationManager: BSDeviceInformationManager = .init()
+    public var deviceInformation: BSDeviceInformation { deviceInformationManager.deviceInformation }
+    var deviceInformationPublisher: AnyPublisher<BSDeviceInformation, Never> { deviceInformationManager.deviceInformationPublisher }
+
+    // MARK: - managers
+
+    let batteryManager: BSBatteryManager = .init()
+    let informationManager: BSInformationManager = .init()
+    let sensorConfigurationManager: BSSensorConfigurationManager = .init()
+    let sensorDataManager: BSSensorDataManager = .init()
+    let vibrationManager: BSVibrationManager = .init()
+    let fileTransferManager: BSFileTransferManager = .init()
+    let tfliteManager: BSTfliteManager = .init()
+    let smpManager: BSSmpManager = .init()
+
+    // MARK: - txMessage
+
+    var pendingTxMessages: [BSTxMessage] = .init()
+    var isSendingTxData: Bool = false
+
+    var txData: Data = .init()
+
+    // MARK: - rxMessage
+
+    var receivedTxRxMessages: Set<BSTxMessageType> = .init()
 }

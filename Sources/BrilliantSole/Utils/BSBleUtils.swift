@@ -95,7 +95,6 @@ enum BSBleCharacteristicUUID: String, BSBleUUID {
 
     case batteryLevel = "0x2A19"
 
-    case systemIdString = "0x2A23"
     case modelNumberString = "0x2A24"
     case serialNumberString = "0x2A25"
     case firmwareRevisionString = "0x2A26"
@@ -136,8 +135,6 @@ enum BSBleCharacteristicUUID: String, BSBleUUID {
 
     var deviceInformationType: BSDeviceInformationType? {
         switch self {
-        case .systemIdString:
-            .systemIdString
         case .modelNumberString:
             .modelNumberString
         case .serialNumberString:

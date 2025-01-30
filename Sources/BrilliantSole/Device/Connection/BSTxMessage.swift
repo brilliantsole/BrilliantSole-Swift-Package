@@ -7,8 +7,10 @@
 
 import Foundation
 
+typealias BSTxMessageType = UInt8
+
 struct BSTxMessage {
-    let type: UInt8
+    let type: BSTxMessageType
     let data: Data?
 
     init(type: UInt8, data: Data? = nil) {

@@ -1,6 +1,11 @@
 device
-    connectionManager
-    sendRequiredMessages
-    parse
+    device+manager
+    device+txMessage
+    device+rxMessage
 devicePair
+tests
+    sensorData
+    vibration
+    tflite
 client
+firmware
