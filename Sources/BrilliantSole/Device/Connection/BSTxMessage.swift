@@ -12,6 +12,7 @@ typealias BSTxMessageType = UInt8
 struct BSTxMessage {
     let type: BSTxMessageType
     let data: Data?
+    var typeString: String { BSTxRxMessageUtils.enumStrings[Int(type)] }
 
     init(type: UInt8, data: Data? = nil) {
         self.type = type
