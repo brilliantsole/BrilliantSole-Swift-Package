@@ -30,7 +30,7 @@ func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @e
             messageDataLength = paredMessageDataLength
             offset += 2
         } else {
-            messageDataLength = UInt16(data[offset])
+            messageDataLength = UInt16(data[data.startIndex + offset])
             offset += 1
         }
         logger.debug("messageType: \(String(describing: messageType)), messageDataLength: \(messageDataLength)")

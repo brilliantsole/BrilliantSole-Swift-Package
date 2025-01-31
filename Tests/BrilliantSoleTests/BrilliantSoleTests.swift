@@ -89,7 +89,7 @@ enum BSTests {
             BSBleScanner.shared.stopScan()
         }
 
-        @Test mutating func deviceConnectionTest() async throws {
+        func connectToFirstDevice(onConnectedDevice: @escaping (BSDevice) -> Void) {
             var foundDevice = false
             BSBleScanner.shared.startScan()
             BSBleScanner.shared.discoveredDevicePublisher.sink { [self] discoveredDevice in
@@ -100,18 +100,26 @@ enum BSTests {
                 let device = discoveredDevice.connect()
                 device.connectedPublisher.sink { _ in
                     print("connected to device \"\(device.name)\"")
-                    device.disconnect()
+                    onConnectedDevice(device)
                 }.store(in: &cancellablesStore.cancellables)
+            }.store(in: &cancellablesStore.cancellables)
+        }
+
+        @Test func deviceConnectionTest() async throws {
+            connectToFirstDevice(onConnectedDevice: { device in
                 device.notConnectedPublisher.sink { _ in
                     print("disconnected from device \"\(device.name)\"")
                 }.store(in: &cancellablesStore.cancellables)
-            }.store(in: &cancellablesStore.cancellables)
+                device.disconnect()
+            })
             try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-            BSBleScanner.shared.stopScan()
         }
 
-        @Test mutating func deviceSensorDataTest() async throws {
-            
+        @Test func deviceSensorDataTest() async throws {
+            connectToFirstDevice(onConnectedDevice: { device in
+                device.setSensorRate(sensorType: .linearAcceleration, sensorRate: ._100ms)
+            })
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
         }
     }
 }

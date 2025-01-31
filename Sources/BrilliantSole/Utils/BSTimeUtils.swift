@@ -21,12 +21,12 @@ private let timestampThreshold: UInt16 = 60_000
 func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> BSTimestamp? {
     let currentTime = getUtcTime()
     logger.debug("currentTime: \(currentTime)ms")
-    offset += 2
 
     guard let rawTimestamp = UInt16.parse(data, at: offset) else {
         return nil
     }
     logger.debug("rawTimestamp: \(rawTimestamp)ms")
+    offset += 2
 
     var timestamp: BSTimestamp = currentTime - (currentTime % (BSTimestamp(UInt16.max) + 1))
     logger.debug("truncated timestamp: \(timestamp)ms")
