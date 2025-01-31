@@ -7,6 +7,8 @@
 
 import Foundation
 
+private let logger = getLogger(category: "BSVibrationWaveformEffectSegments")
+
 public typealias BSVibrationWaveformEffectSegments = [BSVibrationWaveformEffectSegment]
 
 public extension Array where Element == BSVibrationWaveformEffectSegment {
@@ -33,8 +35,10 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
             data += self[index].data
         }
 
-        for index in 0 ..< (includeAllWaveformEffectSegments ? maxLength : count) {
-            if index == 0 || index == 4 { data += Data([0]) }
+        for index in 0 ..< (includeAllWaveformEffectSegments ? maxLength : Swift.min(count, maxLength)) {
+            if index == 0 || index == 4 {
+                data += Data([0])
+            }
 
             var segmentLoopCount: UInt8 = 0
             if index < count { segmentLoopCount = self[index].loopCount }

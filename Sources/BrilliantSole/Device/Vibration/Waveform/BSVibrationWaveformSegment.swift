@@ -9,6 +9,8 @@ import Foundation
 import UkatonMacros
 
 public struct BSVibrationWaveformSegment: BSVibrationSegment {
+    public static var type: BSVibrationType { .waveform }
+
     var amplitude: Float {
         didSet {
             amplitude = max(0.0, min(amplitude, 1.0))

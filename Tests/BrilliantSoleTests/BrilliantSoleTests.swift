@@ -54,7 +54,7 @@ enum BSTests {
         }
 
         @Test func vibrationWaveformEffectTest() async throws {
-            let configuration: BSVibrationConfiguration = .init(locations: [.front, .rear], waveformEffectSegments: [.init(effect: .alert1000ms, loopCount: 0)], loopCount: 0)
+            let configuration: BSVibrationConfiguration = .init(locations: [.front, .rear], waveformEffectSegments: [.init(effect: .alert1000ms, loopCount: 0)], loopCount: 2)
             let configurationData = configuration.getData()
             #expect(configurationData != nil)
             print("vibrationWaveformEffects data: \(configurationData!.bytes)")
@@ -128,7 +128,7 @@ enum BSTests {
         @Test func deviceVibrationTest() async throws {
             connectToDevice(withName: "Right 3", onConnectedDevice: { device in
                 if true {
-                    device.triggerVibration([.init(locations: .all, waveformEffectSegments: [.init(effect: .alert1000ms)], loopCount: 2)])
+                    device.triggerVibration([.init(locations: .all, waveformEffectSegments: [.init(effect: .doubleClick100)], loopCount: 2)])
                 }
                 else {
                     device.triggerVibration([.init(locations: .all, waveformSegments: [

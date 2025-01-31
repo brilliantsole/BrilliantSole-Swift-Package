@@ -59,7 +59,7 @@ public struct BSVibrationConfiguration {
             return nil
         }
 
-        logger.debug("vibration type \(type.data.bytes), locations \(locations.data.bytes), segmentsData \(segmentsData.bytes)")
+        logger.debug("vibration type \(type.data.bytes) (\(type.name), locations \(locations.data.bytes), segmentsData \(segmentsData.bytes)")
 
         data += locations.data
         data += type.data
