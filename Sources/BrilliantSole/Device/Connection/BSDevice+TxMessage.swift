@@ -30,7 +30,7 @@ extension BSDevice {
             logger.debug("already sending txData - will wait")
             return
         }
-        guard pendingTxMessages.isEmpty else {
+        guard !pendingTxMessages.isEmpty else {
             logger.debug("no pending messages")
             return
         }

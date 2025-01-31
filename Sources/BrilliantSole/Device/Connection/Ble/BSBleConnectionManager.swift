@@ -56,7 +56,7 @@ class BSBleConnectionManager: BSBaseConnectionManager {
     override func sendTxData(_ data: Data) {
         super.sendTxData(data)
         guard let characteristic = characteristics[BSBleCharacteristicUUID.tx] else {
-            fatalError("Characteristic not found")
+            fatalError("tx characteristic not found")
         }
         logger.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name)")
         peripheral.writeValue(data, for: characteristic, type: BSBleCharacteristicUUID.tx.writeType)
