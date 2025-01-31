@@ -76,8 +76,8 @@ class BSPressureSensorDataManager: BSBaseSensorDataManager {
     func parsePressurePositions(_ data: Data) {
         var newPressurePositions: [BSPressureSensorPosition] = []
         for index in stride(from: 0, to: data.count, by: 2) {
-            let x = Double(data[index])
-            let y = Double(data[index + 1])
+            let x = Double(data[data.startIndex + index])
+            let y = Double(data[data.startIndex + index + 1])
 
             let pressurePosition: BSPressureSensorPosition = .init(x: x, y: y) * Self.pressurePositionScalar
             logger.debug("pressurePosition \(newPressurePositions.count): \(pressurePosition)")

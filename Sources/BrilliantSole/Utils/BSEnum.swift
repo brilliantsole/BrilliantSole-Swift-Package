@@ -33,7 +33,7 @@ extension BSEnum {
             logger.error("invalid offset \(offset)")
             return nil
         }
-        let rawValue = data[offset]
+        let rawValue = data[data.startIndex + offset]
         guard let value = Self(rawValue: rawValue) else {
             logger.error("invalid \(self) rawValue \(rawValue)")
             return nil

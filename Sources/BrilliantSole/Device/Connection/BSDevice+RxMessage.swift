@@ -9,7 +9,7 @@ import Foundation
 
 extension BSDevice {
     func onRxMessage(type: BSTxMessageType, data: Data) {
-        logger.debug("received message: \(BSTxRxMessageUtils.enumStrings[Int(type)]) (\(data.count) bytes)")
+        logger.debug("received message: \"\(BSTxRxMessageUtils.enumStrings[Int(type)])\" (\(data.count) bytes)")
         receivedTxRxMessages.insert(type)
         for manager in managers {
             if manager.canParseRxMessageEnum(type) {

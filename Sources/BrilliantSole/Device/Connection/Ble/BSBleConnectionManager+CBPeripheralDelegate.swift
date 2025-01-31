@@ -88,6 +88,9 @@ extension BSBleConnectionManager: CBPeripheralDelegate {
             return
         }
         logger.debug("notification state updated for \(characteristicEnum.name): \(characteristic.isNotifying)")
+        if connectionStatus == .connecting {
+            checkIfFullyConnected()
+        }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
@@ -134,6 +137,9 @@ extension BSBleConnectionManager: CBPeripheralDelegate {
         }
         else {
             logger.error("unable to read data from characteristic \(characteristicEnum.name)")
+        }
+        if connectionStatus == .connecting {
+            checkIfFullyConnected()
         }
     }
 }

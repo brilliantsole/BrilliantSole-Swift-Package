@@ -10,7 +10,7 @@ import OSLog
 
 private let logger = getLogger(category: "BSParseUtils")
 
-func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index = .zero, parseMessageLengthAs2Bytes: Bool = false) {
+func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index = .zero, parseMessageLengthAs2Bytes: Bool = true) {
     logger.debug("parsing \(data.count) bytes at \(initialoffset)")
     var offset = initialoffset
     while offset < data.count {
@@ -42,8 +42,8 @@ func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @e
         }
         let messageData = data[Data.Index(offset) ..< endIndex]
         messageCallback(messageType, messageData)
-
         offset += Data.Index(messageDataLength)
         logger.debug("new offset: \(offset)")
     }
+    logger.debug("finished parsing")
 }

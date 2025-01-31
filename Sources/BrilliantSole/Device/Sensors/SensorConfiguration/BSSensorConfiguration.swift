@@ -28,7 +28,7 @@ extension BSSensorConfiguration {
         var configuration: Self = .init()
         logger.debug("parsing sensor configuration (\(data.count) bytes)")
         for index in stride(from: 0, to: data.count, by: 3) {
-            guard let sensorType = BSSensorType(rawValue: data[index]) else {
+            guard let sensorType = BSSensorType(rawValue: data[data.startIndex + index]) else {
                 logger.error("Invalid sensor type (\(data[index])) at index \(index)")
                 continue
             }

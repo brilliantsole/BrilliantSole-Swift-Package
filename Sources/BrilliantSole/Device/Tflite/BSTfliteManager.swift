@@ -418,7 +418,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         var maxValue: Float = -Float.infinity
         var maxIndex: Int = -1
         var maxClassName: String?
-        for offset in stride(from: 0, to: inferenceData.count, by: inferenceSize) {
+        for offset in stride(from: inferenceData.startIndex, to: inferenceData.endIndex, by: inferenceSize) {
             let index = inference.count
             guard let value = Float.parse(inferenceData, at: offset) else { return }
             logger.debug("class #\(index) value: \(value)")

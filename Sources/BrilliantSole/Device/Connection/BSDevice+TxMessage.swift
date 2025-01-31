@@ -45,11 +45,11 @@ extension BSDevice {
             let pendingTxMessageLength = pendingTxMessage.length()
             let shouldAppendTxMessage: Bool = maxMessageLength == 0 || UInt16(txData.count) + pendingTxMessageLength <= maxMessageLength
             if shouldAppendTxMessage {
-                logger.debug("appending pendingTxMessage \(pendingTxMessage.typeString) (\(pendingTxMessageLength) bytes")
+                logger.debug("appending pendingTxMessage \"\(pendingTxMessage.typeString)\" (\(pendingTxMessageLength) bytes)")
                 pendingTxMessage.appendTo(&txData)
                 pendingTxMessages.remove(at: pendingTxMessageIndex)
             } else {
-                logger.debug("skipping pendingTxMessage \(pendingTxMessage.typeString) (\(pendingTxMessageLength) bytes")
+                logger.debug("skipping pendingTxMessage \"\(pendingTxMessage.typeString)\" (\(pendingTxMessageLength) bytes")
                 pendingTxMessageIndex += 1
             }
         }

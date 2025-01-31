@@ -94,7 +94,7 @@ class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         logger.debug("timestamp: \(timestamp)ms")
         parseMessages(data, messageCallback: { (sensorType: BSSensorType, data: Data) in
             self.parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
-        }, at: offset)
+        }, at: offset, parseMessageLengthAs2Bytes: false)
     }
 
     private func parseSensorDataMessage(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp) {

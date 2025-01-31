@@ -11,7 +11,7 @@ extension Data {
             logger.error("Insufficient bytes: required \(size), available \(count - offset)")
             return nil
         }
-        return subdata(in: offset ..< offset + size).withUnsafeBytes { $0.load(as: T.self) }
+        return subdata(in: (startIndex + offset) ..< (startIndex + offset + size)).withUnsafeBytes { $0.load(as: T.self) }
     }
 }
 
@@ -83,7 +83,7 @@ extension Data {
             return ""
         }
 
-        let nameData = subdata(in: offset ..< finalOffset)
+        let nameData = subdata(in: (startIndex + offset) ..< (startIndex + finalOffset))
         return String(data: nameData, encoding: .utf8) ?? ""
     }
 }
@@ -118,7 +118,7 @@ extension Bool {
             logger.error("Invalid offset \(offset) for data size \(data.count)")
             return nil
         }
-        return data[offset] == 1
+        return data[data.startIndex + offset] == 1
     }
 }
 

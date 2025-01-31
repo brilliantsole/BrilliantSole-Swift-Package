@@ -19,16 +19,16 @@ extension BSBleScanner: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         let connectionManager = getConnectionManager(for: peripheral)
-        connectionManager?.connectionStatus = .connected
+        connectionManager?.onPeripheralStateUpdate()
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
         if let error {
             logger.error("error disconnecting from peripheral \(peripheral): \(error)")
         }
-        logger.error("disconnected from peripheral \(peripheral)")
+        logger.debug("disconnected from peripheral \(peripheral)")
         let connectionManager = getConnectionManager(for: peripheral)
-        connectionManager?.connectionStatus = .notConnected
+        connectionManager?.onPeripheralStateUpdate()
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?) {
@@ -37,12 +37,12 @@ extension BSBleScanner: CBCentralManagerDelegate {
         }
         logger.debug("disconnected from \(peripheral) at \(timestamp), isReconnecting: \(isReconnecting)")
         let connectionManager = getConnectionManager(for: peripheral)
-        connectionManager?.connectionStatus = .notConnected
+        connectionManager?.onPeripheralStateUpdate()
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: (any Error)?) {
         logger.debug("failed to connect to peripheral \(peripheral) error: \(String(describing: error))")
         let connectionManager = getConnectionManager(for: peripheral)
-        connectionManager?.connectionStatus = .notConnected
+        connectionManager?.onPeripheralStateUpdate()
     }
 }

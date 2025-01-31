@@ -21,6 +21,6 @@ class BSBaseSensorDataManager {
     }
 
     func reset() {
-        logger.debug("resetting sensorDataManager")
+        logger.debug("resetting sensorDataManager \(String(describing: Self.self))")
     }
 }

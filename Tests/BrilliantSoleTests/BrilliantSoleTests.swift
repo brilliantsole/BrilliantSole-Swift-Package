@@ -94,7 +94,7 @@ enum BSTests {
                 print("connecting to discoveredDevice \(discoveredDevice)")
                 let device = discoveredDevice.connect()
                 device.connectedPublisher.sink { _ in
-                    print("connected")
+                    print("connected to device \"\(device.name)\"")
                     device.disconnect()
                 }.store(in: &cancellables)
                 device.notConnectedPublisher.sink { _ in

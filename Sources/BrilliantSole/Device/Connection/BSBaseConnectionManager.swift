@@ -135,14 +135,15 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func parseRxData(_ data: Data) {
-        logger.debug("parsing \(data.count) bytes")
+        logger.debug("parsing \(data.count) bytes \(data.bytes)")
         parseMessages(data, messageCallback: { (messageType: UInt8, data: Data) in
             self.parseRxMessage(messageType: messageType, data: data)
         })
+        rxMessagesSubject.send()
     }
 
     func parseRxMessage(messageType: UInt8, data: Data) {
-        logger.debug("parsing rxMessage \(messageType) \(data)")
+        logger.debug("parsing rxMessage #\(messageType) \"\(BSTxRxMessageUtils.enumStrings[Int(messageType)])\" (\(data.count) bytes) \(data.bytes)")
         rxMessageSubject.send((messageType, data))
     }
 
