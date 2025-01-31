@@ -60,7 +60,7 @@ extension BSDevice {
             isSendingTxData = false
             return
         }
-        logger.debug("sending \(self.txData.count) bytes..")
+        logger.debug("sending \(self.txData.count) bytes \(self.txData.bytes)")
         sendTxData(txData)
     }
     

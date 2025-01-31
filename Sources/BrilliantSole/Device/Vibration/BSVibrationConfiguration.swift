@@ -33,7 +33,7 @@ public struct BSVibrationConfiguration {
         }
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8) {
+    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8 = 0) {
         self.locations = locations
         self.waveformEffectSegments = waveformEffectSegments
         self.type = .waveformEffect
@@ -46,24 +46,27 @@ public struct BSVibrationConfiguration {
         self.type = .waveform
     }
 
-    func getData() -> Data {
+    func getData() -> Data? {
         var data: Data = .init()
         guard locations.count > 0 else {
-            logger.warning("no locations specified - returning empty data")
-            return data
+            logger.warning("no locations specified - returning nil")
+            return nil
         }
 
         let segmentsData = getSegmentsData()
         guard segmentsData.count > 0 else {
-            logger.warning("empty segmentsData - returning empty data")
-            return data
+            logger.warning("empty segmentsData - returning nil")
+            return nil
         }
 
-        data += type.data
-        data += locations.data
-        data.append(segmentsData)
+        logger.debug("vibration type \(type.data.bytes), locations \(locations.data.bytes), segmentsData \(segmentsData.bytes)")
 
-        logger.debug("serialized \(type.name) vibration: \(data.debugDescription)")
+        data += locations.data
+        data += type.data
+        data.append(UInt8(segmentsData.count))
+        data += segmentsData
+
+        logger.debug("serialized \(type.name) vibration: \(data.debugDescription) \(data.bytes)")
         return data
     }
 
@@ -76,3 +79,5 @@ public struct BSVibrationConfiguration {
         }
     }
 }
+
+public typealias BSVibrationConfigurations = [BSVibrationConfiguration]

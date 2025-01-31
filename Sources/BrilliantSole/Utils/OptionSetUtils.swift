@@ -32,3 +32,7 @@ extension OptionSet where Self: CaseIterable, Self.RawValue == UInt8 {
             }
     }
 }
+
+public extension Array where Element: CaseIterable {
+    static var all: [Element] { Element.allCases as! [Element] }
+}

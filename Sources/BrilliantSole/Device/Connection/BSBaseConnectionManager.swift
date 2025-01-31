@@ -155,6 +155,6 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func sendTxData(_ data: Data) {
-        logger.log("sending \(data.count) bytes...")
+        logger.log("sending \(data.count) bytes \(data.bytes)")
     }
 }

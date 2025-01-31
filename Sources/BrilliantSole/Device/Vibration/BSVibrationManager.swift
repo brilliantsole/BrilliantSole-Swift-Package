@@ -15,15 +15,18 @@ class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
 
     override func onRxMessage(_ messageType: BSVibrationMessageType, data: Data) {}
 
-    func triggerVibration(_ vibrationConfigurations: [BSVibrationConfiguration], sendImmediately: Bool = true) {
+    func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool = true) {
         var data: Data = .init()
         for vibrationConfiguration in vibrationConfigurations {
-            data += vibrationConfiguration.getData()
+            if let vibrationData = vibrationConfiguration.getData() {
+                data += vibrationData
+            }
         }
-        guard data.count == 0 else {
-            logger.debug("empty data - nothing to sen")
+        guard !data.isEmpty else {
+            logger.debug("empty data - nothing to send")
             return
         }
+        logger.debug("vibrationData: \(data.count) bytes - \(data.bytes)")
         createAndSendMessage(.triggerVibration, data: data, sendImmediately: sendImmediately)
     }
 }

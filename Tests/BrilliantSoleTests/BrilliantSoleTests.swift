@@ -49,13 +49,15 @@ enum BSTests {
         @Test func vibrationWaveformTest() async throws {
             let configuration: BSVibrationConfiguration = .init(locations: [.front, .rear], waveformSegments: [.init(amplitude: 0.5, duration: 100)])
             let configurationData = configuration.getData()
-            print("vibrationWaveform data: \(configurationData.bytes)")
+            #expect(configurationData != nil)
+            print("vibrationWaveform data: \(configurationData!.bytes)")
         }
 
         @Test func vibrationWaveformEffectTest() async throws {
             let configuration: BSVibrationConfiguration = .init(locations: [.front, .rear], waveformEffectSegments: [.init(effect: .alert1000ms, loopCount: 0)], loopCount: 0)
             let configurationData = configuration.getData()
-            print("vibrationWaveformEffects data: \(configurationData.bytes)")
+            #expect(configurationData != nil)
+            print("vibrationWaveformEffects data: \(configurationData!.bytes)")
         }
     }
 
@@ -89,10 +91,11 @@ enum BSTests {
             BSBleScanner.shared.stopScan()
         }
 
-        func connectToFirstDevice(onConnectedDevice: @escaping (BSDevice) -> Void) {
+        func connectToDevice(withName name: String? = nil, onConnectedDevice: @escaping (BSDevice) -> Void) {
             var foundDevice = false
             BSBleScanner.shared.startScan()
             BSBleScanner.shared.discoveredDevicePublisher.sink { [self] discoveredDevice in
+                guard name == nil || discoveredDevice.name == name else { return }
                 guard !foundDevice else { return }
                 foundDevice = true
                 BSBleScanner.shared.stopScan()
@@ -106,7 +109,7 @@ enum BSTests {
         }
 
         @Test func deviceConnectionTest() async throws {
-            connectToFirstDevice(onConnectedDevice: { device in
+            connectToDevice(onConnectedDevice: { device in
                 device.notConnectedPublisher.sink { _ in
                     print("disconnected from device \"\(device.name)\"")
                 }.store(in: &cancellablesStore.cancellables)
@@ -116,8 +119,24 @@ enum BSTests {
         }
 
         @Test func deviceSensorDataTest() async throws {
-            connectToFirstDevice(onConnectedDevice: { device in
-                device.setSensorRate(sensorType: .linearAcceleration, sensorRate: ._100ms)
+            connectToDevice(withName: "Right 3", onConnectedDevice: { device in
+                device.setSensorRate(sensorType: .pressure, sensorRate: ._100ms)
+            })
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+        }
+
+        @Test func deviceVibrationTest() async throws {
+            connectToDevice(withName: "Right 3", onConnectedDevice: { device in
+                if true {
+                    device.triggerVibration([.init(locations: .all, waveformEffectSegments: [.init(effect: .alert1000ms)], loopCount: 2)])
+                }
+                else {
+                    device.triggerVibration([.init(locations: .all, waveformSegments: [
+                        .init(amplitude: 1, duration: 300),
+                        .init(amplitude: 0, duration: 500),
+                        .init(amplitude: 1, duration: 500)
+                    ])])
+                }
             })
             try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
         }

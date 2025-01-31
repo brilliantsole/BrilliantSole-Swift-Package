@@ -21,3 +21,5 @@ public struct BSVibrationLocationFlag: OptionSet, Sendable, CaseIterable {
     public static let front = BSVibrationLocationFlag(rawValue: 1 << 0)
     public static let rear = BSVibrationLocationFlag(rawValue: 1 << 1)
 }
+
+

@@ -49,7 +49,7 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         guard let characteristic = characteristics[BSBleCharacteristicUUID.tx] else {
             fatalError("tx characteristic not found")
         }
-        logger.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name)")
+        logger.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name) \(data.bytes)")
         peripheral.writeValue(data, for: characteristic, type: BSBleCharacteristicUUID.tx.writeType)
     }
 

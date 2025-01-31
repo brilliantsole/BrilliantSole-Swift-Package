@@ -26,9 +26,9 @@ public struct BSPressureData {
     }
 
     static func parse(_ data: Data, scalar: Float, positions: [BSPressureSensorPosition], ranges: inout [BSRange], centerOfPressureRange: inout BSCenterOfPressureRange) -> Self? {
-        guard data.count * 2 == ranges.count else {
-            let rangesCount = ranges.count
-            logger.error("data count mismatch (expected \(rangesCount), got \(data.count * 2)")
+        guard data.count == ranges.count * 2 else {
+            let rangesCount = ranges.count * 2
+            logger.error("data count mismatch (expected \(rangesCount), got \(data.count)")
             return nil
         }
         var sensors: [BSPressureSensorData] = .init()
@@ -54,7 +54,7 @@ public struct BSPressureData {
                 normalizedValue: normalizedValue
             )
             logger.debug("#\(index) sensor: \(String(describing: sensor))")
-            sensors[index] = sensor
+            sensors.append(sensor)
 
             scaledSum += scaledValue
             normalizedSum += normalizedValue

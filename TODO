@@ -1,6 +1,6 @@
 tests
-    sensorData
     vibration
+        loopCount
     tflite
 devicePair
 client
