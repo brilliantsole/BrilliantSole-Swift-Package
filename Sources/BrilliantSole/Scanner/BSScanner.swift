@@ -29,8 +29,10 @@ protocol BSScanner {
 
     // MARK: - scan
 
-    func startScanning()
-    func stopScanning()
+    func startScan(scanWhenAvailable: Bool)
+    func startScan()
+    func stopScan()
+    func toggleScan(scanWhenAvailable: Bool)
     func toggleScan()
 
     // MARK: - discoveredDevices
@@ -49,8 +51,12 @@ protocol BSScanner {
 }
 
 extension BSScanner {
-    func toggleScan() {
+    func startScan() { startScan(scanWhenAvailable: true) }
+
+    func toggleScan(scanWhenAvailable: Bool) {
         logger.debug("toggling scan")
-        isScanning ? stopScanning() : startScanning()
+        isScanning ? stopScan() : startScan()
     }
+
+    func toggleScan() { toggleScan(scanWhenAvailable: true) }
 }

@@ -26,8 +26,8 @@ class BSBleScanner: BSBaseScanner {
 
     // MARK: - scanning
 
-    override func startScanning(_continue: inout Bool) {
-        super.startScanning(_continue: &_continue)
+    override func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+        super.startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
         guard _continue else {
             return
         }
@@ -38,8 +38,8 @@ class BSBleScanner: BSBaseScanner {
         peripherals.forEach { onPeripheral($0) }
     }
 
-    override func stopScanning(_continue: inout Bool) {
-        super.stopScanning(_continue: &_continue)
+    override func stopScan(_continue: inout Bool) {
+        super.stopScan(_continue: &_continue)
         guard _continue else {
             return
         }

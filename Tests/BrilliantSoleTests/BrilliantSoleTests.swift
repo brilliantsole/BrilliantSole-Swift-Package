@@ -3,6 +3,10 @@ import Combine
 import Foundation
 import Testing
 
+class CancellablesStore {
+    var cancellables: Set<AnyCancellable> = []
+}
+
 enum BSTests {
     struct BSTxRxMessageTests {
         @Test func enumStringsTest() async throws {
@@ -67,6 +71,8 @@ enum BSTests {
     }
 
     struct BSScannerTests {
+        var cancellablesStore = CancellablesStore()
+
         @Test func discoveredDeviceJsonTest() async throws {
             let discoveredDeviceJson = BSDiscoveredDeviceJson(jsonString: "{\"name\":\"Brilliant Sole\",\"bluetoothId\":\"0b68679a6951bda8ca8fe31356f4e189\",\"deviceType\":\"leftInsole\",\"rssi\":-46}")
             #expect(discoveredDeviceJson != nil)
@@ -74,35 +80,38 @@ enum BSTests {
             print("discoveredDeviceJson \(discoveredDeviceJson!), deviceType \(discoveredDeviceJson!.deviceType?.name ?? "nil")")
         }
 
-        @Test func bleScannerTest() async throws {
-            var isConnecting = false
-            var cancellables = Set<AnyCancellable>()
-            if BSBleScanner.shared.isScanningAvailable {
-                BSBleScanner.shared.startScanning()
-            }
-            else {
-                BSBleScanner.shared.isScanningAvailablePublisher.sink { isScanningAvailable in
-                    if isScanningAvailable {
-                        BSBleScanner.shared.startScanning()
-                    }
-                }.store(in: &cancellables)
-            }
+        @Test func scanTest() async throws {
+            BSBleScanner.shared.startScan()
             BSBleScanner.shared.discoveredDevicePublisher.sink { discoveredDevice in
-                guard !isConnecting else { return }
-                isConnecting = true
-                BSBleScanner.shared.stopScanning()
+                print("discoveredDevice \"\(discoveredDevice.name)\"")
+            }.store(in: &cancellablesStore.cancellables)
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+            BSBleScanner.shared.stopScan()
+        }
+
+        @Test mutating func deviceConnectionTest() async throws {
+            var foundDevice = false
+            BSBleScanner.shared.startScan()
+            BSBleScanner.shared.discoveredDevicePublisher.sink { [self] discoveredDevice in
+                guard !foundDevice else { return }
+                foundDevice = true
+                BSBleScanner.shared.stopScan()
                 print("connecting to discoveredDevice \(discoveredDevice)")
                 let device = discoveredDevice.connect()
                 device.connectedPublisher.sink { _ in
                     print("connected to device \"\(device.name)\"")
                     device.disconnect()
-                }.store(in: &cancellables)
+                }.store(in: &cancellablesStore.cancellables)
                 device.notConnectedPublisher.sink { _ in
-                    print("disconnected")
-                }.store(in: &cancellables)
-            }.store(in: &cancellables)
+                    print("disconnected from device \"\(device.name)\"")
+                }.store(in: &cancellablesStore.cancellables)
+            }.store(in: &cancellablesStore.cancellables)
             try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-            BSBleScanner.shared.stopScanning()
+            BSBleScanner.shared.stopScan()
+        }
+
+        @Test mutating func deviceSensorDataTest() async throws {
+            
         }
     }
 }

@@ -17,8 +17,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     private let isScanningAvailableSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var isScanningAvailablePublisher: AnyPublisher<Bool, Never> {
-        isScanningAvailableSubject
-            .eraseToAnyPublisher()
+        isScanningAvailableSubject.eraseToAnyPublisher()
     }
 
     var isScanningAvailable: Bool {
@@ -28,6 +27,10 @@ class BSBaseScanner: NSObject, BSScanner {
             isScanningAvailableSubject.value = newValue
             if isScanningAvailable {
                 scanningIsAvailableSubject.send()
+                if scanWhenAvailable {
+                    logger.debug("reattempting scan")
+                    startScan(scanWhenAvailable: scanWhenAvailable)
+                }
             }
             else {
                 scanningIsUnavailableSubject.send()
@@ -37,22 +40,19 @@ class BSBaseScanner: NSObject, BSScanner {
 
     private let scanningIsAvailableSubject: PassthroughSubject<Void, Never> = .init()
     var scanningIsAvailablePublisher: AnyPublisher<Void, Never> {
-        scanningIsAvailableSubject
-            .eraseToAnyPublisher()
+        scanningIsAvailableSubject.eraseToAnyPublisher()
     }
 
     private let scanningIsUnavailableSubject: PassthroughSubject<Void, Never> = .init()
     var scanningIsUnavailablePublisher: AnyPublisher<Void, Never> {
-        scanningIsUnavailableSubject
-            .eraseToAnyPublisher()
+        scanningIsUnavailableSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isScanning
 
     private let isScanningSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var isScanningPublisher: AnyPublisher<Bool, Never> {
-        isScanningSubject
-            .eraseToAnyPublisher()
+        isScanningSubject.eraseToAnyPublisher()
     }
 
     var isScanning: Bool {
@@ -63,6 +63,7 @@ class BSBaseScanner: NSObject, BSScanner {
             if isScanning {
                 scanStartSubject.send()
                 startCheckingExpiredDiscoveredDevices()
+                scanWhenAvailable = false
             }
             else {
                 scanStopSubject.send()
@@ -73,24 +74,24 @@ class BSBaseScanner: NSObject, BSScanner {
 
     private let scanStartSubject: PassthroughSubject<Void, Never> = .init()
     var scanStartPublisher: AnyPublisher<Void, Never> {
-        scanStartSubject
-            .eraseToAnyPublisher()
+        scanStartSubject.eraseToAnyPublisher()
     }
 
     private let scanStopSubject: PassthroughSubject<Void, Never> = .init()
     var scanStopPublisher: AnyPublisher<Void, Never> {
-        scanStopSubject
-            .eraseToAnyPublisher()
+        scanStopSubject.eraseToAnyPublisher()
     }
 
     // MARK: - scan
 
-    public func startScanning() {
+    private var scanWhenAvailable: Bool = false
+
+    public func startScan(scanWhenAvailable: Bool) {
         var _continue = true
-        startScanning(_continue: &_continue)
+        startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
     }
 
-    func startScanning(_continue: inout Bool) {
+    func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         guard !isScanning else {
             logger.debug("already scanning")
             _continue = false
@@ -99,6 +100,8 @@ class BSBaseScanner: NSObject, BSScanner {
         guard isScanningAvailable else {
             logger.warning("scanning is not available")
             _continue = false
+            logger.debug("waiting until scaning is available")
+            self.scanWhenAvailable = scanWhenAvailable
             return
         }
         discoveredDevices.removeAll()
@@ -107,12 +110,14 @@ class BSBaseScanner: NSObject, BSScanner {
         _continue = true
     }
 
-    public func stopScanning() {
+    public func stopScan() {
+        scanWhenAvailable = false
+
         var _continue = true
-        stopScanning(_continue: &_continue)
+        stopScan(_continue: &_continue)
     }
 
-    func stopScanning(_continue: inout Bool) {
+    func stopScan(_continue: inout Bool) {
         guard isScanning else {
             logger.debug("already not scanning")
             _continue = false
@@ -128,14 +133,12 @@ class BSBaseScanner: NSObject, BSScanner {
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
     private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
-        discoveredDeviceSubject
-            .eraseToAnyPublisher()
+        discoveredDeviceSubject.eraseToAnyPublisher()
     }
 
     private let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
-        expiredDeviceSubject
-            .eraseToAnyPublisher()
+        expiredDeviceSubject.eraseToAnyPublisher()
     }
 
     func add(discoveredDevice: BSDiscoveredDevice) {
@@ -216,7 +219,7 @@ class BSBaseScanner: NSObject, BSScanner {
         if allDevices[discoveredDevice.id] == nil {
             logger.debug("no device found for \(discoveredDevice.name)")
             if createIfNotFound {
-                createDevice(discoveredDevice: discoveredDevice)
+                _ = createDevice(discoveredDevice: discoveredDevice)
             }
             else {
                 return nil
