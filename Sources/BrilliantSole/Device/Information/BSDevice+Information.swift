@@ -7,7 +7,7 @@
 
 import Combine
 
-extension BSDevice {
+public extension BSDevice {
     // MARK: - id
 
     var idPublisher: AnyPublisher<String, Never> {

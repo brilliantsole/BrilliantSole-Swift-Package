@@ -76,6 +76,10 @@ public extension BSDevice {
 
     var tfliteFile: BSTfliteFile? { tfliteManager.tfliteFile }
     func sendTfliteModel(_ newTfliteFile: inout BSTfliteFile) {
+        guard let _ = newTfliteFile.getFileData() else {
+            logger.error("failed to get newTfliteFile data")
+            return
+        }
         var file = newTfliteFile as BSFile
         tfliteManager.sendTfliteFile(newTfliteFile, sendImmediately: false)
         let isSendingFile = fileTransferManager.sendFile(&file, sendImmediately: true)

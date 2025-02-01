@@ -171,3 +171,17 @@ public class BSDevice {
         isTfliteReadySubject.eraseToAnyPublisher()
     }
 }
+
+extension BSDevice: Identifiable {}
+
+extension BSDevice: Hashable {
+    public func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
+    public static func == (lhs: BSDevice, rhs: BSDevice) -> Bool {
+        guard let lhsType = lhs.connectionType, let rhsType = lhs.connectionType, lhsType == rhsType else {
+            return false
+        }
+
+        return !lhs.id.isEmpty && lhs.id == rhs.id
+    }
+}
