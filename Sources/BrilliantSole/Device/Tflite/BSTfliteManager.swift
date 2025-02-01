@@ -368,6 +368,14 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         createAndSendMessage(.setTfliteInferencingEnabled, data: newTfliteInferencingEnabled.data, sendImmediately: sendImmediately)
     }
 
+    func enableTfliteInferencing(sendImmediately: Bool = true) {
+        setTfliteInferencingEnabled(true, sendImmediately: sendImmediately)
+    }
+
+    func disableTfliteInferencing(sendImmediately: Bool = true) {
+        setTfliteInferencingEnabled(false, sendImmediately: sendImmediately)
+    }
+
     func toggleTfliteInferencingEnabled(sendImmediately: Bool = true) {
         setTfliteInferencingEnabled(!tfliteInferencingEnabled, sendImmediately: sendImmediately)
     }
@@ -395,7 +403,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         guard let timestamp = parseTimestamp(data, at: &offset) else { return }
         logger.debug("timestamp: \(timestamp)ms")
 
-        let inferenceData = data[offset...]
+        let inferenceData = data[(data.startIndex + offset)...]
         let inferenceSize = 4
         guard (inferenceData.count % inferenceSize) == 0 else {
             logger.error("inferenceData length is not a multiple of \(inferenceSize) (got \(inferenceData.count)")
@@ -418,7 +426,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         var maxValue: Float = -Float.infinity
         var maxIndex: Int = -1
         var maxClassName: String?
-        for offset in stride(from: inferenceData.startIndex, to: inferenceData.endIndex, by: inferenceSize) {
+        for offset in stride(from: 0, to: inferenceData.count, by: inferenceSize) {
             let index = inference.count
             guard let value = Float.parse(inferenceData, at: offset) else { return }
             logger.debug("class #\(index) value: \(value)")
@@ -441,7 +449,7 @@ class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
         tfliteInferenceSubject.send((inference, inferenceMap, timestamp))
         if tfliteTask == .classification, let maxClassName {
-            logger.debug("maxClass \(maxClassName) (#\(maxIndex) with \(maxValue)")
+            logger.debug("maxClass \(maxClassName) (#\(maxIndex) with \(maxValue))")
             tfliteClassificationSubject.send((maxClassName, maxValue, timestamp))
         }
     }

@@ -167,4 +167,7 @@ public class BSDevice {
     // MARK: - tfliteManager
 
     let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
+    public var isTfliteReadyPublisher: AnyPublisher<Bool, Never> {
+        isTfliteReadySubject.eraseToAnyPublisher()
+    }
 }

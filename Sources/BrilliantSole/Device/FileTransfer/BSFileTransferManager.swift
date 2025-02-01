@@ -338,17 +338,17 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
         let fileChecksum = fileData.crc32()
 
-        if file.fileType == fileType {
-            // different file types - sending
+        if file.fileType != fileType {
+            logger.debug("different fileTypes - sending")
         }
-        else if fileData.count == fileLength {
-            // different file lengths - sending
+        else if fileData.count != fileLength {
+            logger.debug("different fileLengths - sending")
         }
         else if fileChecksum != self.fileChecksum {
-            // different file checksums - sending
+            logger.debug("different fileChecksums - sending")
         }
         else {
-            logger.debug("already sent message")
+            logger.debug("already sent file")
             return false
         }
 

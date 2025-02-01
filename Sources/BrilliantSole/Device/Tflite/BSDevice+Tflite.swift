@@ -48,6 +48,14 @@ public extension BSDevice {
         tfliteManager.setTfliteInferencingEnabled(newTfliteInferencingEnabled, sendImmediately: sendImmediately)
     }
 
+    func enableTfliteInferencing(sendImmediately: Bool = true) {
+        tfliteManager.enableTfliteInferencing(sendImmediately: sendImmediately)
+    }
+
+    func disableTfliteInferencing(sendImmediately: Bool = true) {
+        tfliteManager.disableTfliteInferencing(sendImmediately: sendImmediately)
+    }
+
     func toggleTfliteInferencingEnabled(sendImmediately: Bool = true) {
         tfliteManager.toggleTfliteInferencingEnabled(sendImmediately: sendImmediately)
     }

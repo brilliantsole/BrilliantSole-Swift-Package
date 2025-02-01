@@ -14,6 +14,7 @@ nonisolated(unsafe) var tfliteFile: BSTfliteFile = .init(
     sensorTypes: [.linearAcceleration, .gyroscope],
     task: .classification,
     sensorRate: ._10ms,
+    captureDelay: 500,
     classes: ["idle", "kick", "stomp", "tap"]
 )
 
@@ -133,10 +134,15 @@ struct BSTests {
     }
 
     @Test func deviceTfliteTest() async throws {
-        connectToDevice(withName: "Brilliant Sole", onConnectedDevice: { device in
+        connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.sendTfliteModel(&tfliteFile)
-            
+            device.isTfliteReadyPublisher.sink { isTfliteReady in
+                if isTfliteReady {
+                    print("tflite is ready")
+                    device.enableTfliteInferencing()
+                }
+            }.store(in: &cancellablesStore.cancellables)
         })
-        try await Task.sleep(nanoseconds: 10 * 1_000_000_000)
+        try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
 }
