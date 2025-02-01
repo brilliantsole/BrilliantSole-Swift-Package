@@ -11,7 +11,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBarometerSensorDataManager: BSBaseSensorDataManager {
+final class BSBarometerSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [.barometer] }
 
     override func parseSensorData(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {

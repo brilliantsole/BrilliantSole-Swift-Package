@@ -13,7 +13,7 @@ public typealias BSMtu = UInt16
 private let defaultMtu: BSMtu = 23
 
 @StaticLogger
-class BSInformationManager: BSBaseManager<BSInformationMessageType> {
+final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     override class var requiredMessageTypes: [BSInformationMessageType]? {
         [
             .getMtu,

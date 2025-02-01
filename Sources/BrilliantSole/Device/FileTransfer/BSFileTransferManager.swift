@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSFileLength = UInt32
 
 @StaticLogger
-class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
+final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
         [.getMaxFileLength,
          .getFileTransferType,

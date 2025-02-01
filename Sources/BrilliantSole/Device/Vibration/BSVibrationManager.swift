@@ -8,7 +8,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
+final class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
     override class var requiredMessageTypes: [BSVibrationMessageType]? {
         nil
     }

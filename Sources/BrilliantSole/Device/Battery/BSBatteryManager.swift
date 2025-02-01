@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
+final class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     override class var requiredMessageTypes: [BSBatteryMessageType]? {
         [.getIsBatteryCharging, .getBatteryCurrent]
     }

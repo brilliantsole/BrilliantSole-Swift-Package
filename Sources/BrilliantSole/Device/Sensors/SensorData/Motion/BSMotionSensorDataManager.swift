@@ -13,7 +13,7 @@ import UkatonMacros
 public typealias BSStepCount = UInt32
 
 @StaticLogger
-class BSMotionSensorDataManager: BSBaseSensorDataManager {
+final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [
         .acceleration,
         .gravity,

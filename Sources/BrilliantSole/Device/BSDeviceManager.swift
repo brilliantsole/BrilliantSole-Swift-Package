@@ -11,7 +11,7 @@ import UkatonMacros
 
 @StaticLogger
 @MainActor
-public class BSDeviceManager {
+public class BSDeviceManager: ObservableObject {
     // MARK: - availableDevices
 
     public private(set) static var availableDevices: Set<BSDevice> = .init()

@@ -13,7 +13,7 @@ public typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
 public typealias BSClassification = (String, Float, BSTimestamp)
 
 @StaticLogger
-class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
+final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
         [
             .getTfliteName,

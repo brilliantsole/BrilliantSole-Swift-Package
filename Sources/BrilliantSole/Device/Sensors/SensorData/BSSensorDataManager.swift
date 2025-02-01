@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
+final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     override class var requiredMessageTypes: [BSSensorDataMessageType]? {
         [
             .getPressurePositions,

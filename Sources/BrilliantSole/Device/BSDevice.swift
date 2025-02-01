@@ -10,12 +10,14 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-public class BSDevice {
+public final class BSDevice {
     // MARK: - init
 
     init() {
         setupManagers()
-        // BSDeviceManager.onDeviceCreated(self)
+        Task {
+            // await BSDeviceManager.onDeviceCreated(self)
+        }
     }
 
     convenience init(name: String, deviceType: BSDeviceType?) {

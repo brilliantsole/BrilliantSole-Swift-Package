@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageType> {
+final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageType> {
     override class var requiredMessageTypes: [BSSensorConfigurationMessageType]? {
         [.getSensorConfiguration]
     }
