@@ -162,19 +162,19 @@ class BSBaseScanner: NSObject, @preconcurrency BSScanner {
         expiredDeviceSubject.send(discoveredDevice)
     }
 
-    @MainActor func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.connect()
         return device
     }
 
-    @MainActor func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
+    func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
         let device = getDevice(discoveredDevice: discoveredDevice)
         device?.disconnect()
         return device
     }
 
-    @MainActor func toggleConnection(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    func toggleConnection(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.toggleConnection()
         return device
@@ -212,7 +212,7 @@ class BSBaseScanner: NSObject, @preconcurrency BSScanner {
     private(set) var devices: [String: BSDevice] = .init()
     var allDevices: [String: BSDevice] = .init()
 
-    @MainActor private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
+    private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
         guard discoveredDevices[discoveredDevice.id] != nil else {
             fatalError("invalid discoveredDevice \(discoveredDevices)")
         }
@@ -229,7 +229,7 @@ class BSBaseScanner: NSObject, @preconcurrency BSScanner {
     }
 
     private var deviceIsConnectedCancellables = Set<AnyCancellable>()
-    @MainActor func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         logger.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device

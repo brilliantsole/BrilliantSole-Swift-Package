@@ -83,7 +83,7 @@ struct BSTests {
         BSBleScanner.shared.stopScan()
     }
 
-    func connectToDevice(withName name: String? = nil, onConnectedDevice: @escaping (BSDevice) -> Void) {
+    func connectToDevice(withName name: String? = nil, onConnectedDevice: ((BSDevice) -> Void)? = nil) {
         var foundDevice = false
         BSBleScanner.shared.startScan()
         BSBleScanner.shared.discoveredDevicePublisher.sink { [self] discoveredDevice in
@@ -95,7 +95,7 @@ struct BSTests {
             let device = discoveredDevice.connect()
             device.connectedPublisher.sink { _ in
                 print("connected to device \"\(device.name)\"")
-                onConnectedDevice(device)
+                onConnectedDevice?(device)
             }.store(in: &cancellablesStore.cancellables)
         }.store(in: &cancellablesStore.cancellables)
     }
@@ -111,13 +111,10 @@ struct BSTests {
     }
 
     @Test func deviceManagerTest() async throws {
-        connectToDevice(onConnectedDevice: { _ in
-
-        })
-        // FIX
-//        BSDeviceManager.connectedDevicesPublisher.sink { _ in
-//
-//        }.store(in: &cancellablesStore.cancellables)
+        connectToDevice()
+        BSDeviceManager.deviceConnectedPublisher.sink { device in
+            print("connectedDevice \(device.name) added")
+        }.store(in: &cancellablesStore.cancellables)
         try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
     }
 

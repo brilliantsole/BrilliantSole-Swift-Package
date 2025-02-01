@@ -13,12 +13,12 @@ import UkatonMacros
 public final class BSDevice {
     // MARK: - init
 
-    @MainActor init() {
+    init() {
         setupManagers()
         BSDeviceManager.onDeviceCreated(self)
     }
 
-    @MainActor convenience init(name: String, deviceType: BSDeviceType?) {
+    convenience init(name: String, deviceType: BSDeviceType?) {
         self.init()
         informationManager.initName(name)
         if let deviceType {
@@ -26,7 +26,7 @@ public final class BSDevice {
         }
     }
 
-    @MainActor convenience init(discoveredDevice: BSDiscoveredDevice) {
+    convenience init(discoveredDevice: BSDiscoveredDevice) {
         self.init(name: discoveredDevice.name, deviceType: discoveredDevice.deviceType)
     }
 
