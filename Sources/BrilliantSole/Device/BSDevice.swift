@@ -15,7 +15,7 @@ public class BSDevice {
 
     init() {
         setupManagers()
-        // BSDeviceManager.shared.add(device: self) FILL
+        // BSDeviceManager.onDeviceCreated(self)
     }
 
     convenience init(name: String, deviceType: BSDeviceType?) {
