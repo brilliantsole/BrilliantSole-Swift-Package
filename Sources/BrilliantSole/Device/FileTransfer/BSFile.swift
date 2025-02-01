@@ -15,11 +15,12 @@ public protocol BSFile {
     var fileType: BSFileType { get }
     var fileName: String { get }
     var fileData: Data? { get set }
-    mutating func getFileData(bundle: Bundle) -> Data?
+    var bundle: Bundle { get }
+    mutating func getFileData() -> Data?
 }
 
 public extension BSFile {
-    mutating func getFileData(bundle: Bundle = .main) -> Data? {
+    mutating func getFileData() -> Data? {
         if fileData != nil {
             return fileData
         }

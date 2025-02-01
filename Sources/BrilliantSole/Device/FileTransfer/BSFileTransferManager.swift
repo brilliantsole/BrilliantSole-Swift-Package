@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-public typealias BSFileLength = UInt16
+public typealias BSFileLength = UInt32
 
 @StaticLogger
 class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
@@ -154,6 +154,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
             logger.debug("redundant fileLength assignment \(newFileLength)")
             return
         }
+        logger.debug("setting fileLength to \(newFileLength) \(newFileLength.getData().bytes)")
         createAndSendMessage(.setFileLength, data: newFileLength.getData(), sendImmediately: sendImmediately)
     }
 
@@ -211,6 +212,11 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         set {
             fileTransferStatusSubject.value = newValue
             logger.debug("updated fileTransferStatus to \(newValue.name)")
+
+            if fileTransferStatus == .sending {
+                logger.debug("starting to send file")
+                sendFileBlock(sendImmediately: false)
+            }
         }
     }
 
@@ -294,7 +300,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         }
 
         logger.debug("sending next file block")
-        sendFileBlock()
+        sendFileBlock(sendImmediately: false)
     }
 
     // MARK: - fileTransfer
@@ -349,7 +355,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         fileDataToSend = fileData
 
         setFileTransferType(file.fileType, sendImmediately: false)
-        setFileLength(UInt16(fileData.count), sendImmediately: false)
+        setFileLength(BSFileLength(fileData.count), sendImmediately: false)
         setChecksum(fileChecksum, sendImmediately: false)
         setFileTransferCommand(.send, sendImmediately: sendImmediately)
 
@@ -373,7 +379,7 @@ class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         logger.debug("remainingBytes: \(remainingBytes)")
 
         let progress = Float(bytesTransferred) / Float(fileDataToSend.count)
-        logger.debug("progress: \(progress)%")
+        logger.debug("progress: \(progress * 100)%")
         fileTransferProgressSubject.send((fileType, .sending, progress))
 
         guard remainingBytes > 0 else {

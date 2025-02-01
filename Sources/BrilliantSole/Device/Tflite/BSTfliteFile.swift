@@ -5,6 +5,8 @@
 //  Created by Zack Qattan on 1/21/25.
 //
 
+import Foundation
+
 public typealias BSTfliteCaptureDelay = UInt16
 public typealias BSTfliteThreshold = Float
 
@@ -36,7 +38,7 @@ public class BSTfliteFile: BSBaseFile {
 
     public let classes: [String]?
 
-    public init(fileName: String, modelName: String, sensorTypes: BSTfliteSensorTypes, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]?) {
+    public init(fileName: String, bundle: Bundle = .main, modelName: String, sensorTypes: BSTfliteSensorTypes, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]?) {
         self.tfliteName = modelName
         self.sensorTypes = sensorTypes
         self.task = task
@@ -45,6 +47,6 @@ public class BSTfliteFile: BSBaseFile {
         self.threshold = threshold
         self.classes = classes
 
-        super.init(fileName: fileName)
+        super.init(fileName: fileName, bundle: bundle)
     }
 }

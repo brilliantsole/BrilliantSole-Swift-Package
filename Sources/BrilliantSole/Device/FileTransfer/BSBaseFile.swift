@@ -16,9 +16,12 @@ public class BSBaseFile: BSFile {
     }
 
     public let fileName: String
+    public let bundle: Bundle
+
     public var fileData: Data?
 
-    public init(fileName: String) {
+    public init(fileName: String, bundle: Bundle = .main) {
         self.fileName = fileName
+        self.bundle = bundle
     }
 }
