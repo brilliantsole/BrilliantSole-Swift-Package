@@ -15,9 +15,7 @@ public final class BSDevice {
 
     init() {
         setupManagers()
-        Task {
-            // await BSDeviceManager.onDeviceCreated(self)
-        }
+        // BSDeviceManager.onDeviceCreated(self)
     }
 
     convenience init(name: String, deviceType: BSDeviceType?) {
