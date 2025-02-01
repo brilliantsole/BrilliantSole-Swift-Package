@@ -10,7 +10,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSBaseScanner")
 
-class BSBaseScanner: NSObject, @preconcurrency BSScanner {
+class BSBaseScanner: NSObject, BSScanner {
     class var connectionType: BSConnectionType { fatalError("not implemented") }
 
     // MARK: - isScanningAvailable
