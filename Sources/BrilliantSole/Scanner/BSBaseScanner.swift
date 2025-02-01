@@ -10,7 +10,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSBaseScanner")
 
-class BSBaseScanner: NSObject, BSScanner {
+class BSBaseScanner: NSObject, @preconcurrency BSScanner {
     class var connectionType: BSConnectionType { fatalError("not implemented") }
 
     // MARK: - isScanningAvailable
@@ -162,19 +162,19 @@ class BSBaseScanner: NSObject, BSScanner {
         expiredDeviceSubject.send(discoveredDevice)
     }
 
-    func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    @MainActor func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.connect()
         return device
     }
 
-    func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
+    @MainActor func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
         let device = getDevice(discoveredDevice: discoveredDevice)
         device?.disconnect()
         return device
     }
 
-    func toggleConnection(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    @MainActor func toggleConnection(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.toggleConnection()
         return device
@@ -212,7 +212,7 @@ class BSBaseScanner: NSObject, BSScanner {
     private(set) var devices: [String: BSDevice] = .init()
     var allDevices: [String: BSDevice] = .init()
 
-    private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
+    @MainActor private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
         guard discoveredDevices[discoveredDevice.id] != nil else {
             fatalError("invalid discoveredDevice \(discoveredDevices)")
         }
@@ -229,7 +229,7 @@ class BSBaseScanner: NSObject, BSScanner {
     }
 
     private var deviceIsConnectedCancellables = Set<AnyCancellable>()
-    func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    @MainActor func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         logger.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device

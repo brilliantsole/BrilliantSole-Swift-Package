@@ -13,12 +13,12 @@ import UkatonMacros
 public final class BSDevice {
     // MARK: - init
 
-    init() {
+    @MainActor init() {
         setupManagers()
-        // BSDeviceManager.onDeviceCreated(self)
+        BSDeviceManager.onDeviceCreated(self)
     }
 
-    convenience init(name: String, deviceType: BSDeviceType?) {
+    @MainActor convenience init(name: String, deviceType: BSDeviceType?) {
         self.init()
         informationManager.initName(name)
         if let deviceType {
@@ -26,7 +26,7 @@ public final class BSDevice {
         }
     }
 
-    convenience init(discoveredDevice: BSDiscoveredDevice) {
+    @MainActor convenience init(discoveredDevice: BSDiscoveredDevice) {
         self.init(name: discoveredDevice.name, deviceType: discoveredDevice.deviceType)
     }
 
@@ -61,6 +61,7 @@ public final class BSDevice {
                 logger.debug("redundant update to connectionStatus \(newValue.name)")
                 return
             }
+
             logger.debug("updated connectionStatus \(newValue.name)")
             connectionStatusSubject.value = newValue
 
@@ -106,7 +107,7 @@ public final class BSDevice {
 
     // MARK: - isConnected
 
-    private let isConnectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    private let isConnectedSubject: PassthroughSubject<Bool, Never> = .init()
     var isConnectedPublisher: AnyPublisher<Bool, Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }

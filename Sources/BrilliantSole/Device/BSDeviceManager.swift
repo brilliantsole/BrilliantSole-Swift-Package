@@ -53,29 +53,35 @@ public final class BSDeviceManager: ObservableObject {
 
     static var cancellables: Set<AnyCancellable> = .init()
     static func onDeviceCreated(_ device: BSDevice) {
-        logger.debug("adding device \(device.name)...")
+        logger.debug("adding device")
         device.isConnectedPublisher.sink { _ in
+            logger.debug("device \(device.name) isConnected? \(device.isConnected)")
             onDeviceIsConnected(device)
         }.store(in: &cancellables)
     }
 
     static func onDeviceIsConnected(_ device: BSDevice) {
-        logger.debug("\(device.name) isConnected? \(device.isConnected)")
         if device.isConnected {
+            logger.debug("adding \(device.name) to connectedDevices")
             connectedDevices.insert(device)
             deviceConnectedSubject.send(device)
             if !availableDevices.contains(device) {
+                logger.debug("adding \(device.name) to availableDevices")
                 availableDevices.insert(device)
                 availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
             }
             // FILL - devicePair
         }
-        else {
+        else if connectedDevices.contains(device) {
+            logger.debug("removing \(device.name) from connectedDevices")
             connectedDevices.remove(device)
             deviceDisconnectedSubject.send(device)
         }
-        connectedDevicesSubject.send(connectedDevices)
-        isDeviceConnectedSubject.send((device, device.isConnected))
+        if availableDevices.contains(device) {
+            logger.debug("updating connectedDevicesSubject and isDeviceConnectedSubject for \(device.name)")
+            connectedDevicesSubject.send(connectedDevices)
+            isDeviceConnectedSubject.send((device, device.isConnected))
+        }
     }
 }

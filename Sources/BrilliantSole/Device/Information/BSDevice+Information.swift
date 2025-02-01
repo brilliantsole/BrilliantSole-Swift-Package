@@ -14,7 +14,7 @@ public extension BSDevice {
         informationManager.idPublisher
     }
 
-    nonisolated var id: String { "hey" }
+    nonisolated var id: String { informationManager.id }
 
     // MARK: - mtu
 

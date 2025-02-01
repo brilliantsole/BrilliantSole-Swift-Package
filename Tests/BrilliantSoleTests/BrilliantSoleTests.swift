@@ -110,6 +110,17 @@ struct BSTests {
         try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
     }
 
+    @Test func deviceManagerTest() async throws {
+        connectToDevice(onConnectedDevice: { _ in
+
+        })
+        // FIX
+//        BSDeviceManager.connectedDevicesPublisher.sink { _ in
+//
+//        }.store(in: &cancellablesStore.cancellables)
+        try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+    }
+
     @Test func deviceSensorDataTest() async throws {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.setSensorRate(sensorType: .pressure, sensorRate: ._100ms)

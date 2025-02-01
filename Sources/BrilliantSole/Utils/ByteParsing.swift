@@ -78,6 +78,10 @@ extension BinaryFloatingPoint {
 
 extension Data {
     func parseString(offset: Data.Index = .zero, until finalOffset: Data.Index) -> String {
+        guard !isEmpty else {
+            logger.debug("empty string")
+            return ""
+        }
         guard offset < finalOffset, finalOffset <= count else {
             logger.error("Invalid string range: offset \(offset), finalOffset \(finalOffset), data count \(count)")
             return ""
