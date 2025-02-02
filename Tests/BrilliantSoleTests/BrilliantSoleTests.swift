@@ -144,7 +144,7 @@ struct BSTests {
     @Test func deviceTfliteTest() async throws {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.sendTfliteModel(&tfliteFile)
-            device.isTfliteReadyPublisher.sink { isTfliteReady in
+            device.isTfliteReadyPublisher.sink { device, isTfliteReady in
                 if isTfliteReady {
                     print("tflite is ready")
                     device.enableTfliteInferencing()

@@ -56,13 +56,12 @@ public extension BSDevicePair {
         }
         deviceConnectionCancellables[device] = .init()
 
-        let insoleSide = device.insoleSide!
-        device.connectionStatusPublisher.sink { connectionStatus in
-            self.onDeviceConnectionStatus(insoleSide: insoleSide, connectionStatus: connectionStatus)
+        device.connectionStatusPublisher.sink { device, connectionStatus in
+            self.onDeviceConnectionStatus(device: device, connectionStatus: connectionStatus)
         }.store(in: &deviceConnectionCancellables[device]!)
 
-        device.isConnectedPublisher.sink { isConnected in
-            self.onDeviceIsConnected(insoleSide: insoleSide, isConnected: isConnected)
+        device.isConnectedPublisher.sink { device, isConnected in
+            self.onDeviceIsConnected(device: device, isConnected: isConnected)
         }.store(in: &deviceConnectionCancellables[device]!)
     }
 
@@ -70,17 +69,17 @@ public extension BSDevicePair {
         deviceConnectionCancellables[device] = nil
     }
 
-    func onDeviceConnectionStatus(insoleSide: BSInsoleSide, connectionStatus: BSConnectionStatus) {
-        guard let device = devices[insoleSide] else {
-            logger.error("\(insoleSide.name) device not found")
+    func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
+        guard let insoleSide = device.insoleSide else {
+            logger.error("device.insoleSide not found")
             return
         }
         deviceConnectionStatusSubject.send((insoleSide, device, connectionStatus))
     }
 
-    func onDeviceIsConnected(insoleSide: BSInsoleSide, isConnected: Bool) {
-        guard let device = devices[insoleSide] else {
-            logger.error("\(insoleSide.name) device not found")
+    func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
+        guard let insoleSide = device.insoleSide else {
+            logger.error("device.insoleSide not found")
             return
         }
         deviceIsConnectedSubject.send((insoleSide, device, isConnected))

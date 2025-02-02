@@ -49,66 +49,61 @@ public final class BSDevice {
 
     // MARK: - connectionStatus
 
-    private let connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(.notConnected)
-    var connectionStatusPublisher: AnyPublisher<BSConnectionStatus, Never> {
+    private let connectionStatusSubject: PassthroughSubject<(BSDevice, BSConnectionStatus), Never> = .init()
+    var connectionStatusPublisher: AnyPublisher<(BSDevice, BSConnectionStatus), Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
-    public internal(set) var connectionStatus: BSConnectionStatus {
-        get { connectionStatusSubject.value }
-        set {
-            guard newValue != connectionStatus else {
-                logger.debug("redundant update to connectionStatus \(newValue.name)")
-                return
-            }
+    public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
+        didSet {
+            logger.debug("updated connectionStatus \(self.connectionStatus.name)")
 
-            logger.debug("updated connectionStatus \(newValue.name)")
-            connectionStatusSubject.value = newValue
+            connectionStatusSubject.send((self, connectionStatus))
 
             switch connectionStatus {
             case .notConnected:
-                notConnectedSubject.send()
+                notConnectedSubject.send(self)
             case .connecting:
-                connectingSubject.send()
+                connectingSubject.send(self)
             case .connected:
-                connectedSubject.send()
+                connectedSubject.send(self)
             case .disconnecting:
-                disconnectingSubject.send()
+                disconnectingSubject.send(self)
             }
 
             switch connectionStatus {
             case .connected, .notConnected:
-                isConnectedSubject.send(isConnected)
+                isConnectedSubject.send((self, isConnected))
             default:
                 break
             }
         }
     }
 
-    private let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
-    var notConnectedPublisher: AnyPublisher<Void, Never> {
+    private let notConnectedSubject: PassthroughSubject<BSDevice, Never> = .init()
+    var notConnectedPublisher: AnyPublisher<BSDevice, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectedSubject: PassthroughSubject<Void, Never> = .init()
-    var connectedPublisher: AnyPublisher<Void, Never> {
+    private let connectedSubject: PassthroughSubject<BSDevice, Never> = .init()
+    var connectedPublisher: AnyPublisher<BSDevice, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectingSubject: PassthroughSubject<Void, Never> = .init()
-    var connectingPublisher: AnyPublisher<Void, Never> {
+    private let connectingSubject: PassthroughSubject<BSDevice, Never> = .init()
+    var connectingPublisher: AnyPublisher<BSDevice, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
-    private let disconnectingSubject: PassthroughSubject<Void, Never> = .init()
-    var disconnectingPublisher: AnyPublisher<Void, Never> {
+    private let disconnectingSubject: PassthroughSubject<BSDevice, Never> = .init()
+    var disconnectingPublisher: AnyPublisher<BSDevice, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isConnected
 
-    private let isConnectedSubject: PassthroughSubject<Bool, Never> = .init()
-    var isConnectedPublisher: AnyPublisher<Bool, Never> {
+    private let isConnectedSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    var isConnectedPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
 
@@ -116,30 +111,35 @@ public final class BSDevice {
 
     // MARK: - batteryLevel
 
-    private let batteryLevelSubject: CurrentValueSubject<BSBatteryLevel, Never> = .init(0)
-    var batteryLevelPublisher: AnyPublisher<BSBatteryLevel, Never> {
+    private let batteryLevelSubject: PassthroughSubject<(BSDevice, BSBatteryLevel), Never> = .init()
+    var batteryLevelPublisher: AnyPublisher<(BSDevice, BSBatteryLevel), Never> {
         batteryLevelSubject.eraseToAnyPublisher()
     }
 
     var didReceiveBatteryLevel: Bool = false
 
-    public internal(set) var batteryLevel: BSBatteryLevel {
-        get { batteryLevelSubject.value }
-        set {
-            guard newValue != batteryLevel else {
-                logger.debug("redundant batteryLevel \(newValue)")
-                return
-            }
-            batteryLevelSubject.value = newValue
+    public internal(set) var batteryLevel: BSBatteryLevel = 0 {
+        didSet {
+            logger.debug("updated batteryLevel \(self.batteryLevel)")
             didReceiveBatteryLevel = true
+            batteryLevelSubject.send((self, batteryLevel))
         }
     }
 
     // MARK: - deviceInformation
 
+    let deviceInformationSubject: PassthroughSubject<(BSDevice, BSDeviceInformation), Never> = .init()
+    public var deviceInformationPublisher: AnyPublisher<(BSDevice, BSDeviceInformation), Never> {
+        deviceInformationSubject.eraseToAnyPublisher()
+    }
+
     let deviceInformationManager: BSDeviceInformationManager = .init()
-    public var deviceInformation: BSDeviceInformation { deviceInformationManager.deviceInformation }
-    var deviceInformationPublisher: AnyPublisher<BSDeviceInformation, Never> { deviceInformationManager.deviceInformationPublisher }
+    public internal(set) var deviceInformation: BSDeviceInformation = .init() {
+        didSet {
+            logger.debug("updated deviceInformation \(self.deviceInformation)")
+            deviceInformationSubject.send((self, deviceInformation))
+        }
+    }
 
     // MARK: - managers
 
@@ -167,9 +167,39 @@ public final class BSDevice {
 
     // MARK: - tfliteManager
 
-    let isTfliteReadySubject: CurrentValueSubject<Bool, Never> = .init(false)
-    public var isTfliteReadyPublisher: AnyPublisher<Bool, Never> {
+    // MARK: - tfliteInferencingEnabled
+
+    private let tfliteInferencingEnabledSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    public var tfliteInferencingEnabledPublisher: AnyPublisher<(BSDevice, Bool), Never> {
+        tfliteInferencingEnabledSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - isTfliteReady
+
+    let isTfliteReadySubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    public var isTfliteReadyPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isTfliteReadySubject.eraseToAnyPublisher()
+    }
+
+    public internal(set) var isTfliteReady: Bool = false {
+        didSet {
+            logger.debug("updated isTfliteReady \(self.isTfliteReady)")
+            isTfliteReadySubject.send((self, isTfliteReady))
+        }
+    }
+
+    // MARK: - tfliteInference
+
+    let tfliteInferenceSubject: PassthroughSubject<(BSDevice, BSInference), Never> = .init()
+    public var tfliteInferencePublisher: AnyPublisher<(BSDevice, BSInference), Never> {
+        tfliteInferenceSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteClassification
+
+    let tfliteClassificationSubject: PassthroughSubject<(BSDevice, BSClassification), Never> = .init()
+    var tfliteClassificationPublisher: AnyPublisher<(BSDevice, BSClassification), Never> {
+        tfliteClassificationSubject.eraseToAnyPublisher()
     }
 }
 
