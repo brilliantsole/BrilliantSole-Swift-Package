@@ -126,6 +126,22 @@ public final class BSDevice {
         }
     }
 
+    // MARK: - batteryManager
+
+    // MARK: - batteryCurrent
+
+    let batteryCurrentSubject: PassthroughSubject<(BSDevice, Float), Never> = .init()
+    var batteryCurrentPublisher: AnyPublisher<(BSDevice, Float), Never> {
+        batteryCurrentSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - isBatteryCharging
+
+    let isBatteryChargingSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    var isBatteryChargingPublisher: AnyPublisher<(BSDevice, Bool), Never> {
+        isBatteryChargingSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - deviceInformation
 
     let deviceInformationSubject: PassthroughSubject<(BSDevice, BSDeviceInformation), Never> = .init()
@@ -134,12 +150,7 @@ public final class BSDevice {
     }
 
     let deviceInformationManager: BSDeviceInformationManager = .init()
-    public internal(set) var deviceInformation: BSDeviceInformation = .init() {
-        didSet {
-            logger.debug("updated deviceInformation \(self.deviceInformation)")
-            deviceInformationSubject.send((self, deviceInformation))
-        }
-    }
+    public var deviceInformation: BSDeviceInformation { deviceInformationManager.deviceInformation }
 
     // MARK: - managers
 
@@ -164,6 +175,12 @@ public final class BSDevice {
     // MARK: - rxMessage
 
     var receivedTxRxMessages: Set<BSTxMessageType> = .init()
+
+    // MARK: - fileTransferManager
+
+    // MARK: - maxFileLength
+
+    // FILL
 
     // MARK: - tfliteManager
 

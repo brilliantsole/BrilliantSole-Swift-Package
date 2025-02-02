@@ -18,6 +18,7 @@ extension BSDevice {
     }
 
     func setupManagers() {
+        setupBatteryManager()
         setupDeviceInformationManager()
         setupFileTransfer()
         setupTfliteManager()

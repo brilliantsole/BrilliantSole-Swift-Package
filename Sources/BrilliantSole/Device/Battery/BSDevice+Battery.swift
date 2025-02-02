@@ -8,19 +8,16 @@
 import Combine
 
 public extension BSDevice {
-    // MARK: - batteryCurrent
+    internal func setupBatteryManager() {
+        batteryManager.batteryCurrentPublisher.sink { [self] batteryCurrent in
+            self.batteryCurrentSubject.send((self, batteryCurrent))
+        }.store(in: &managerCancellables)
 
-    var batteryCurrentPublisher: AnyPublisher<Float, Never> {
-        batteryManager.batteryCurrentPublisher
+        batteryManager.isBatteryChargingPublisher.sink { [self] isBatteryCharging in
+            self.isBatteryChargingSubject.send((self, isBatteryCharging))
+        }.store(in: &managerCancellables)
     }
 
     var batteryCurrent: Float { batteryManager.batteryCurrent }
-
-    // MARK: - isBatteryCharging
-
-    var isBatteryChargingPublisher: AnyPublisher<Bool, Never> {
-        batteryManager.isBatteryChargingPublisher
-    }
-
     var isBatteryCharging: Bool { batteryManager.isBatteryCharging }
 }

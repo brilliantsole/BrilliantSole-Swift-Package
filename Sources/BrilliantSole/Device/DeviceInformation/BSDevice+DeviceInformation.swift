@@ -7,8 +7,8 @@
 
 extension BSDevice {
     func setupDeviceInformationManager() {
-        deviceInformationManager.deviceInformationPublisher.sink { [weak self] deviceInformation in
-            self?.deviceInformation = deviceInformation
+        deviceInformationManager.deviceInformationPublisher.sink { [self] deviceInformation in
+            self.deviceInformationSubject.send((self, deviceInformation))
         }.store(in: &managerCancellables)
     }
 }
