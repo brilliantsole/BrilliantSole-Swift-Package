@@ -21,16 +21,28 @@ public actor BSDevicePair {
         self.init()
         guard isShared else { return }
         Self.logger.debug("initializing shared instance")
-        // FILL
+
+        defer { Task { @MainActor in await listenToDeviceManager() } }
     }
 
     public init() {
-        // FILL
+        setupSensorDataManager()
     }
 
     public func reset() {
-        // FILL
+        sensorDataManager.reset()
     }
+
+    func listenToDeviceManager() {
+        logger.debug("listening to deviceManager for new devices...")
+        BSDeviceManager.availableDevicePublisher.sink { [self] device in
+            self.add(device: device)
+        }.store(in: &cancellables)
+    }
+
+    // MARK: - cancellables
+
+    var cancellables: Set<AnyCancellable> = .init()
 
     // MARK: - devices
 
@@ -77,6 +89,7 @@ public actor BSDevicePair {
 
     // MARK: - sensorData
 
+    let sensorDataManager: BSDevicePairSensorDataManager = .init()
     // FILL
 
     // MARK: - tflite
@@ -103,5 +116,43 @@ public actor BSDevicePair {
 
     // MARK: - fileTransfer
 
-    // FILL
+    let deviceMaxFileLengthSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileLength), Never> = .init()
+    public var deviceMaxFileLengthPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileLength), Never> {
+        deviceMaxFileLengthSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileTransferStatusSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileTransferStatus), Never> = .init()
+    public var deviceFileTransferStatusPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileTransferStatus), Never> {
+        deviceFileTransferStatusSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileChecksumSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileChecksum), Never> = .init()
+    public var deviceFileChecksumPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileChecksum), Never> {
+        deviceFileChecksumSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileLengthSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileLength), Never> = .init()
+    public var deviceFileLengthPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileLength), Never> {
+        deviceFileLengthSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileTypeSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType), Never> = .init()
+    public var deviceFileTypePublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType), Never> {
+        deviceFileTypeSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileTransferProgressSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, BSFileTransferDirection, Float), Never> = .init()
+    public var deviceFileTransferProgressPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, BSFileTransferDirection, Float), Never> {
+        deviceFileTransferProgressSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileTransferCompleteSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, BSFileTransferDirection), Never> = .init()
+    public var devieceFileTransferCompletePublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, BSFileTransferDirection), Never> {
+        deviceFileTransferCompleteSubject.eraseToAnyPublisher()
+    }
+
+    let deviceFileReceivedSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, Data), Never> = .init()
+    public var deviceFileReceivedPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSFileType, Data), Never> {
+        deviceFileReceivedSubject.eraseToAnyPublisher()
+    }
 }

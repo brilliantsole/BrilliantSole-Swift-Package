@@ -70,7 +70,6 @@ public actor BSDeviceManager {
                 availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
             }
-            // FILL - devicePair
         }
         else if connectedDevices.contains(device) {
             logger.debug("removing \(device.name) from connectedDevices")

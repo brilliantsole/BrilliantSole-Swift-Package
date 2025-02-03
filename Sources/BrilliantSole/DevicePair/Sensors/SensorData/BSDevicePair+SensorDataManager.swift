@@ -7,4 +7,7 @@
 
 extension BSDevicePair {
     // FILL
+    nonisolated func setupSensorDataManager() {
+        // FILL
+    }
 }
