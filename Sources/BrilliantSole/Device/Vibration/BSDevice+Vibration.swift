@@ -8,6 +8,8 @@
 import Combine
 
 public extension BSDevice {
+    internal func setupVibrationManager() {}
+
     func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool = true) {
         vibrationManager.triggerVibration(vibrationConfigurations, sendImmediately: sendImmediately)
     }

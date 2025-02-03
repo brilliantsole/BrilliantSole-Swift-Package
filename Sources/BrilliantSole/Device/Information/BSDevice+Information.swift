@@ -8,27 +8,35 @@
 import Combine
 
 public extension BSDevice {
-    // MARK: - id
+    internal func setupInformationManager() {
+        informationManager.idPublisher.sink { id in
+            self.idSubject.send((self, id))
+        }.store(in: &managerCancellables)
 
-    var idPublisher: AnyPublisher<String, Never> {
-        informationManager.idPublisher
+        informationManager.mtuPublisher.sink { mtu in
+            self.mtuSubject.send((self, mtu))
+        }.store(in: &managerCancellables)
+
+        informationManager.deviceTypePublisher.sink { deviceType in
+            self.deviceTypeSubject.send((self, deviceType))
+        }.store(in: &managerCancellables)
+
+        informationManager.namePublisher.sink { name in
+            self.nameSubject.send((self, name))
+        }.store(in: &managerCancellables)
     }
 
-    nonisolated var id: String { informationManager.id }
+    // MARK: - id
+
+    var id: String { informationManager.id }
 
     // MARK: - mtu
 
     var mtu: BSMtu { informationManager.mtu }
-    var mtuPublisher: AnyPublisher<BSMtu, Never> {
-        informationManager.mtuPublisher
-    }
 
     // MARK: - deviceType
 
     var deviceType: BSDeviceType { informationManager.deviceType }
-    var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> {
-        informationManager.deviceTypePublisher
-    }
 
     var isInsole: Bool { deviceType.isInsole }
     var insoleSide: BSInsoleSide? { deviceType.insoleSide }
@@ -36,7 +44,4 @@ public extension BSDevice {
     // MARK: - name
 
     var name: String { informationManager.name }
-    var namePublisher: AnyPublisher<String, Never> {
-        informationManager.namePublisher
-    }
 }

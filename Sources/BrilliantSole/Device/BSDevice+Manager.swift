@@ -20,8 +20,12 @@ extension BSDevice {
     func setupManagers() {
         setupBatteryManager()
         setupDeviceInformationManager()
+        setupInformationManager()
+        setupSensorConfiguration()
+        setupSensorData()
         setupFileTransfer()
         setupTfliteManager()
+        setupVibrationManager()
         for manager in managers {
             manager.setSendTxMessages { txMessages, sendImmediately in
                 self.sendTxMessages(txMessages, sendImmediately: sendImmediately)

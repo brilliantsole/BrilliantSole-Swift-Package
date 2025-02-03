@@ -176,19 +176,207 @@ public final class BSDevice {
 
     var receivedTxRxMessages: Set<BSTxMessageType> = .init()
 
+    // MARK: - informationManager
+
+    // MARK: - id
+
+    let idSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    public var idPublisher: AnyPublisher<(BSDevice, String), Never> {
+        idSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - mtu
+
+    let mtuSubject: PassthroughSubject<(BSDevice, BSMtu), Never> = .init()
+    public var mtuPublisher: AnyPublisher<(BSDevice, BSMtu), Never> {
+        mtuSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - deviceType
+
+    let deviceTypeSubject: PassthroughSubject<(BSDevice, BSDeviceType), Never> = .init()
+    public var deviceTypePublisher: AnyPublisher<(BSDevice, BSDeviceType), Never> {
+        deviceTypeSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - name
+
+    let nameSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    public var namePublisher: AnyPublisher<(BSDevice, String), Never> {
+        nameSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - sensorConfigurationManager
+
+    let sensorConfigurationSubject: PassthroughSubject<(BSDevice, BSSensorConfiguration), Never> = .init()
+    public var sensorConfigurationPublisher: AnyPublisher<(BSDevice, BSSensorConfiguration), Never> {
+        sensorConfigurationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - sensorDataManager
+
+    // MARK: - pressure
+
+    let pressureDataSubject: PassthroughSubject<(BSDevice, BSPressureData, BSTimestamp), Never> = .init()
+    public var pressureDataPublisher: AnyPublisher<(BSDevice, BSPressureData, BSTimestamp), Never> {
+        pressureDataSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - motion
+
+    let accelerationSubject: PassthroughSubject<(BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var accelerationPublisher: AnyPublisher<(BSDevice, BSVector3D, BSTimestamp), Never> {
+        accelerationSubject.eraseToAnyPublisher()
+    }
+
+    let linearAccelerationSubject: PassthroughSubject<(BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var linearAccelerationPublisher: AnyPublisher<(BSDevice, BSVector3D, BSTimestamp), Never> {
+        linearAccelerationSubject.eraseToAnyPublisher()
+    }
+
+    let gravitySubject: PassthroughSubject<(BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var gravityPublisher: AnyPublisher<(BSDevice, BSVector3D, BSTimestamp), Never> {
+        gravitySubject.eraseToAnyPublisher()
+    }
+
+    let gyroscopeSubject: PassthroughSubject<(BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var gyroscopePublisher: AnyPublisher<(BSDevice, BSVector3D, BSTimestamp), Never> {
+        gyroscopeSubject.eraseToAnyPublisher()
+    }
+
+    let magnetometerSubject: PassthroughSubject<(BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var magnetometerPublisher: AnyPublisher<(BSDevice, BSVector3D, BSTimestamp), Never> {
+        magnetometerSubject.eraseToAnyPublisher()
+    }
+
+    let gameRotationSubject: PassthroughSubject<(BSDevice, BSQuaternion, BSTimestamp), Never> = .init()
+    public var gameRotationPublisher: AnyPublisher<(BSDevice, BSQuaternion, BSTimestamp), Never> {
+        gameRotationSubject.eraseToAnyPublisher()
+    }
+
+    let rotationSubject: PassthroughSubject<(BSDevice, BSQuaternion, BSTimestamp), Never> = .init()
+    public var rotationPublisher: AnyPublisher<(BSDevice, BSQuaternion, BSTimestamp), Never> {
+        rotationSubject.eraseToAnyPublisher()
+    }
+
+    let orientationSubject: PassthroughSubject<(BSDevice, BSRotation3D, BSTimestamp), Never> = .init()
+    public var orientationPublisher: AnyPublisher<(BSDevice, BSRotation3D, BSTimestamp), Never> {
+        orientationSubject.eraseToAnyPublisher()
+    }
+
+    let stepCountSubject: PassthroughSubject<(BSDevice, BSStepCount, BSTimestamp), Never> = .init()
+    public var stepCountPublisher: AnyPublisher<(BSDevice, BSStepCount, BSTimestamp), Never> {
+        stepCountSubject.eraseToAnyPublisher()
+    }
+
+    let stepDetectionSubject: PassthroughSubject<(BSDevice, BSTimestamp), Never> = .init()
+    public var stepDetectionPublisher: AnyPublisher<(BSDevice, BSTimestamp), Never> {
+        stepDetectionSubject.eraseToAnyPublisher()
+    }
+
+    let activitySubject: PassthroughSubject<(BSDevice, BSActivityFlags, BSTimestamp), Never> = .init()
+    public var activityPublisher: AnyPublisher<(BSDevice, BSActivityFlags, BSTimestamp), Never> {
+        activitySubject.eraseToAnyPublisher()
+    }
+
+    let deviceOrientationSubject: PassthroughSubject<(BSDevice, BSDeviceOrientation, BSTimestamp), Never> = .init()
+    public var deviceOrientationPublisher: AnyPublisher<(BSDevice, BSDeviceOrientation, BSTimestamp), Never> {
+        deviceOrientationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - barometer
+
+    let barometerSubject: PassthroughSubject<(BSDevice, BSBarometer, BSTimestamp), Never> = .init()
+    public var barometerPublisher: AnyPublisher<(BSDevice, BSBarometer, BSTimestamp), Never> {
+        barometerSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - fileTransferManager
 
     // MARK: - maxFileLength
 
-    // FILL
+    let maxFileLengthSubject: PassthroughSubject<(BSDevice, BSFileLength), Never> = .init()
+    public var maxFileLengthPublisher: AnyPublisher<(BSDevice, BSFileLength), Never> {
+        maxFileLengthSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileType
+
+    let fileTypeSubject: PassthroughSubject<(BSDevice, BSFileType), Never> = .init()
+    public var fileTypePublisher: AnyPublisher<(BSDevice, BSFileType), Never> {
+        fileTypeSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileLength
+
+    let fileLengthSubject: PassthroughSubject<(BSDevice, BSFileLength), Never> = .init()
+    public var fileLengthPublisher: AnyPublisher<(BSDevice, BSFileLength), Never> {
+        fileLengthSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileChecksum
+
+    let fileChecksumSubject: PassthroughSubject<(BSDevice, BSFileChecksum), Never> = .init()
+    public var fileChecksumPublisher: AnyPublisher<(BSDevice, BSFileChecksum), Never> {
+        fileChecksumSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileTransferStatus
+
+    let fileTransferStatusSubject: PassthroughSubject<(BSDevice, BSFileTransferStatus), Never> = .init()
+    public var fileTransferStatusPublisher: AnyPublisher<(BSDevice, BSFileTransferStatus), Never> {
+        fileTransferStatusSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileTransferProgress
+
+    let fileTransferProgressSubject: PassthroughSubject<(BSDevice, BSFileType, BSFileTransferDirection, Float), Never> = .init()
+    public var fileTransferProgressPublisher: AnyPublisher<(BSDevice, BSFileType, BSFileTransferDirection, Float), Never> {
+        fileTransferProgressSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileTransferComplete
+
+    let fileReceivedSubject: PassthroughSubject<(BSDevice, BSFileType, Data), Never> = .init()
+    public var fileReceivedPublisher: AnyPublisher<(BSDevice, BSFileType, Data), Never> {
+        fileReceivedSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileReceived
+
+    let fileTransferCompleteSubject: PassthroughSubject<(BSDevice, BSFileType, BSFileTransferDirection), Never> = .init()
+    public var fileTransferCompletePublisher: AnyPublisher<(BSDevice, BSFileType, BSFileTransferDirection), Never> {
+        fileTransferCompleteSubject.eraseToAnyPublisher()
+    }
 
     // MARK: - tfliteManager
 
-    // MARK: - tfliteInferencingEnabled
+    // MARK: - tfliteName
 
-    private let tfliteInferencingEnabledSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
-    public var tfliteInferencingEnabledPublisher: AnyPublisher<(BSDevice, Bool), Never> {
-        tfliteInferencingEnabledSubject.eraseToAnyPublisher()
+    let tfliteNameSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    public var tfliteNamePublisher: AnyPublisher<(BSDevice, String), Never> {
+        tfliteNameSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteTask
+
+    let tfliteTaskSubject: PassthroughSubject<(BSDevice, BSTfliteTask), Never> = .init()
+    public var tfliteTaskPublisher: AnyPublisher<(BSDevice, BSTfliteTask), Never> {
+        tfliteTaskSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteSensorRate
+
+    let tfliteSensorRateSubject: PassthroughSubject<(BSDevice, BSSensorRate), Never> = .init()
+    public var tfliteSensorRatePublisher: AnyPublisher<(BSDevice, BSSensorRate), Never> {
+        tfliteSensorRateSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteSensorTypes
+
+    let tfliteSensorTypesSubject: PassthroughSubject<(BSDevice, BSTfliteSensorTypes), Never> = .init()
+    public var tfliteSensorTypesPublisher: AnyPublisher<(BSDevice, BSTfliteSensorTypes), Never> {
+        tfliteSensorTypesSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isTfliteReady
@@ -203,6 +391,27 @@ public final class BSDevice {
             logger.debug("updated isTfliteReady \(self.isTfliteReady)")
             isTfliteReadySubject.send((self, isTfliteReady))
         }
+    }
+
+    // MARK: - tfliteThreshold
+
+    let tfliteThresholdSubject: PassthroughSubject<(BSDevice, BSTfliteThreshold), Never> = .init()
+    public var tfliteThresholdPublisher: AnyPublisher<(BSDevice, BSTfliteThreshold), Never> {
+        tfliteThresholdSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteCaptureDelay
+
+    let tfliteCaptureDelaySubject: PassthroughSubject<(BSDevice, BSTfliteCaptureDelay), Never> = .init()
+    public var tfliteCaptureDelayPublisher: AnyPublisher<(BSDevice, BSTfliteCaptureDelay), Never> {
+        tfliteCaptureDelaySubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - tfliteInferencingEnabled
+
+    let tfliteInferencingEnabledSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    public var tfliteInferencingEnabledPublisher: AnyPublisher<(BSDevice, Bool), Never> {
+        tfliteInferencingEnabledSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteInference

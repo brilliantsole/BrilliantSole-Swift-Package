@@ -11,8 +11,36 @@ public extension BSDevice {
     // MARK: - setup
 
     internal func setupTfliteManager() {
+        tfliteManager.tfliteNamePublisher.sink { tfliteName in
+            self.tfliteNameSubject.send((self, tfliteName))
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteTaskPublisher.sink { tfliteTask in
+            self.tfliteTaskSubject.send((self, tfliteTask))
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteSensorRatePublisher.sink { tfliteSensorRate in
+            self.tfliteSensorRateSubject.send((self, tfliteSensorRate))
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteSensorTypesPublisher.sink { tfliteSensorTypes in
+            self.tfliteSensorTypesSubject.send((self, tfliteSensorTypes))
+        }.store(in: &managerCancellables)
+
         tfliteManager.isTfliteReadyPublisher.sink { _ in
             self.checkIsTfliteReady()
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteThresholdPublisher.sink { tfliteThreshold in
+            self.tfliteThresholdSubject.send((self, tfliteThreshold))
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteCaptureDelayPublisher.sink { tfliteCaptureDelay in
+            self.tfliteCaptureDelaySubject.send((self, tfliteCaptureDelay))
+        }.store(in: &managerCancellables)
+
+        tfliteManager.tfliteInferencingEnabledPublisher.sink { tfliteInferencingEnabled in
+            self.tfliteInferencingEnabledSubject.send((self, tfliteInferencingEnabled))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteInferencePublisher.sink { inference in
@@ -24,17 +52,39 @@ public extension BSDevice {
         }.store(in: &managerCancellables)
     }
 
+    // MARK: - tfliteName
+
+    var tfliteName: String { tfliteManager.tfliteName }
+
+    // MARK: - tfliteTask
+
+    var tfliteTask: BSTfliteTask { tfliteManager.tfliteTask }
+
+    // MARK: - tfliteSensorRate
+
+    var tfliteSensorRate: BSSensorRate { tfliteManager.tfliteSensorRate }
+
+    // MARK: - tfliteSensorTypes
+
+    var tfliteSensorTypes: BSTfliteSensorTypes { tfliteManager.tfliteSensorTypes }
+
     // MARK: - isTfliteReady
 
     private func checkIsTfliteReady() {
         isTfliteReady = tfliteManager.isTfliteReady && tfliteManager.tfliteFile != nil
     }
 
+    // MARK: - tfliteCaptureDelay
+
+    var tfliteCaptureDelay: BSTfliteCaptureDelay { tfliteManager.tfliteCaptureDelay }
+
+    // MARK: - tfliteThreshold
+
+    var tfliteThreshold: BSTfliteThreshold { tfliteManager.tfliteThreshold }
+
     // MARK: - tfliteInferencingEnabled
 
-    var tfliteInferencingEnabled: Bool {
-        tfliteManager.tfliteInferencingEnabled
-    }
+    var tfliteInferencingEnabled: Bool { tfliteManager.tfliteInferencingEnabled }
 
     func setTfliteInferencingEnabled(_ newTfliteInferencingEnabled: Bool, sendImmediately: Bool = true) {
         tfliteManager.setTfliteInferencingEnabled(newTfliteInferencingEnabled, sendImmediately: sendImmediately)

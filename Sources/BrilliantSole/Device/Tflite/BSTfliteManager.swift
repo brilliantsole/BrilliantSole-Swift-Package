@@ -162,7 +162,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     // MARK: - tfliteSensorRate
 
     private let tfliteSensorRateSubject: CurrentValueSubject<BSSensorRate, Never> = .init(._0ms)
-    var tfliteSensorsRatePublisher: AnyPublisher<BSSensorRate, Never> {
+    var tfliteSensorRatePublisher: AnyPublisher<BSSensorRate, Never> {
         tfliteSensorRateSubject.eraseToAnyPublisher()
     }
 

@@ -8,65 +8,77 @@
 import Combine
 
 public extension BSDevice {
+    internal func setupSensorData() {
+        setupPressureData()
+        setupMotionData()
+        setupBarometerData()
+    }
+
     // MARK: - pressure
 
-    var pressureDataPublisher: AnyPublisher<(BSPressureData, BSTimestamp), Never> {
-        sensorDataManager.pressureSensorDataManager.pressureDataPublisher
+    private func setupPressureData() {
+        sensorDataManager.pressureSensorDataManager.pressureDataPublisher.sink { pressureData, timestamp in
+            self.pressureDataSubject.send((self, pressureData, timestamp))
+        }.store(in: &managerCancellables)
     }
 
     // MARK: - motion
 
-    var accelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.accelerationPublisher
-    }
+    private func setupMotionData() {
+        sensorDataManager.motionSensorDataManager.accelerationPublisher.sink { acceleration, timestamp in
+            self.accelerationSubject.send((self, acceleration, timestamp))
+        }.store(in: &managerCancellables)
 
-    var linearAccelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.linearAccelerationPublisher
-    }
+        sensorDataManager.motionSensorDataManager.linearAccelerationPublisher.sink { acceleration, timestamp in
+            self.linearAccelerationSubject.send((self, acceleration, timestamp))
+        }.store(in: &managerCancellables)
 
-    var gravityPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.gravityPublisher
-    }
+        sensorDataManager.motionSensorDataManager.gravityPublisher.sink { gravity, timestamp in
+            self.gravitySubject.send((self, gravity, timestamp))
+        }.store(in: &managerCancellables)
 
-    var gyroscopePublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.gyroscopePublisher
-    }
+        sensorDataManager.motionSensorDataManager.gyroscopePublisher.sink { gyroscope, timestamp in
+            self.gyroscopeSubject.send((self, gyroscope, timestamp))
+        }.store(in: &managerCancellables)
 
-    var magnetometerPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.magnetometerPublisher
-    }
+        sensorDataManager.motionSensorDataManager.magnetometerPublisher.sink { magnetometer, timestamp in
+            self.magnetometerSubject.send((self, magnetometer, timestamp))
+        }.store(in: &managerCancellables)
 
-    var gameRotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.gameRotationPublisher
-    }
+        sensorDataManager.motionSensorDataManager.gameRotationPublisher.sink { rotation, timestamp in
+            self.gameRotationSubject.send((self, rotation, timestamp))
+        }.store(in: &managerCancellables)
 
-    var rotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.rotationPublisher
-    }
+        sensorDataManager.motionSensorDataManager.rotationPublisher.sink { rotation, timestamp in
+            self.rotationSubject.send((self, rotation, timestamp))
+        }.store(in: &managerCancellables)
 
-    var orientationPublisher: AnyPublisher<(BSRotation3D, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.orientationPublisher
-    }
+        sensorDataManager.motionSensorDataManager.orientationPublisher.sink { orientation, timestamp in
+            self.orientationSubject.send((self, orientation, timestamp))
+        }.store(in: &managerCancellables)
 
-    var stepCountPublisher: AnyPublisher<(BSStepCount, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.stepCountPublisher
-    }
+        sensorDataManager.motionSensorDataManager.stepCountPublisher.sink { stepCount, timestamp in
+            self.stepCountSubject.send((self, stepCount, timestamp))
+        }.store(in: &managerCancellables)
 
-    var stepDetectionPublisher: AnyPublisher<BSTimestamp, Never> {
-        sensorDataManager.motionSensorDataManager.stepDetectionPublisher
-    }
+        sensorDataManager.motionSensorDataManager.stepDetectionPublisher.sink { timestamp in
+            self.stepDetectionSubject.send((self, timestamp))
+        }.store(in: &managerCancellables)
 
-    var activityPublisher: AnyPublisher<(BSActivityFlags, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.activityPublisher
-    }
+        sensorDataManager.motionSensorDataManager.activityPublisher.sink { activity, timestamp in
+            self.activitySubject.send((self, activity, timestamp))
+        }.store(in: &managerCancellables)
 
-    var deviceOrientationPublisher: AnyPublisher<(BSDeviceOrientation, BSTimestamp), Never> {
-        sensorDataManager.motionSensorDataManager.deviceOrientationPublisher
+        sensorDataManager.motionSensorDataManager.deviceOrientationPublisher.sink { orientation, timestamp in
+            self.deviceOrientationSubject.send((self, orientation, timestamp))
+        }.store(in: &managerCancellables)
     }
 
     // MARK: - barometer
 
-    var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
-        sensorDataManager.barometerSensorDataManager.barometerPublisher
+    private func setupBarometerData() {
+        sensorDataManager.barometerSensorDataManager.barometerPublisher.sink { barometerData, timestamp in
+            self.barometerSubject.send((self, barometerData, timestamp))
+        }.store(in: &managerCancellables)
     }
 }

@@ -11,51 +11,62 @@ public extension BSDevice {
     // MARK: - setup
 
     internal func setupFileTransfer() {
-        mtuPublisher.sink { [weak self] mtu in
-            self?.fileTransferManager.mtu = mtu
+        mtuPublisher.sink { _, mtu in
+            self.fileTransferManager.mtu = mtu
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.maxFileLengthPublisher.sink { maxFileLength in
+            self.maxFileLengthSubject.send((self, maxFileLength))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileTypePublisher.sink { fileType in
+            self.fileTypeSubject.send((self, fileType))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileLengthPublisher.sink { fileLength in
+            self.fileLengthSubject.send((self, fileLength))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileChecksumPublisher.sink { [self] fileChecksum in
+            fileChecksumSubject.send((self, fileChecksum))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileTransferStatusPublisher.sink { [self] fileTransferStatus in
+            fileTransferStatusSubject.send((self, fileTransferStatus))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileTransferProgressPublisher.sink { [self] fileType, direction, progress in
+            fileTransferProgressSubject.send((self, fileType, direction, progress))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileTransferCompletePublisher.sink { [self] fileType, direction in
+            fileTransferCompleteSubject.send((self, fileType, direction))
+        }.store(in: &managerCancellables)
+
+        fileTransferManager.fileReceivedPublisher.sink { [self] fileType, data in
+            fileReceivedSubject.send((self, fileType, data))
         }.store(in: &managerCancellables)
     }
 
     // MARK: - maxFileLength
 
     var maxFileLength: BSFileLength { fileTransferManager.maxFileLength }
-    var maxFileLengthPublisher: AnyPublisher<BSFileLength, Never> {
-        fileTransferManager.maxFileLengthPublisher
-    }
 
     // MARK: - fileType
 
     var fileType: BSFileType { fileTransferManager.fileType }
-    var fileTypePublisher: AnyPublisher<BSFileType, Never> {
-        fileTransferManager.fileTypePublisher
-    }
 
     // MARK: - fileLength
 
     var fileLength: BSFileLength { fileTransferManager.fileLength }
-    var fileLengthPublisher: AnyPublisher<BSFileLength, Never> {
-        fileTransferManager.fileLengthPublisher
-    }
 
     // MARK: - fileChecksum
 
     var fileChecksum: BSFileChecksum { fileTransferManager.fileChecksum }
-    var fileChecksumPublisher: AnyPublisher<BSFileChecksum, Never> {
-        fileTransferManager.fileChecksumPublisher
-    }
 
     // MARK: - fileTransferStatus
 
     var fileTransferStatus: BSFileTransferStatus { fileTransferManager.fileTransferStatus }
-    var fileTransferStatusPublisher: AnyPublisher<BSFileTransferStatus, Never> {
-        fileTransferManager.fileTransferStatusPublisher
-    }
-
-    // MARK: - fileTransferProgress
-
-    var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
-        fileTransferManager.fileTransferProgressPublisher
-    }
 
     // MARK: - transfer commands
 

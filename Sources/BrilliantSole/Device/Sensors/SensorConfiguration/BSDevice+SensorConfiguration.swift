@@ -8,10 +8,15 @@
 import Combine
 
 public extension BSDevice {
-    var sensorConfiguration: BSSensorConfiguration { sensorConfigurationManager.sensorConfiguration }
-    var sensorConfigurationPublisher: AnyPublisher<BSSensorConfiguration, Never> {
-        sensorConfigurationManager.sensorConfigurationPublisher
+    internal func setupSensorConfiguration() {
+        sensorConfigurationManager.sensorConfigurationPublisher.sink { sensorConfiguration in
+            self.sensorConfigurationSubject.send((self, sensorConfiguration))
+        }.store(in: &managerCancellables)
     }
+
+    var sensorConfiguration: BSSensorConfiguration { sensorConfigurationManager.sensorConfiguration }
+
+    // MARK: - modify sensorConfiguration
 
     func setSensorConfiguration(_ newSensorConfiguration: BSSensorConfiguration, clearRest: Bool = false, sendImmediately: Bool = true) {
         sensorConfigurationManager.setSensorConfiguration(newSensorConfiguration, clearRest: clearRest, sendImmediately: sendImmediately)
