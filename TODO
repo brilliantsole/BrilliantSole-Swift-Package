@@ -1,3 +1,5 @@
 devicePair
+    listeners
+    sensorDataManager
 client
 firmware

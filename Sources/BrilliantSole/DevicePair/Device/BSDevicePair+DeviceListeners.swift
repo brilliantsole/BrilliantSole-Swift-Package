@@ -7,12 +7,19 @@
 
 extension BSDevicePair {
     func addListeners(device: BSDevice) {
+        if deviceCancellables[device] != nil {
+            removeListeners(device: device)
+        }
+        deviceCancellables[device] = .init()
+
         addDeviceConnectionListeners(device: device)
-        // FILL
+        addDeviceSensorConfigurationListeners(device: device)
+        addDeviceSensorDataListeners(device: device)
+        addDeviceFileTransferListeners(device: device)
+        addDeviceTfliteListeners(device: device)
     }
 
     func removeListeners(device: BSDevice) {
-        removeDeviceConnectionListeners(device: device)
-        // FILL
+        deviceCancellables[device] = nil
     }
 }

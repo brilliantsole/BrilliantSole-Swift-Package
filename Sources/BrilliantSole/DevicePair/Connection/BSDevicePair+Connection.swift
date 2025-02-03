@@ -51,22 +51,13 @@ public extension BSDevicePair {
     // MARK: - deviceConnectionListeners
 
     func addDeviceConnectionListeners(device: BSDevice) {
-        if deviceConnectionCancellables[device] != nil {
-            removeDeviceConnectionListeners(device: device)
-        }
-        deviceConnectionCancellables[device] = .init()
-
         device.connectionStatusPublisher.sink { device, connectionStatus in
             self.onDeviceConnectionStatus(device: device, connectionStatus: connectionStatus)
-        }.store(in: &deviceConnectionCancellables[device]!)
+        }.store(in: &deviceCancellables[device]!)
 
         device.isConnectedPublisher.sink { device, isConnected in
             self.onDeviceIsConnected(device: device, isConnected: isConnected)
-        }.store(in: &deviceConnectionCancellables[device]!)
-    }
-
-    func removeDeviceConnectionListeners(device: BSDevice) {
-        deviceConnectionCancellables[device] = nil
+        }.store(in: &deviceCancellables[device]!)
     }
 
     func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
@@ -74,7 +65,7 @@ public extension BSDevicePair {
             logger.error("device.insoleSide not found")
             return
         }
-        deviceConnectionStatusSubject.send((insoleSide, device, connectionStatus))
+        deviceConnectionStatusSubject.send((self, insoleSide, device, connectionStatus))
     }
 
     func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
@@ -82,6 +73,6 @@ public extension BSDevicePair {
             logger.error("device.insoleSide not found")
             return
         }
-        deviceIsConnectedSubject.send((insoleSide, device, isConnected))
+        deviceIsConnectedSubject.send((self, insoleSide, device, isConnected))
     }
 }

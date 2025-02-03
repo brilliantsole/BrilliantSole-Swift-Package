@@ -9,8 +9,8 @@ import Combine
 import OSLog
 import UkatonMacros
 
-public typealias BSInference = ([Float], [String: Float]?, BSTimestamp)
-public typealias BSClassification = (String, Float, BSTimestamp)
+public typealias BSTfliteInference = ([Float], [String: Float]?, BSTimestamp)
+public typealias BSTfliteClassification = (String, Float, BSTimestamp)
 
 @StaticLogger
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
@@ -382,13 +382,13 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteInference
 
-    private let tfliteInferenceSubject: PassthroughSubject<BSInference, Never> = .init()
-    var tfliteInferencePublisher: AnyPublisher<BSInference, Never> {
+    private let tfliteInferenceSubject: PassthroughSubject<BSTfliteInference, Never> = .init()
+    var tfliteInferencePublisher: AnyPublisher<BSTfliteInference, Never> {
         tfliteInferenceSubject.eraseToAnyPublisher()
     }
 
-    private let tfliteClassificationSubject: PassthroughSubject<BSClassification, Never> = .init()
-    var tfliteClassificationPublisher: AnyPublisher<BSClassification, Never> {
+    private let tfliteClassificationSubject: PassthroughSubject<BSTfliteClassification, Never> = .init()
+    var tfliteClassificationPublisher: AnyPublisher<BSTfliteClassification, Never> {
         tfliteClassificationSubject.eraseToAnyPublisher()
     }
 

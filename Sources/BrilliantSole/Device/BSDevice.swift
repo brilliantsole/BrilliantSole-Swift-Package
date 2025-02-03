@@ -416,15 +416,15 @@ public final class BSDevice {
 
     // MARK: - tfliteInference
 
-    let tfliteInferenceSubject: PassthroughSubject<(BSDevice, BSInference), Never> = .init()
-    public var tfliteInferencePublisher: AnyPublisher<(BSDevice, BSInference), Never> {
+    let tfliteInferenceSubject: PassthroughSubject<(BSDevice, BSTfliteInference), Never> = .init()
+    public var tfliteInferencePublisher: AnyPublisher<(BSDevice, BSTfliteInference), Never> {
         tfliteInferenceSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteClassification
 
-    let tfliteClassificationSubject: PassthroughSubject<(BSDevice, BSClassification), Never> = .init()
-    var tfliteClassificationPublisher: AnyPublisher<(BSDevice, BSClassification), Never> {
+    let tfliteClassificationSubject: PassthroughSubject<(BSDevice, BSTfliteClassification), Never> = .init()
+    var tfliteClassificationPublisher: AnyPublisher<(BSDevice, BSTfliteClassification), Never> {
         tfliteClassificationSubject.eraseToAnyPublisher()
     }
 }

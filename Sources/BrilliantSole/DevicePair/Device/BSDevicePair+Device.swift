@@ -78,4 +78,13 @@ public extension BSDevicePair {
             in result += device.value.isConnected ? 1 : 0
         }
     }
+
+    internal func getDeviceInsoleSide(_ device: BSDevice) -> BSInsoleSide? {
+        guard let insoleSide = device.insoleSide
+        else {
+            self.logger.error("device \(device.name) missing insoleSide")
+            return nil
+        }
+        return insoleSide
+    }
 }

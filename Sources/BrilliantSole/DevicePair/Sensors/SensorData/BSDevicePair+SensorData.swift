@@ -6,5 +6,7 @@
 //
 
 public extension BSDevicePair {
-    // FILL
+    func addDeviceSensorDataListeners(device: BSDevice) {
+        // FILL
+    }
 }

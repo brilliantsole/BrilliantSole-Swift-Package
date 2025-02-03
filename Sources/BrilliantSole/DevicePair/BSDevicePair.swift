@@ -36,19 +36,21 @@ public actor BSDevicePair {
 
     var devices: [BSInsoleSide: BSDevice] = .init()
 
+    // MARK: - deviceListeners
+
+    var deviceCancellables: [BSDevice: Set<AnyCancellable>] = .init()
+
     // MARK: - deviceConnection
 
-    let deviceConnectionStatusSubject: PassthroughSubject<(BSInsoleSide, BSDevice, BSConnectionStatus), Never> = .init()
-    public var deviceConnectionStatusPublisher: AnyPublisher<(BSInsoleSide, BSDevice, BSConnectionStatus), Never> {
+    let deviceConnectionStatusSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSConnectionStatus), Never> = .init()
+    public var deviceConnectionStatusPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSConnectionStatus), Never> {
         deviceConnectionStatusSubject.eraseToAnyPublisher()
     }
 
-    let deviceIsConnectedSubject: PassthroughSubject<(BSInsoleSide, BSDevice, Bool), Never> = .init()
-    public var deviceIsConnectedPublisher: AnyPublisher<(BSInsoleSide, BSDevice, Bool), Never> {
+    let deviceIsConnectedSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> = .init()
+    public var deviceIsConnectedPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> {
         deviceIsConnectedSubject.eraseToAnyPublisher()
     }
-
-    var deviceConnectionCancellables: [BSDevice: Set<AnyCancellable>] = .init()
 
     // MARK: - connection
 
@@ -65,4 +67,41 @@ public actor BSDevicePair {
     var isHalfConnectedPublisher: AnyPublisher<Bool, Never> {
         isHalfConnectedSubject.eraseToAnyPublisher()
     }
+
+    // MARK: - sensorConfiguration
+
+    let deviceSensorConfigurationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSSensorConfiguration), Never> = .init()
+    public var deviceSensorConfigurationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSSensorConfiguration), Never> {
+        deviceSensorConfigurationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - sensorData
+
+    // FILL
+
+    // MARK: - tflite
+
+    let deviceIsTfliteReadySubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> = .init()
+    public var deviceIsTfliteReadyPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> {
+        deviceIsTfliteReadySubject.eraseToAnyPublisher()
+    }
+
+    let deviceTfliteInferencingEnabledSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> = .init()
+    public var deviceTfliteInferencingEnabledPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, Bool), Never> {
+        deviceTfliteInferencingEnabledSubject.eraseToAnyPublisher()
+    }
+
+    let deviceTfliteInferenceSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSTfliteInference), Never> = .init()
+    public var deviceTfliteInferencePublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSTfliteInference), Never> {
+        deviceTfliteInferenceSubject.eraseToAnyPublisher()
+    }
+
+    let deviceTfliteClassificationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSTfliteClassification), Never> = .init()
+    public var deviceTfliteClassificationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSTfliteClassification), Never> {
+        deviceTfliteClassificationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - fileTransfer
+
+    // FILL
 }
