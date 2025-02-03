@@ -49,7 +49,7 @@ public final class BSDevice {
 
     // MARK: - connectionStatus
 
-    private let connectionStatusSubject: PassthroughSubject<(BSDevice, BSConnectionStatus), Never> = .init()
+    lazy var connectionStatusSubject: CurrentValueSubject<(BSDevice, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
     var connectionStatusPublisher: AnyPublisher<(BSDevice, BSConnectionStatus), Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
@@ -102,7 +102,7 @@ public final class BSDevice {
 
     // MARK: - isConnected
 
-    private let isConnectedSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    lazy var isConnectedSubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.isConnected))
     var isConnectedPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
@@ -111,7 +111,7 @@ public final class BSDevice {
 
     // MARK: - batteryLevel
 
-    private let batteryLevelSubject: PassthroughSubject<(BSDevice, BSBatteryLevel), Never> = .init()
+    lazy var batteryLevelSubject: CurrentValueSubject<(BSDevice, BSBatteryLevel), Never> = .init((self, self.batteryLevel))
     var batteryLevelPublisher: AnyPublisher<(BSDevice, BSBatteryLevel), Never> {
         batteryLevelSubject.eraseToAnyPublisher()
     }
@@ -130,21 +130,21 @@ public final class BSDevice {
 
     // MARK: - batteryCurrent
 
-    let batteryCurrentSubject: PassthroughSubject<(BSDevice, Float), Never> = .init()
+    lazy var batteryCurrentSubject: CurrentValueSubject<(BSDevice, Float), Never> = .init((self, self.batteryCurrent))
     var batteryCurrentPublisher: AnyPublisher<(BSDevice, Float), Never> {
         batteryCurrentSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isBatteryCharging
 
-    let isBatteryChargingSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    lazy var isBatteryChargingSubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.isBatteryCharging))
     var isBatteryChargingPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isBatteryChargingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - deviceInformation
 
-    let deviceInformationSubject: PassthroughSubject<(BSDevice, BSDeviceInformation), Never> = .init()
+    lazy var deviceInformationSubject: CurrentValueSubject<(BSDevice, BSDeviceInformation), Never> = .init((self, self.deviceInformation))
     public var deviceInformationPublisher: AnyPublisher<(BSDevice, BSDeviceInformation), Never> {
         deviceInformationSubject.eraseToAnyPublisher()
     }
@@ -180,35 +180,35 @@ public final class BSDevice {
 
     // MARK: - id
 
-    let idSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    lazy var idSubject: CurrentValueSubject<(BSDevice, String), Never> = .init((self, self.id))
     public var idPublisher: AnyPublisher<(BSDevice, String), Never> {
         idSubject.eraseToAnyPublisher()
     }
 
     // MARK: - mtu
 
-    let mtuSubject: PassthroughSubject<(BSDevice, BSMtu), Never> = .init()
+    lazy var mtuSubject: CurrentValueSubject<(BSDevice, BSMtu), Never> = .init((self, self.mtu))
     public var mtuPublisher: AnyPublisher<(BSDevice, BSMtu), Never> {
         mtuSubject.eraseToAnyPublisher()
     }
 
     // MARK: - deviceType
 
-    let deviceTypeSubject: PassthroughSubject<(BSDevice, BSDeviceType), Never> = .init()
+    lazy var deviceTypeSubject: CurrentValueSubject<(BSDevice, BSDeviceType), Never> = .init((self, self.deviceType))
     public var deviceTypePublisher: AnyPublisher<(BSDevice, BSDeviceType), Never> {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
     // MARK: - name
 
-    let nameSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    lazy var nameSubject: CurrentValueSubject<(BSDevice, String), Never> = .init((self, self.name))
     public var namePublisher: AnyPublisher<(BSDevice, String), Never> {
         nameSubject.eraseToAnyPublisher()
     }
 
     // MARK: - sensorConfigurationManager
 
-    let sensorConfigurationSubject: PassthroughSubject<(BSDevice, BSSensorConfiguration), Never> = .init()
+    lazy var sensorConfigurationSubject: CurrentValueSubject<(BSDevice, BSSensorConfiguration), Never> = .init((self, self.sensorConfiguration))
     public var sensorConfigurationPublisher: AnyPublisher<(BSDevice, BSSensorConfiguration), Never> {
         sensorConfigurationSubject.eraseToAnyPublisher()
     }
@@ -295,35 +295,35 @@ public final class BSDevice {
 
     // MARK: - maxFileLength
 
-    let maxFileLengthSubject: PassthroughSubject<(BSDevice, BSFileLength), Never> = .init()
+    lazy var maxFileLengthSubject: CurrentValueSubject<(BSDevice, BSFileLength), Never> = .init((self, self.maxFileLength))
     public var maxFileLengthPublisher: AnyPublisher<(BSDevice, BSFileLength), Never> {
         maxFileLengthSubject.eraseToAnyPublisher()
     }
 
     // MARK: - fileType
 
-    let fileTypeSubject: PassthroughSubject<(BSDevice, BSFileType), Never> = .init()
+    lazy var fileTypeSubject: CurrentValueSubject<(BSDevice, BSFileType), Never> = .init((self, self.fileType))
     public var fileTypePublisher: AnyPublisher<(BSDevice, BSFileType), Never> {
         fileTypeSubject.eraseToAnyPublisher()
     }
 
     // MARK: - fileLength
 
-    let fileLengthSubject: PassthroughSubject<(BSDevice, BSFileLength), Never> = .init()
+    lazy var fileLengthSubject: CurrentValueSubject<(BSDevice, BSFileLength), Never> = .init((self, self.fileLength))
     public var fileLengthPublisher: AnyPublisher<(BSDevice, BSFileLength), Never> {
         fileLengthSubject.eraseToAnyPublisher()
     }
 
     // MARK: - fileChecksum
 
-    let fileChecksumSubject: PassthroughSubject<(BSDevice, BSFileChecksum), Never> = .init()
+    lazy var fileChecksumSubject: CurrentValueSubject<(BSDevice, BSFileChecksum), Never> = .init((self, self.fileChecksum))
     public var fileChecksumPublisher: AnyPublisher<(BSDevice, BSFileChecksum), Never> {
         fileChecksumSubject.eraseToAnyPublisher()
     }
 
     // MARK: - fileTransferStatus
 
-    let fileTransferStatusSubject: PassthroughSubject<(BSDevice, BSFileTransferStatus), Never> = .init()
+    lazy var fileTransferStatusSubject: CurrentValueSubject<(BSDevice, BSFileTransferStatus), Never> = .init((self, self.fileTransferStatus))
     public var fileTransferStatusPublisher: AnyPublisher<(BSDevice, BSFileTransferStatus), Never> {
         fileTransferStatusSubject.eraseToAnyPublisher()
     }
@@ -353,35 +353,35 @@ public final class BSDevice {
 
     // MARK: - tfliteName
 
-    let tfliteNameSubject: PassthroughSubject<(BSDevice, String), Never> = .init()
+    lazy var tfliteNameSubject: CurrentValueSubject<(BSDevice, String), Never> = .init((self, self.tfliteName))
     public var tfliteNamePublisher: AnyPublisher<(BSDevice, String), Never> {
         tfliteNameSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteTask
 
-    let tfliteTaskSubject: PassthroughSubject<(BSDevice, BSTfliteTask), Never> = .init()
+    lazy var tfliteTaskSubject: CurrentValueSubject<(BSDevice, BSTfliteTask), Never> = .init((self, self.tfliteTask))
     public var tfliteTaskPublisher: AnyPublisher<(BSDevice, BSTfliteTask), Never> {
         tfliteTaskSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteSensorRate
 
-    let tfliteSensorRateSubject: PassthroughSubject<(BSDevice, BSSensorRate), Never> = .init()
+    lazy var tfliteSensorRateSubject: CurrentValueSubject<(BSDevice, BSSensorRate), Never> = .init((self, self.tfliteSensorRate))
     public var tfliteSensorRatePublisher: AnyPublisher<(BSDevice, BSSensorRate), Never> {
         tfliteSensorRateSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteSensorTypes
 
-    let tfliteSensorTypesSubject: PassthroughSubject<(BSDevice, BSTfliteSensorTypes), Never> = .init()
+    lazy var tfliteSensorTypesSubject: CurrentValueSubject<(BSDevice, BSTfliteSensorTypes), Never> = .init((self, self.tfliteSensorTypes))
     public var tfliteSensorTypesPublisher: AnyPublisher<(BSDevice, BSTfliteSensorTypes), Never> {
         tfliteSensorTypesSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isTfliteReady
 
-    let isTfliteReadySubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    lazy var isTfliteReadySubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.isTfliteReady))
     public var isTfliteReadyPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isTfliteReadySubject.eraseToAnyPublisher()
     }
@@ -395,21 +395,21 @@ public final class BSDevice {
 
     // MARK: - tfliteThreshold
 
-    let tfliteThresholdSubject: PassthroughSubject<(BSDevice, BSTfliteThreshold), Never> = .init()
+    lazy var tfliteThresholdSubject: CurrentValueSubject<(BSDevice, BSTfliteThreshold), Never> = .init((self, self.tfliteThreshold))
     public var tfliteThresholdPublisher: AnyPublisher<(BSDevice, BSTfliteThreshold), Never> {
         tfliteThresholdSubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteCaptureDelay
 
-    let tfliteCaptureDelaySubject: PassthroughSubject<(BSDevice, BSTfliteCaptureDelay), Never> = .init()
+    lazy var tfliteCaptureDelaySubject: CurrentValueSubject<(BSDevice, BSTfliteCaptureDelay), Never> = .init((self, self.tfliteCaptureDelay))
     public var tfliteCaptureDelayPublisher: AnyPublisher<(BSDevice, BSTfliteCaptureDelay), Never> {
         tfliteCaptureDelaySubject.eraseToAnyPublisher()
     }
 
     // MARK: - tfliteInferencingEnabled
 
-    let tfliteInferencingEnabledSubject: PassthroughSubject<(BSDevice, Bool), Never> = .init()
+    lazy var tfliteInferencingEnabledSubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.tfliteInferencingEnabled))
     public var tfliteInferencingEnabledPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         tfliteInferencingEnabledSubject.eraseToAnyPublisher()
     }
