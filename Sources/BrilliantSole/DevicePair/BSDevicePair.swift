@@ -22,11 +22,15 @@ public actor BSDevicePair {
         guard isShared else { return }
         Self.logger.debug("initializing shared instance")
 
-        defer { Task { @MainActor in await listenToDeviceManager() } }
+        Task {
+            await listenToDeviceManager()
+        }
     }
 
     public init() {
-        defer { Task { @MainActor in await setupSensorDataManager() } }
+        Task {
+            await setupSensorDataManager()
+        }
     }
 
     public func reset() {

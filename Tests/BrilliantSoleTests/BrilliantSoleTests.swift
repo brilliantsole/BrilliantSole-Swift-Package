@@ -154,4 +154,13 @@ struct BSTests {
         })
         try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
+
+    @Test func devicePairTest() async throws {
+        connectToDevice(withName: "Right 3", onConnectedDevice: { _ in
+            connectToDevice(withName: "Left 3", onConnectedDevice: { _ in
+                // FILL
+            })
+        })
+        try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
+    }
 }

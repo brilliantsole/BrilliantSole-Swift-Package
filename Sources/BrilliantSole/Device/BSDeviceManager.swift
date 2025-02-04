@@ -52,6 +52,8 @@ public actor BSDeviceManager {
 
     static var cancellables: Set<AnyCancellable> = .init()
     static func onDeviceCreated(_ device: BSDevice) {
+        _ = BSDevicePair.shared
+
         logger.debug("adding device")
         device.isConnectedPublisher.sink { _ in
             logger.debug("device \(device.name) isConnected? \(device.isConnected)")
