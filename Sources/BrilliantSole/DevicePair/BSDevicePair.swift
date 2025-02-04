@@ -91,6 +91,84 @@ public actor BSDevicePair {
 
     let sensorDataManager: BSDevicePairSensorDataManager = .init()
 
+    // MARK: - deviceSensorData
+
+    // MARK: - devicePressureSensorData
+
+    let devicePressureDataSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSPressureData, BSTimestamp), Never> = .init()
+    public var devicePressureDataPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSPressureData, BSTimestamp), Never> {
+        devicePressureDataSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - deviceMotionSensorData
+
+    let deviceAccelerationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var deviceAccelerationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+        deviceAccelerationSubject.eraseToAnyPublisher()
+    }
+
+    let deviceLinearAccelerationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var deviceLinearAccelerationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+        deviceLinearAccelerationSubject.eraseToAnyPublisher()
+    }
+
+    let deviceGravitySubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var deviceGravityPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+        deviceGravitySubject.eraseToAnyPublisher()
+    }
+
+    let deviceGyroscopeSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var deviceGyroscopePublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+        deviceGyroscopeSubject.eraseToAnyPublisher()
+    }
+
+    let deviceMagnetometerSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
+    public var deviceMagnetometerPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+        deviceMagnetometerSubject.eraseToAnyPublisher()
+    }
+
+    let deviceGameRotationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSQuaternion, BSTimestamp), Never> = .init()
+    public var deviceGameRotationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSQuaternion, BSTimestamp), Never> {
+        deviceGameRotationSubject.eraseToAnyPublisher()
+    }
+
+    let deviceRotationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSQuaternion, BSTimestamp), Never> = .init()
+    public var deviceRotationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSQuaternion, BSTimestamp), Never> {
+        deviceRotationSubject.eraseToAnyPublisher()
+    }
+
+    let deviceOrientationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSRotation3D, BSTimestamp), Never> = .init()
+    public var deviceOrientationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSRotation3D, BSTimestamp), Never> {
+        deviceOrientationSubject.eraseToAnyPublisher()
+    }
+
+    let deviceStepCountSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSStepCount, BSTimestamp), Never> = .init()
+    public var deviceStepCountPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSStepCount, BSTimestamp), Never> {
+        deviceStepCountSubject.eraseToAnyPublisher()
+    }
+
+    let deviceStepDetectionSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSTimestamp), Never> = .init()
+    public var deviceStepDetectionPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSTimestamp), Never> {
+        deviceStepDetectionSubject.eraseToAnyPublisher()
+    }
+
+    let deviceActivitySubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSActivityFlags, BSTimestamp), Never> = .init()
+    public var deviceActivityPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSActivityFlags, BSTimestamp), Never> {
+        deviceActivitySubject.eraseToAnyPublisher()
+    }
+
+    let deviceDeviceOrientationSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSDeviceOrientation, BSTimestamp), Never> = .init()
+    public var deviceDeviceOrientationPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSDeviceOrientation, BSTimestamp), Never> {
+        deviceDeviceOrientationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - deviceBarometerSensorData
+
+    let deviceBarometerSubject: PassthroughSubject<(BSDevicePair, BSInsoleSide, BSDevice, BSBarometer, BSTimestamp), Never> = .init()
+    public var deviceBarometerPublisher: AnyPublisher<(BSDevicePair, BSInsoleSide, BSDevice, BSBarometer, BSTimestamp), Never> {
+        deviceBarometerSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - pressureSensorData
 
     let pressureDataSubject: PassthroughSubject<(BSDevicePair, BSDevicePairPressureData, BSTimestamp), Never> = .init()
