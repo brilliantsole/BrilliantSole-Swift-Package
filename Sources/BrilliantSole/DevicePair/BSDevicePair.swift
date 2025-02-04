@@ -26,7 +26,7 @@ public actor BSDevicePair {
     }
 
     public init() {
-        setupSensorDataManager()
+        defer { Task { @MainActor in await setupSensorDataManager() } }
     }
 
     public func reset() {
@@ -90,7 +90,13 @@ public actor BSDevicePair {
     // MARK: - sensorData
 
     let sensorDataManager: BSDevicePairSensorDataManager = .init()
-    // FILL
+
+    // MARK: - pressureSensorData
+
+    let pressureDataSubject: PassthroughSubject<(BSDevicePair, BSDevicePairPressureData, BSTimestamp), Never> = .init()
+    public var pressureDataPublisher: AnyPublisher<(BSDevicePair, BSDevicePairPressureData, BSTimestamp), Never> {
+        pressureDataSubject.eraseToAnyPublisher()
+    }
 
     // MARK: - tflite
 

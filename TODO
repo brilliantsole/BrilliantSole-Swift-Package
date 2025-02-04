@@ -1,5 +1,6 @@
 devicePair
     pressureDataManager
     sensorDataManager listeners
+    test
 client
 firmware
