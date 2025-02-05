@@ -122,7 +122,7 @@ struct BSTests {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.setSensorRate(sensorType: .pressure, sensorRate: ._100ms)
         })
-        try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+        try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
 
     @Test func deviceVibrationTest() async throws {

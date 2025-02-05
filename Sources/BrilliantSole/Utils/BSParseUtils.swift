@@ -40,7 +40,7 @@ func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @e
             logger.error("message data length exceeds buffer size")
             return
         }
-        let messageData = data[Data.Index(offset) ..< endIndex]
+        let messageData = data[(data.startIndex + Data.Index(offset)) ..< (data.startIndex + endIndex)]
         messageCallback(messageType, messageData)
         offset += Data.Index(messageDataLength)
         logger.debug("new offset: \(offset)")

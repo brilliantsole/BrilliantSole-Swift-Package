@@ -18,6 +18,7 @@ public extension BSDevicePair {
         device.pressureDataPublisher.sink { [self] device, pressureData, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
             devicePressureDataSubject.send((self, insoleSide, device, pressureData, timestamp))
+            sensorDataManager.pressureSensorDataManager.onDevicePressureData(insoleSide: insoleSide, pressureData: pressureData, timestamp: timestamp)
         }.store(in: &deviceCancellables[device]!)
     }
 

@@ -72,7 +72,7 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
     }
 
     var numberOfPressureSensors: Int { pressurePositions.count }
-    static let pressurePositionScalar: Double = pow(2, 8)
+    static let pressurePositionScalar: Double = pow(2, -8)
     func parsePressurePositions(_ data: Data) {
         var newPressurePositions: [BSPressureSensorPosition] = []
         for index in stride(from: 0, to: data.count, by: 2) {
