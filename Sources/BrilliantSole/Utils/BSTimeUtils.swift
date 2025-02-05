@@ -37,7 +37,8 @@ func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> BSTimestamp? {
     logger.debug("timestampDifference: \(timestampDifference)ms")
     if timestampDifference > timestampThreshold {
         logger.debug("correcting timestamp overflow")
-        timestamp += BSTimestamp(UInt16.max) * (currentTime - timestamp).signum()
+        let timestampCorrection = Int(UInt16.max) * (Int(currentTime) - Int(timestamp)).signum()
+        timestamp = BSTimestamp(clamping: Int(timestamp) + timestampCorrection)
     }
 
     logger.debug("timestamp: \(timestamp)ms")

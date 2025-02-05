@@ -8,5 +8,7 @@
 import OSLog
 
 func getLogger(category: String) -> Logger {
-    Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: category)
+    var logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: category)
+    logger.logLevel = .debug
+    return logger
 }
