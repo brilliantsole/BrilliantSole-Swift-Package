@@ -5,15 +5,15 @@
 //  Created by Zack Qattan on 1/31/25.
 //
 
-import Combine
+@preconcurrency import Combine
 import OSLog
 import UkatonMacros
 
 @StaticLogger
-public actor BSDeviceManager {
+public final class BSDeviceManager {
     // MARK: - availableDevices
 
-    public private(set) static var availableDevices: Set<BSDevice> = .init()
+    public private(set) nonisolated(unsafe) static var availableDevices: Set<BSDevice> = .init()
     private static let availableDevicesSubject: PassthroughSubject<Set<BSDevice>, Never> = .init()
     public static var availableDevicesPublisher: AnyPublisher<Set<BSDevice>, Never> {
         availableDevicesSubject.eraseToAnyPublisher()
@@ -26,7 +26,7 @@ public actor BSDeviceManager {
 
     // MARK: - connectedDevices
 
-    public private(set) static var connectedDevices: Set<BSDevice> = .init()
+    public private(set) nonisolated(unsafe) static var connectedDevices: Set<BSDevice> = .init()
     private static let connectedDevicesSubject: PassthroughSubject<Set<BSDevice>, Never> = .init()
     public static var connectedDevicesPublisher: AnyPublisher<Set<BSDevice>, Never> {
         connectedDevicesSubject.eraseToAnyPublisher()
@@ -50,10 +50,8 @@ public actor BSDeviceManager {
 
     // MARK: - deviceCreation
 
-    static var cancellables: Set<AnyCancellable> = .init()
+    private nonisolated(unsafe) static var cancellables: Set<AnyCancellable> = .init()
     static func onDeviceCreated(_ device: BSDevice) {
-        _ = BSDevicePair.shared
-
         logger.debug("adding device")
         device.isConnectedPublisher.sink { _ in
             logger.debug("device \(device.name) isConnected? \(device.isConnected)")
@@ -71,6 +69,7 @@ public actor BSDeviceManager {
                 availableDevices.insert(device)
                 availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
+                BSDevicePair.shared.add(device: device)
             }
         }
         else if connectedDevices.contains(device) {

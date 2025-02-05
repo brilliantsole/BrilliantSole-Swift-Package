@@ -10,27 +10,23 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-public actor BSDevicePair {
+public final class BSDevicePair {
     // MARK: - shared
 
-    static let shared = BSDevicePair(isShared: true)
+    nonisolated(unsafe) static let shared = BSDevicePair(isShared: true)
 
-    var isShared: Bool { self === Self.shared }
+    private var isShared: Bool = false
 
-    private init(isShared: Bool) {
+    private convenience init(isShared: Bool) {
         self.init()
+        self.isShared = isShared
         guard isShared else { return }
         Self.logger.debug("initializing shared instance")
-
-        Task {
-            await listenToDeviceManager()
-        }
+        // listenToDeviceManager()
     }
 
     public init() {
-        Task {
-            await setupSensorDataManager()
-        }
+        setupSensorDataManager()
     }
 
     public func reset() {

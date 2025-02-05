@@ -156,11 +156,17 @@ struct BSTests {
     }
 
     @Test func devicePairTest() async throws {
-        connectToDevice(withName: "Right 3", onConnectedDevice: { _ in
-            connectToDevice(withName: "Left 3", onConnectedDevice: { _ in
-                // FILL
-            })
-        })
+        BSBleScanner.shared.startScan()
+        BSBleScanner.shared.discoveredDevicePublisher.sink { discoveredDevice in
+            print("connecting to discoveredDevice \(discoveredDevice)")
+            let device = discoveredDevice.connect()
+        }.store(in: &cancellablesStore.cancellables)
+        BSDevicePair.shared.isFullyConnectedPublisher.sink { isFullyConnected in
+            if isFullyConnected {
+                print("yay, fully connected")
+                BSBleScanner.shared.stopScan()
+            }
+        }.store(in: &cancellablesStore.cancellables)
         try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
 }
