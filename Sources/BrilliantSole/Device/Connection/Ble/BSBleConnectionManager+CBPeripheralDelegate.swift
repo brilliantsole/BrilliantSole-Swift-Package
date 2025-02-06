@@ -37,7 +37,7 @@ extension BSBleConnectionManager: CBPeripheralDelegate {
         logger.debug("services \(invalidatedServices) invalidated for peripheral \(peripheral.name ?? "unknown")")
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
         if let error {
             logger.error("error discovering services for \(peripheral): \(error)")
             return
@@ -55,7 +55,7 @@ extension BSBleConnectionManager: CBPeripheralDelegate {
 
     // MARK: - characteristics
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: (any Error)?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: (any Error)?) {
         if let error {
             logger.error("error discovering characteristics for \(service.uuid): \(error)")
             return

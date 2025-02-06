@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBleScanner: BSBaseScanner {
+public class BSBleScanner: BSBaseScanner {
     override private init() {
         super.init()
         isScanningAvailable = centralManager.state == .poweredOn
@@ -18,7 +18,7 @@ class BSBleScanner: BSBaseScanner {
 
     nonisolated(unsafe) static let shared = BSBleScanner()
 
-    override static var connectionType: BSConnectionType { .ble }
+    override public static var connectionType: BSConnectionType { .ble }
 
     // MARK: - CBCentralManager
 
@@ -26,7 +26,7 @@ class BSBleScanner: BSBaseScanner {
 
     // MARK: - scanning
 
-    override func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+    override public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         super.startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
         guard _continue else {
             return
@@ -38,7 +38,7 @@ class BSBleScanner: BSBaseScanner {
         peripherals.forEach { onPeripheral($0) }
     }
 
-    override func stopScan(_continue: inout Bool) {
+    override public func stopScan(_continue: inout Bool) {
         super.stopScan(_continue: &_continue)
         guard _continue else {
             return
@@ -47,7 +47,7 @@ class BSBleScanner: BSBaseScanner {
         isScanning = centralManager.isScanning
     }
 
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         logger.debug("discovered peripherial \(peripheral), advertisementData: \(advertisementData), rssi: \(RSSI)")
         onDiscoveredPeripheral(peripheral, advertisementData: advertisementData, rssi: RSSI)
     }
@@ -110,13 +110,13 @@ class BSBleScanner: BSBaseScanner {
 
     // MARK: - connection
 
-    override func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+    override public func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = super.connect(to: discoveredDevice)
         device.connectionManager!.connect()
         return device
     }
 
-    override func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
+    override public func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
         let device = super.disconnect(from: discoveredDevice)
         device?.connectionManager?.disconnect()
         return device

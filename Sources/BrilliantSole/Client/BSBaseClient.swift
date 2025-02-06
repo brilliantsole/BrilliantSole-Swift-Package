@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBaseClient: BSBaseScanner, BSClient {
+class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     override init() {
         super.init()
 
@@ -48,7 +48,7 @@ class BSBaseClient: BSBaseScanner, BSClient {
 
     // MARK: - scanning
 
-    override func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+    override public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         super.startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
         guard _continue else {
             return
@@ -56,7 +56,7 @@ class BSBaseClient: BSBaseScanner, BSClient {
         sendMessages([.init(type: .startScan)])
     }
 
-    override func stopScan(_continue: inout Bool) {
+    override public func stopScan(_continue: inout Bool) {
         super.stopScan(_continue: &_continue)
         guard _continue else {
             return
@@ -120,23 +120,23 @@ class BSBaseClient: BSBaseScanner, BSClient {
         }
     }
 
-    private let notConnectedSubject: PassthroughSubject<BSClient, Never> = .init()
-    var notConnectedPublisher: AnyPublisher<BSClient, Never> {
+    private let notConnectedSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
+    var notConnectedPublisher: AnyPublisher<BSDeviceClient, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectedSubject: PassthroughSubject<BSClient, Never> = .init()
-    var connectedPublisher: AnyPublisher<BSClient, Never> {
+    private let connectedSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
+    var connectedPublisher: AnyPublisher<BSDeviceClient, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectingSubject: PassthroughSubject<BSClient, Never> = .init()
-    var connectingPublisher: AnyPublisher<BSClient, Never> {
+    private let connectingSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
+    var connectingPublisher: AnyPublisher<BSDeviceClient, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
-    private let disconnectingSubject: PassthroughSubject<BSClient, Never> = .init()
-    var disconnectingPublisher: AnyPublisher<BSClient, Never> {
+    private let disconnectingSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
+    var disconnectingPublisher: AnyPublisher<BSDeviceClient, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 

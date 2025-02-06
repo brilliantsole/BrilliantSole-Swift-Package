@@ -13,9 +13,9 @@ class BSClientConnectionManager: BSBaseConnectionManager {
 
     // MARK: - client
 
-    var client: BSClient
+    var client: BSDeviceClient
 
-    init(discoveredDevice: BSDiscoveredDevice, client: BSClient) {
+    init(discoveredDevice: BSDiscoveredDevice, client: BSDeviceClient) {
         self.client = client
         super.init(discoveredDevice: discoveredDevice)
     }

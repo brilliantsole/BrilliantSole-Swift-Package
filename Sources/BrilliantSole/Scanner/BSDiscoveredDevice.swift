@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSDiscoveredDevice {
+public class BSDiscoveredDevice {
     let id: String
 
     private let nameSubject: CurrentValueSubject<String, Never> = .init("")
