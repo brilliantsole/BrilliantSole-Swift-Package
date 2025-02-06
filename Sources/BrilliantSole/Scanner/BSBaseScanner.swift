@@ -129,7 +129,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - discoveredDevices
 
-    internal(set) var discoveredDevices: [String: BSDiscoveredDevice] = .init()
+    var discoveredDevices: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
     private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
