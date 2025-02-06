@@ -1,5 +1,5 @@
 //
-//  BSConnectionMessageUtils.swift
+//  BSDeviceEventMessageUtils.swift
 //  BrilliantSole
 //
 //  Created by Zack Qattan on 1/21/25.
@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSConnectionMessageUtils {
+class BSDeviceEventMessageUtils {
     static let enumStrings: [String] = initializeEnumStrings()
     static let enumStringMap: [String: UInt8] = initializeEnumStringMap()
 
@@ -18,11 +18,23 @@ class BSConnectionMessageUtils {
         logger.debug("initializeEnumStrings")
         var enumStrings: [String] = []
         var offset: UInt8 = 0
-        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSBatteryLevelMessageType.self)
-        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSDeviceInformationType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSConnectionMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSConnectionStatus.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSConnectionEventType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSMetaConnectionMessageType.self)
-        appendStrings(offset: &offset, enumStrings: &enumStrings, names: BSTxRxMessageUtils.enumStrings)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSBatteryLevelMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSBatteryMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSInformationMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSDeviceInformationType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSDeviceInformationEventType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorConfigurationMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorDataMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSFileTransferMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSFileTransferEventType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSTfliteMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpMessageType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpEventType.self)
         logger.debug("enumStrings: \(enumStrings)")
         return enumStrings
     }
@@ -59,27 +71,5 @@ class BSConnectionMessageUtils {
             data.append(value)
         }
         return data
-    }
-
-    static func getMessageTypeForString(_ enumString: String) -> _BSConnectionMessageType? {
-        guard let type = enumStringMap[enumString] else {
-            logger.error("no type defined for enumString \(enumString)")
-            return nil
-        }
-        return type
-    }
-
-    static func createMessage(enumString: String, data: Data) -> BSConnectionMessage? {
-        guard let type = getMessageTypeForString(enumString) else {
-            return nil
-        }
-        return .init(type: type, data: data)
-    }
-
-    static func createMessage(enumString: String) -> BSConnectionMessage? {
-        guard let type = getMessageTypeForString(enumString) else {
-            return nil
-        }
-        return .init(type: type)
     }
 }

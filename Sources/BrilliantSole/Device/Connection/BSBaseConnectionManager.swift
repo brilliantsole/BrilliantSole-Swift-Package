@@ -124,12 +124,12 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
 
     // MARK: - messaging (receive
 
-    private let rxMessageSubject: PassthroughSubject<(UInt8, Data), Never> = .init()
+    let rxMessageSubject: PassthroughSubject<(UInt8, Data), Never> = .init()
     var rxMessagePublisher: AnyPublisher<(UInt8, Data), Never> {
         rxMessageSubject.eraseToAnyPublisher()
     }
 
-    private let rxMessagesSubject: PassthroughSubject<Void, Never> = .init()
+    let rxMessagesSubject: PassthroughSubject<Void, Never> = .init()
     var rxMessagesPublisher: AnyPublisher<Void, Never> {
         rxMessagesSubject.eraseToAnyPublisher()
     }

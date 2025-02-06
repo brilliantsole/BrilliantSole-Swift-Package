@@ -209,7 +209,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - devices
 
-    internal(set) var devices: [String: BSDevice] = .init()
+    var devices: [String: BSDevice] = .init()
     var allDevices: [String: BSDevice] = .init()
 
     private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
@@ -243,4 +243,6 @@ class BSBaseScanner: NSObject, BSScanner {
         }.store(in: &deviceIsConnectedCancellables)
         return device
     }
+
+    // MARK: -
 }

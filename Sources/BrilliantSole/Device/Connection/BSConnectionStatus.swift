@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName
-public enum BSConnectionStatus: CaseIterable, Sendable {
+public enum BSConnectionStatus: BSNamedEnum, CaseIterable, Sendable {
     case notConnected
     case connecting
     case connected

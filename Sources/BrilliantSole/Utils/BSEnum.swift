@@ -13,13 +13,7 @@ protocol BSNamedEnum {
     var name: String { get }
 }
 
-protocol BSEnum: BSMessageType, BSNamedEnum, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {}
-
-extension BSEnum {
-    var data: Data {
-        rawValue.data
-    }
-
+extension BSNamedEnum where Self: CaseIterable {
     init?(name: String, useCamelCase: Bool = true) {
         if let matchingCase = Self.allCases.first(where: { $0.name == (useCamelCase ? camelCaseToSpaces(name) : name) }) {
             // logger.debug("parsed \(name) as \(matchingCase.name)")
@@ -28,6 +22,14 @@ extension BSEnum {
             // logger.debug("failed to parse \(name)")
             return nil
         }
+    }
+}
+
+protocol BSEnum: BSMessageType, BSNamedEnum, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {}
+
+extension BSEnum {
+    var data: Data {
+        rawValue.data
     }
 
     static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {

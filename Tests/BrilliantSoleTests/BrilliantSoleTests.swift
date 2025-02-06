@@ -29,6 +29,11 @@ struct BSTests {
         enumStrings.enumerated().forEach { print("\($0): \($1)") }
     }
 
+    @Test func deviceEventEnumStringsTest() async throws {
+        let enumStrings = BSDeviceEventMessageUtils.enumStrings
+        enumStrings.enumerated().forEach { print("\($0): \($1)") }
+    }
+
     @Test func parseConfigurationTest() async throws {
         let configuration: BSSensorConfiguration = [.acceleration: ._80ms, .gameRotation: ._20ms]
         print("sensorConfiguration: \(configuration)")

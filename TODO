@@ -1,5 +1,4 @@
 client
-    BSClientConnectionManager
     BSBaseClient
     BSUdpClient
 firmware
