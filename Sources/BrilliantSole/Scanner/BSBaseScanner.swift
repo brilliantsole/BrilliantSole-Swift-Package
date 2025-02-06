@@ -129,7 +129,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - discoveredDevices
 
-    private(set) var discoveredDevices: [String: BSDiscoveredDevice] = .init()
+    internal(set) var discoveredDevices: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
     private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
@@ -209,7 +209,7 @@ class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - devices
 
-    private(set) var devices: [String: BSDevice] = .init()
+    internal(set) var devices: [String: BSDevice] = .init()
     var allDevices: [String: BSDevice] = .init()
 
     private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {

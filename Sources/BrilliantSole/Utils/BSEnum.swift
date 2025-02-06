@@ -9,9 +9,11 @@ import Foundation
 
 private let logger = getLogger(category: "BSEnum")
 
-protocol BSEnum: BSMessageType, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {
+protocol BSNamedEnum {
     var name: String { get }
 }
+
+protocol BSEnum: BSMessageType, BSNamedEnum, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {}
 
 extension BSEnum {
     var data: Data {

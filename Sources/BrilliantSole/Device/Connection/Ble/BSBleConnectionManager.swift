@@ -14,6 +14,8 @@ import UkatonMacros
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
 
+    // MARK: - ble
+
     let peripheral: CBPeripheral
     let centralManager: CBCentralManager
     private var cancellables: Set<AnyCancellable> = []
