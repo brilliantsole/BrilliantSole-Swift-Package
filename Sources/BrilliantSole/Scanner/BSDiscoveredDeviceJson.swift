@@ -39,4 +39,11 @@ struct BSDiscoveredDeviceJson: Codable {
             return nil
         }
     }
+
+    init?(data: Data) {
+        guard let jsonString = BSStringUtils.getString(from: data, includesLength: true) else {
+            return nil
+        }
+        self.init(jsonString: jsonString)
+    }
 }

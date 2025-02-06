@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BSMessage<MessageType: RawRepresentable> where MessageType.RawValue == UInt8 {
+struct BSMessage<MessageType: RawRepresentable & Sendable> where MessageType.RawValue == UInt8 {
     let type: MessageType
     let data: Data?
 

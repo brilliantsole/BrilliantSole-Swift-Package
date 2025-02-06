@@ -9,7 +9,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSTxRxMessageUtils {
+final class BSTxRxMessageUtils {
     static let BSManagers: [any BSManager.Type] = [
         BSBatteryManager.self,
         BSInformationManager.self,

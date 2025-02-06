@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSDeviceEventMessageUtils {
+final class BSDeviceEventMessageUtils {
     static let enumStrings: [String] = initializeEnumStrings()
     static let enumStringMap: [String: UInt8] = initializeEnumStringMap()
 
