@@ -37,9 +37,9 @@ extension BSBaseClient {
         default:
             logger.error("uncaught serverMessageType \(serverMessageType.name)")
         }
+    }
 
-        func sendRequiredMessages() {
-            sendMessages(Self.requiredMessages)
-        }
+    func sendRequiredMessages() {
+        sendMessages(Self.requiredMessages)
     }
 }
