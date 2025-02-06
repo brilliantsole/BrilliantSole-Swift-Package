@@ -7,8 +7,6 @@
 import OSLog
 import UkatonMacros
 
-// https://github.com/brilliantsole/BrilliantSole-Unity-Example/blob/31fb24b7152a8d60763fb645f0cc98e84bc0e811/Assets/BrilliantSole/Device/Connection/Client/BS_ClientConnectionManager.cs#L12
-
 @StaticLogger
 class BSClientConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .udp }
@@ -16,11 +14,9 @@ class BSClientConnectionManager: BSBaseConnectionManager {
     // MARK: - client
 
     var client: BSClient
-    var bluetoothId: String
 
-    init(discoveredDevice: BSDiscoveredDevice, client: BSClient, bluetoothId: String) {
+    init(discoveredDevice: BSDiscoveredDevice, client: BSClient) {
         self.client = client
-        self.bluetoothId = bluetoothId
         super.init(discoveredDevice: discoveredDevice)
     }
 
@@ -29,13 +25,13 @@ class BSClientConnectionManager: BSBaseConnectionManager {
     override func connect(_continue: inout Bool) {
         super.connect(_continue: &_continue)
         guard _continue else { return }
-        client.sendConnectToDeviceMessage(bluetoothId: bluetoothId)
+        client.sendConnectToDeviceMessage(id: id)
     }
 
     override func disconnect(_continue: inout Bool) {
         super.disconnect(_continue: &_continue)
         guard _continue else { return }
-        client.sendDisconnectFromDeviceMessage(bluetoothId: bluetoothId)
+        client.sendDisconnectFromDeviceMessage(id: id)
     }
 
     // MARK: - isConnected
@@ -58,7 +54,7 @@ class BSClientConnectionManager: BSBaseConnectionManager {
         guard let message = BSConnectionMessageUtils.createMessage(enumString: BSMetaConnectionMessageType.tx.name, data: data) else {
             return
         }
-        client.sendDeviceMessages([message], bluetoothId: bluetoothId)
+        client.sendDeviceMessages([message], id: id)
         sendTxDataSubject.send()
     }
 
@@ -118,6 +114,6 @@ class BSClientConnectionManager: BSBaseConnectionManager {
     static let requiredDeviceInformationMessages: [BSConnectionMessage] = requiredDeviceInformationMessageTypes.compactMap(BSConnectionMessageUtils.createMessage)
     private func requestDeviceInformation() {
         logger.debug("requesting deviceInformation")
-        client.sendDeviceMessages(Self.requiredDeviceInformationMessages, bluetoothId: bluetoothId)
+        client.sendDeviceMessages(Self.requiredDeviceInformationMessages, id: id)
     }
 }

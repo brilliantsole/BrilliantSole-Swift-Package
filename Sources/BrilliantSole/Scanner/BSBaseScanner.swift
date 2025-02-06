@@ -243,6 +243,4 @@ class BSBaseScanner: NSObject, BSScanner {
         }.store(in: &deviceIsConnectedCancellables)
         return device
     }
-
-    // MARK: -
 }

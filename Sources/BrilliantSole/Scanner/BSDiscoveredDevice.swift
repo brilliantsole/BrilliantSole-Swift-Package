@@ -68,7 +68,7 @@ class BSDiscoveredDevice {
 
     // MARK: - init
 
-    init(scanner: BSScanner, id: String, name: String, deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
+    init(scanner: BSScanner, id: String, name: String = "", deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
         self.scanner = scanner
         self.id = id
         self.lastTimeUpdated = .now

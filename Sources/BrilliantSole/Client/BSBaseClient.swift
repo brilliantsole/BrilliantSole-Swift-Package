@@ -63,4 +63,13 @@ class BSBaseClient: BSBaseScanner, BSClient {
         }
         sendMessages([.init(type: .stopScan)])
     }
+    
+    // MARK: - devices
+    
+    override func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+        let device = super.createDevice(discoveredDevice: discoveredDevice)
+        let connectionManager: BSClientConnectionManager = .init(discoveredDevice: discoveredDevice, client: self)
+        device.connectionManager = connectionManager
+        return device
+    }
 }

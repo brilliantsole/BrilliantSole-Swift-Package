@@ -22,6 +22,8 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         self.deviceType = discoveredDevice.deviceType
     }
 
+    var id: String { discoveredDevice.id }
+
     // MARK: - device information
 
     var name: String?
@@ -136,9 +138,9 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
 
     func parseRxData(_ data: Data) {
         logger.debug("parsing \(data.count) bytes \(data.bytes)")
-        parseMessages(data, messageCallback: { (messageType: UInt8, data: Data) in
+        parseMessages(data) { messageType, data in
             self.parseRxMessage(messageType: messageType, data: data)
-        })
+        }
         rxMessagesSubject.send()
     }
 

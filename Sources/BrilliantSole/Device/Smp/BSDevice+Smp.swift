@@ -7,6 +7,4 @@
 
 import Combine
 
-public extension BSDevice {
-    // FILL
-}
+public extension BSDevice {}

@@ -1,5 +1,3 @@
 client
-    BSBaseClient
-        Devices
     BSUdpClient
 firmware

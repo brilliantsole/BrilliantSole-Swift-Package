@@ -31,8 +31,8 @@ final class BSStringUtils {
         var stringLength = data.count
 
         if includesLength {
-            guard !data.isEmpty else { return "" }
-            stringLength = Int(data[offset])
+            guard !data.isEmpty else { return nil }
+            stringLength = Int(data[data.startIndex + offset])
             offset += 1
         }
 
@@ -41,7 +41,7 @@ final class BSStringUtils {
             return nil
         }
 
-        guard let parsedString = String(data: data.subdata(in: offset ..< offset + stringLength), encoding: .utf8) else {
+        guard let parsedString = String(data: data.subdata(in: data.startIndex + offset ..< data.startIndex + offset + stringLength), encoding: .utf8) else {
             return nil
         }
         logger.log("parsed string: \(parsedString)")

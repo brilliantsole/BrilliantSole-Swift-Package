@@ -15,9 +15,9 @@ extension BSBaseClient {
 
     func parseServerData(_ data: Data) {
         logger.debug("parsing \(data.count) bytes")
-        parseMessages(data, messageCallback: { (messageType: BSServerMessageType, data: Data) in
+        parseMessages(data) { messageType, data in
             self.parseServerMessage(type: messageType, data: data)
-        })
+        }
     }
 
     func parseServerMessage(type serverMessageType: BSServerMessageType, data: Data) {
@@ -33,8 +33,7 @@ extension BSBaseClient {
         case .connectedDevices:
             parseConnectedDevices(data)
         case .deviceMessage:
-            // FILL
-            break
+            parseDeviceMessage(data)
         default:
             logger.error("uncaught serverMessageType \(serverMessageType.name)")
         }
