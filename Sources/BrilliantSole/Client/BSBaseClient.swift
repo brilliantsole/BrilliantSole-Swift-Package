@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger
-class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
+public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     override init() {
         super.init()
 
@@ -147,11 +147,11 @@ class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         isConnectedSubject.eraseToAnyPublisher()
     }
 
-    var isConnected: Bool { connectionStatus == .connected }
+    public var isConnected: Bool { connectionStatus == .connected }
 
     // MARK: - connection
 
-    func connect() {
+    public func connect() {
         var _continue = true
         connect(_continue: &_continue)
     }
@@ -166,7 +166,7 @@ class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         _continue = true
     }
 
-    func disconnect() {
+    public func disconnect() {
         var _continue = true
         disconnect(_continue: &_continue)
     }
@@ -186,7 +186,7 @@ class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         _continue = true
     }
 
-    func toggleConnection() {
+    public func toggleConnection() {
         switch connectionStatus {
         case .connected, .connecting:
             disconnect()

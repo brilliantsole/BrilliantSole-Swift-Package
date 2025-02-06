@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-final class BSUdpClient: BSBaseClient {
+public final class BSUdpClient: BSBaseClient {
     static let _logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "BSUdpClient")
     override var logger: Logger { Self._logger }
 
