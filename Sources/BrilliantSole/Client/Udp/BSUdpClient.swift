@@ -16,7 +16,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
 
     override func reset() {
         super.reset()
-        // FILL
+        didSetReceivePort = false
     }
 
     // MARK: - udp
@@ -63,7 +63,24 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
                 logger.error("invalid receivePort number")
                 receivePort = oldValue
             }
+            setRemoteReceivePortMessage = createSetRemoteReceivePortMessage()
         }
+    }
+
+    var didSetReceivePort: Bool = false
+    func parseRemoteReceivePort(_ data: Data) {
+        guard let parsedReceivePort = UInt16.parse(data, littleEndian: false) else {
+            return
+        }
+        logger.debug("parsedReceivePort \(parsedReceivePort)")
+
+        guard parsedReceivePort == receivePort else {
+            logger.error("invalid receivePort - expected \(self.receivePort) got \(parsedReceivePort)")
+            return
+        }
+        logger.debug("successfully set receivePort")
+        didSetReceivePort = true
+        connectionStatus = .connected
     }
 
     // MARK: - connection
@@ -104,10 +121,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         DispatchQueue.global().asyncAfter(deadline: .now() + delay, execute: reconnectTask!)
     }
 
-    // MARK: - pinging
+    // MARK: - ping
 
     private var pingTimer: Timer?
-    static let pingInterval: TimeInterval = 1.0
+    static let pingInterval: TimeInterval = 2.0
     func startPinging() {
         if pingTimer?.isValid == true {
             stopPinging()
@@ -120,14 +137,67 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         pingTimer = nil
     }
 
+    static let pingMessage: BSUdpMessage = .init(type: .ping)
+    lazy var setRemoteReceivePortMessage: BSUdpMessage = createSetRemoteReceivePortMessage()
+    private func createSetRemoteReceivePortMessage() -> BSUdpMessage {
+        .init(type: .setRemoteReceivePort, data: receivePort.getData(littleEndian: false))
+    }
+
     @objc private func ping() {
-        // FILL
+        let message: BSUdpMessage
+        if didSetReceivePort {
+            logger.debug("pinging")
+            message = Self.pingMessage
+        } else {
+            logger.debug("setting remote receive port")
+            message = setRemoteReceivePortMessage
+        }
+        sendUdpMessages([message])
+    }
+
+    // MARK: - pong
+
+    private var pongTimer: Timer?
+    static let pongInterval: TimeInterval = 3.0
+    func waitForPong() {
+        if pongTimer?.isValid == true {
+            stopWaitingForPong()
+        }
+        logger.debug("waiting for pong...")
+        pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
+    }
+
+    func stopWaitingForPong() {
+        logger.debug("stopWaitingForPong")
+        pongTimer?.invalidate()
+        pongTimer = nil
+    }
+
+    @objc private func pongTimeout() {
+        logger.debug("pongTimeout")
+        disconnectedUnintentionally = true
+        disconnect()
+    }
+
+    static let pongMessage: BSUdpMessage = .init(type: .pong)
+    func pong() {
+        logger.debug("ponging")
+        sendUdpMessages([Self.pongMessage])
     }
 
     // MARK: - messaging
 
     override func sendMessageData(_ data: Data, sendImmediately: Bool = true) {
         super.sendMessageData(data, sendImmediately: sendImmediately)
+        let udpMessage: BSUdpMessage = .init(type: .serverMessage, data: data)
+        sendUdpMessages([udpMessage], sendImmediately: sendImmediately)
+    }
+
+    private func sendUdpMessages(_ udpMessages: [BSUdpMessage], sendImmediately: Bool = true) {
+        logger.debug("requesting to send \(udpMessages.count) udp messages")
+    }
+
+    private func sendUdpData(_ data: Data) {
         connection?.send(content: data, completion: .contentProcessed { [unowned self] error in
             if let error {
                 logger.error("send failed: \(error)")

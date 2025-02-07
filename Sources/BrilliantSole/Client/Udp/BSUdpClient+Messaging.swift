@@ -65,9 +65,7 @@ extension BSUdpClient {
             guard let self else { return }
 
             if let data {
-                parseMessages(data) { type, data in
-                    self.onUdpMessage(type: type, data: data)
-                }
+                onUdpData(data)
             }
             if let error {
                 logger.error("Receive error: \(error)")
@@ -76,17 +74,27 @@ extension BSUdpClient {
         }
     }
 
+    private func onUdpData(_ data: Data) {
+        stopWaitingForPong()
+        parseMessages(data) { type, data in
+            self.onUdpMessage(type: type, data: data)
+        }
+        if isConnected {
+            waitForPong()
+        }
+    }
+
     private func onUdpMessage(type: BSUdpMessageType, data: Data) {
         logger.debug("received udpMessage \(type.name) (\(data.count) bytes)")
         switch type {
         case .ping:
-            break
+            pong()
         case .pong:
             break
         case .setRemoteReceivePort:
-            break
+            parseRemoteReceivePort(data)
         case .serverMessage:
-            break
+            parseServerData(data)
         }
     }
 }
