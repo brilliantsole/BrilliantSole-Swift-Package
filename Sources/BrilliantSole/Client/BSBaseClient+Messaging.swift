@@ -8,16 +8,12 @@
 import Foundation
 
 extension BSBaseClient {
-    func onData(_ data: Data) {
-        logger.debug("received \(data.count) bytes")
-        parseServerData(data)
-    }
-
     func parseServerData(_ data: Data) {
-        logger.debug("parsing \(data.count) bytes")
+        logger.debug("parsing serverData (\(data.count) bytes)")
         parseMessages(data) { messageType, data in
             self.parseServerMessage(type: messageType, data: data)
         }
+        logger.debug("sendPendingMessages")
     }
 
     func parseServerMessage(type serverMessageType: BSServerMessageType, data: Data) {
@@ -39,7 +35,8 @@ extension BSBaseClient {
         }
     }
 
-    func sendRequiredMessages() {
-        sendMessages(Self.requiredMessages)
+    func sendRequiredMessages(sendImmediately: Bool = true) {
+        logger.debug("sending required messages")
+        sendMessages(Self.requiredMessages, sendImmediately: sendImmediately)
     }
 }

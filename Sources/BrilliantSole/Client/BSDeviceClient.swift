@@ -15,7 +15,7 @@ protocol BSDeviceClient {
     func sendDeviceMessages(_ messages: [BSConnectionMessage], id: String, sendImmediately: Bool)
 
     func sendMessages(_ serverMessages: [BSServerMessage], sendImmediately: Bool)
-    func sendMessageData(_ data: Data, sendImmediately: Bool)
+    func sendMessageData(_ data: Data)
 }
 
 extension BSDeviceClient {
@@ -33,10 +33,6 @@ extension BSDeviceClient {
 
     func sendMessages(_ serverMessages: [BSServerMessage]) {
         sendMessages(serverMessages, sendImmediately: true)
-    }
-
-    func sendMessageData(_ data: Data) {
-        sendMessageData(data, sendImmediately: true)
     }
 }
 
@@ -63,15 +59,5 @@ extension BSDeviceClient {
         }
         let serverMessage: BSServerMessage = .init(type: .deviceMessage, data: data)
         sendMessages([serverMessage], sendImmediately: sendImmediately)
-    }
-
-    func sendMessages(_ serverMessages: [BSServerMessage], sendImmediately: Bool) {
-        var data: Data = .init()
-        for message in serverMessages {
-            logger.debug("appending \(message.type.name) message")
-            message.appendTo(&data)
-        }
-        logger.debug("sending \(data.count) bytes...")
-        sendMessageData(data, sendImmediately: sendImmediately)
     }
 }

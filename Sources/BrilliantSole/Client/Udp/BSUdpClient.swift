@@ -17,7 +17,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     override func reset() {
         super.reset()
         didSetReceivePort = false
+        pendingUdpMessages.removeAll()
     }
+
+    public static let shared = BSUdpClient()
 
     // MARK: - udp
 
@@ -106,33 +109,24 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         reconnectTask = nil
     }
 
-    func scheduleReconnect(delay: TimeInterval, isListener: Bool) {
-        reconnectTask?.cancel()
-        reconnectTask = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            if isListener {
-                logger.debug("Restarting UDP listener...")
-                self.startReceiving()
-            } else {
-                logger.debug("Reconnecting UDP sender...")
-                self.startSending()
-            }
-        }
-        DispatchQueue.global().asyncAfter(deadline: .now() + delay, execute: reconnectTask!)
-    }
-
     // MARK: - ping
 
     private var pingTimer: Timer?
     static let pingInterval: TimeInterval = 2.0
     func startPinging() {
+        logger.debug("startPinging")
         if pingTimer?.isValid == true {
             stopPinging()
         }
-        pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
+
+        DispatchQueue.main.async { [self] in
+            pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
+        }
+        ping()
     }
 
     func stopPinging() {
+        logger.debug("stopPinging")
         pingTimer?.invalidate()
         pingTimer = nil
     }
@@ -164,7 +158,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             stopWaitingForPong()
         }
         logger.debug("waiting for pong...")
-        pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
+
+        DispatchQueue.main.async { [self] in
+            pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
+        }
     }
 
     func stopWaitingForPong() {
@@ -187,14 +184,35 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
 
     // MARK: - messaging
 
-    override func sendMessageData(_ data: Data, sendImmediately: Bool = true) {
-        super.sendMessageData(data, sendImmediately: sendImmediately)
+    override func sendMessageData(_ data: Data) {
+        super.sendMessageData(data)
         let udpMessage: BSUdpMessage = .init(type: .serverMessage, data: data)
-        sendUdpMessages([udpMessage], sendImmediately: sendImmediately)
+        sendUdpMessages([udpMessage])
     }
 
+    private var pendingUdpMessages: [BSUdpMessage] = .init()
     private func sendUdpMessages(_ udpMessages: [BSUdpMessage], sendImmediately: Bool = true) {
         logger.debug("requesting to send \(udpMessages.count) udp messages")
+        pendingUdpMessages += udpMessages
+        if !sendImmediately {
+            logger.debug("not sending udp messages immediately")
+            return
+        }
+        sendPendingUdpMessages()
+    }
+
+    func sendPendingUdpMessages() {
+        guard !pendingUdpMessages.isEmpty else {
+            logger.debug("pendingUdpMessages is empty - not sending")
+            return
+        }
+        var data: Data = .init()
+        for udpMessage in pendingUdpMessages {
+            logger.debug("appending \(udpMessage.type.name) udpMessage")
+            udpMessage.appendTo(&data)
+        }
+        pendingUdpMessages.removeAll()
+        sendUdpData(data)
     }
 
     private func sendUdpData(_ data: Data) {

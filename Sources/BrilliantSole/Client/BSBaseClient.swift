@@ -16,7 +16,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         self.isScanningAvailablePublisher.sink { isScanningAvailable in
             if isScanningAvailable {
-                self.checkIfScanning()
+                self.checkIfScanning(sendImmediately: false)
             }
         }.store(in: &cancellables)
     }
@@ -31,6 +31,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         discoveredDevices.removeAll()
         // devices.removeAll()
+
+        pendingMessages.removeAll()
 
         for (_, device) in devices {
             guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
@@ -106,7 +108,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
             switch connectionStatus {
             case .connected:
-                sendRequiredMessages()
+                sendRequiredMessages(sendImmediately: false)
             case .notConnected:
                 reset()
                 if disconnectedUnintentionally && reconnectOnDisconnection {
@@ -200,7 +202,38 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     // MARK: - messaging
 
-    func sendMessageData(_ data: Data, sendImmediately: Bool = true) {
+    private var pendingMessages: [BSServerMessage] = .init()
+    func sendMessages(_ serverMessages: [BSServerMessage], sendImmediately: Bool = true) {
+        logger.debug("requesting to send \(serverMessages.count) messages")
+        pendingMessages += serverMessages
+        guard sendImmediately else {
+            logger.debug("not sending serverMessages immediately")
+            return
+        }
+        sendPendingMessages()
+    }
+
+    func sendPendingMessages() {
+        guard !pendingMessages.isEmpty else {
+            logger.debug("pendingMessages is empty, not sending")
+            return
+        }
+        var data: Data = .init()
+        for message in pendingMessages {
+            logger.debug("appending \(message.type.name) serverMessage")
+            message.appendTo(&data)
+        }
+        pendingMessages.removeAll()
+
+        guard !data.isEmpty else {
+            logger.debug("data is empty, not sending")
+            return
+        }
+        logger.debug("sending \(data.count) bytes...")
+        sendMessageData(data)
+    }
+
+    func sendMessageData(_ data: Data) {
         logger.debug("sending \(data.count) bytes...")
     }
 }

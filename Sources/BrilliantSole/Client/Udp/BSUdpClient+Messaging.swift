@@ -18,6 +18,7 @@ extension BSUdpClient {
         connection = NWConnection(host: hostNW, port: portNW, using: .udp)
         connection?.stateUpdateHandler = { [weak self] newState in
             guard let self = self else { return }
+            logger.debug("newState \(String(describing: newState))")
             switch newState {
             case .ready:
                 logger.debug("connected to \(self.host):\(self.sendPort)")
@@ -25,8 +26,10 @@ extension BSUdpClient {
             case .failed(let error):
                 logger.error("Connection failed: \(error), retrying...")
                 self.scheduleReconnect(delay: 2.0, isListener: false)
-            default:
+            case .preparing:
                 break
+            default:
+                logger.debug("uncaught newState \(String(describing: newState))")
             }
         }
         connection?.start(queue: .global())
@@ -40,6 +43,7 @@ extension BSUdpClient {
             listener = try NWListener(using: .udp, on: port)
 
             listener?.newConnectionHandler = { [weak self] connection in
+                connection.start(queue: .global())
                 self?.receiveMessage(connection)
             }
 
@@ -59,8 +63,22 @@ extension BSUdpClient {
         }
     }
 
+    func scheduleReconnect(delay: TimeInterval, isListener: Bool) {
+        reconnectTask?.cancel()
+        reconnectTask = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            if isListener {
+                logger.debug("Restarting UDP listener...")
+                self.startReceiving()
+            } else {
+                logger.debug("Reconnecting UDP sender...")
+                self.startSending()
+            }
+        }
+        DispatchQueue.global().asyncAfter(deadline: .now() + delay, execute: reconnectTask!)
+    }
+
     private func receiveMessage(_ connection: NWConnection) {
-        connection.start(queue: .global())
         connection.receiveMessage { [weak self] data, _, _, error in
             guard let self else { return }
 
@@ -75,10 +93,13 @@ extension BSUdpClient {
     }
 
     private func onUdpData(_ data: Data) {
+        logger.debug("received udpData (\(data.count) bytes)")
         stopWaitingForPong()
         parseMessages(data) { type, data in
             self.onUdpMessage(type: type, data: data)
         }
+        sendPendingMessages()
+        sendPendingUdpMessages()
         if isConnected {
             waitForPong()
         }

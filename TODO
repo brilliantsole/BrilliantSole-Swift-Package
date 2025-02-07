@@ -1,6 +1,4 @@
 BSUdpClient
-    pongTimeout
-    didSetReceivePort
-    parseUdpMessage
+    isConnected when isScanning metadata & devices info is received
     test
 firmware

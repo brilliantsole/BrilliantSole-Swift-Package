@@ -181,4 +181,17 @@ struct BSTests {
         }.store(in: &cancellablesStore.cancellables)
         try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
+
+    @Test func udpClientTest() async throws {
+        let udpClient = BSUdpClient.shared
+        udpClient.connectedPublisher.sink { _ in
+            print("connected!")
+            if udpClient.isScanningAvailable {
+                print("scanning is available!")
+            }
+        }.store(in: &cancellablesStore.cancellables)
+        udpClient.connect()
+
+        try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
+    }
 }
