@@ -35,7 +35,7 @@ extension BSDeviceClient {
         sendMessages(serverMessages, sendImmediately: true)
     }
 
-    func sendMessageData(_ data: Data, sendImmediately: Bool) {
+    func sendMessageData(_ data: Data) {
         sendMessageData(data, sendImmediately: true)
     }
 }

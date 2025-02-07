@@ -197,4 +197,10 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     public var reconnectOnDisconnection: Bool = true
     var disconnectedUnintentionally: Bool = false
+
+    // MARK: - messaging
+
+    func sendMessageData(_ data: Data, sendImmediately: Bool = true) {
+        logger.debug("sending \(data.count) bytes...")
+    }
 }
