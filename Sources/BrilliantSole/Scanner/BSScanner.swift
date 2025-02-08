@@ -7,7 +7,7 @@
 
 import Combine
 
-private let logger = getLogger(category: "BSScanner")
+private let logger = getLogger(category: "BSScanner", disabled: true)
 
 public protocol BSScanner {
     static var connectionType: BSConnectionType { get }
@@ -54,7 +54,7 @@ public extension BSScanner {
     func startScan() { startScan(scanWhenAvailable: true) }
 
     func toggleScan(scanWhenAvailable: Bool) {
-        logger.debug("toggling scan")
+        logger?.debug("toggling scan")
         isScanning ? stopScan() : startScan()
     }
 

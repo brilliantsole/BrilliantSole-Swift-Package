@@ -11,7 +11,7 @@ import UkatonMacros
 
 public typealias BSPressureSensorPosition = simd_double2
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public struct BSPressureSensorData {
     public let position: BSPressureSensorPosition
     public let rawValue: UInt16

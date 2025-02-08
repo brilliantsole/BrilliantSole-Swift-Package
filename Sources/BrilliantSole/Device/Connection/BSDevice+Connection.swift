@@ -7,7 +7,7 @@
 
 public extension BSDevice {
     internal func onConnectionManagerChanged() {
-        logger.debug("assigning connectionManager cancellables")
+        logger?.debug("assigning connectionManager cancellables")
 
         connectionManagerCancellables.removeAll(keepingCapacity: true)
 
@@ -47,7 +47,7 @@ public extension BSDevice {
     var connectionManagerStatus: BSConnectionStatus? { connectionManager?.connectionStatus }
 
     private func onConnectionManagerStatusChanged(_ connectionManagerStatus: BSConnectionStatus) {
-        logger.debug("connectionManagerStatus updated to \(connectionManagerStatus.name)")
+        logger?.debug("connectionManagerStatus updated to \(connectionManagerStatus.name)")
         switch connectionManagerStatus {
         case .connected:
             sendRequiredTxRxMessages()
@@ -66,7 +66,7 @@ public extension BSDevice {
     func toggleConnection() { connectionManager?.toggleConnection() }
 
     private func sendRequiredTxRxMessages() {
-        logger.debug("sending required txRxMessages")
+        logger?.debug("sending required txRxMessages")
         sendTxMessages(BSTxRxMessageUtils.requiredTxRxMessages)
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-private let logger = getLogger(category: "OptionSetUtils")
+private let logger = getLogger(category: "OptionSetUtils", disabled: true)
 
 extension Array where Element: RawRepresentable, Element.RawValue == UInt8 {
     var rawValue: UInt8 {
@@ -22,7 +22,7 @@ extension Array where Element: RawRepresentable, Element.RawValue == UInt8 {
 extension OptionSet where Self: CaseIterable, Self.RawValue == UInt8 {
     static func parse(_ data: Data) -> [Self] {
         guard !data.isEmpty else {
-            logger.error("invalid data \(data)")
+            logger?.error("invalid data \(data)")
             return []
         }
         let rawValue = data[0]

@@ -8,19 +8,19 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSParseUtils")
+private let logger = getLogger(category: "BSParseUtils", disabled: true)
 
 func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @escaping (MessageType, Data) -> Void, at initialoffset: Data.Index = .zero, parseMessageLengthAs2Bytes: Bool = true) {
-    logger.debug("parsing \(data.count) bytes at \(initialoffset)")
+    logger?.debug("parsing \(data.count) bytes at \(initialoffset)")
     var offset = initialoffset
     while offset < data.count {
-        logger.debug("parsing message at \(offset)")
+        logger?.debug("parsing message at \(offset)")
 
         guard let messageType = MessageType.parse(data, at: offset) else {
             return
         }
         offset += 1
-        logger.debug("messageType \(String(describing: messageType))")
+        logger?.debug("messageType \(String(describing: messageType))")
 
         let messageDataLength: UInt16
         if parseMessageLengthAs2Bytes {
@@ -33,17 +33,17 @@ func parseMessages<MessageType: BSMessageType>(_ data: Data, messageCallback: @e
             messageDataLength = UInt16(data[data.startIndex + offset])
             offset += 1
         }
-        logger.debug("messageType: \(String(describing: messageType)), messageDataLength: \(messageDataLength)")
+        logger?.debug("messageType: \(String(describing: messageType)), messageDataLength: \(messageDataLength)")
 
         let endIndex = Data.Index(offset) + Data.Index(messageDataLength)
         guard endIndex <= data.count else {
-            logger.error("message data length exceeds buffer size")
+            logger?.error("message data length exceeds buffer size")
             return
         }
         let messageData = data[(data.startIndex + Data.Index(offset)) ..< (data.startIndex + endIndex)]
         messageCallback(messageType, messageData)
         offset += Data.Index(messageDataLength)
-        logger.debug("new offset: \(offset)")
+        logger?.debug("new offset: \(offset)")
     }
-    logger.debug("finished parsing")
+    logger?.debug("finished parsing")
 }

@@ -24,7 +24,7 @@ public func spacesToCamelCase(_ inputString: String) -> String {
     return camelCaseString
 }
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSStringUtils {
     static func getString(from data: Data, includesLength: Bool = false) -> String? {
         var offset = 0
@@ -37,14 +37,14 @@ final class BSStringUtils {
         }
 
         guard offset + stringLength <= data.count else {
-            logger.error("Invalid string length")
+            logger?.error("Invalid string length")
             return nil
         }
 
         guard let parsedString = String(data: data.subdata(in: data.startIndex + offset ..< data.startIndex + offset + stringLength), encoding: .utf8) else {
             return nil
         }
-        logger.log("parsed string: \(parsedString)")
+        logger?.debug("parsed string: \(parsedString)")
         return parsedString
     }
 

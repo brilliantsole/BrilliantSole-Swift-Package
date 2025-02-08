@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public final class BSDevice {
     // MARK: - init
 
@@ -56,7 +56,7 @@ public final class BSDevice {
 
     public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
         didSet {
-            logger.debug("updated connectionStatus \(self.connectionStatus.name)")
+            logger?.debug("updated connectionStatus \(self.connectionStatus.name)")
 
             connectionStatusSubject.send((self, connectionStatus))
 
@@ -120,7 +120,7 @@ public final class BSDevice {
 
     public internal(set) var batteryLevel: BSBatteryLevel = 0 {
         didSet {
-            logger.debug("updated batteryLevel \(self.batteryLevel)")
+            logger?.debug("updated batteryLevel \(self.batteryLevel)")
             didReceiveBatteryLevel = true
             batteryLevelSubject.send((self, batteryLevel))
         }
@@ -388,7 +388,7 @@ public final class BSDevice {
 
     public internal(set) var isTfliteReady: Bool = false {
         didSet {
-            logger.debug("updated isTfliteReady \(self.isTfliteReady)")
+            logger?.debug("updated isTfliteReady \(self.isTfliteReady)")
             isTfliteReadySubject.send((self, isTfliteReady))
         }
     }

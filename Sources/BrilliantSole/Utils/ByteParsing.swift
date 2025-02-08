@@ -1,6 +1,6 @@
 import Foundation
 
-private let logger = getLogger(category: "ByteParsing")
+private let logger = getLogger(category: "ByteParsing", disabled: true)
 
 // MARK: - Data to Object
 
@@ -8,7 +8,7 @@ extension Data {
     func parse<T>(at offset: Data.Index = .zero) -> T? {
         let size = MemoryLayout<T>.size
         guard offset + size <= count else {
-            logger.error("Insufficient bytes: required \(size), available \(count - offset)")
+            logger?.error("Insufficient bytes: required \(size), available \(count - offset)")
             return nil
         }
         return subdata(in: (startIndex + offset) ..< (startIndex + offset + size)).withUnsafeBytes { $0.load(as: T.self) }
@@ -79,11 +79,11 @@ extension BinaryFloatingPoint {
 extension Data {
     func parseString(offset: Data.Index = .zero, until finalOffset: Data.Index) -> String {
         guard !isEmpty else {
-            logger.debug("empty string")
+            logger?.debug("empty string")
             return ""
         }
         guard offset < finalOffset, finalOffset <= count else {
-            logger.error("Invalid string range: offset \(offset), finalOffset \(finalOffset), data count \(count)")
+            logger?.error("Invalid string range: offset \(offset), finalOffset \(finalOffset), data count \(count)")
             return ""
         }
 
@@ -119,7 +119,7 @@ extension Bool {
 
     static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {
         guard offset < data.count else {
-            logger.error("Invalid offset \(offset) for data size \(data.count)")
+            logger?.error("Invalid offset \(offset) for data size \(data.count)")
             return nil
         }
         return data[data.startIndex + offset] == 1

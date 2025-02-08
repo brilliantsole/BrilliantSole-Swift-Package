@@ -8,5 +8,5 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSDevicePairBarometerSensorDataManager {}

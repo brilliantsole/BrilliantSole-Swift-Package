@@ -7,7 +7,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
     override class var requiredMessageTypes: [BSVibrationMessageType]? {
         nil
@@ -23,10 +23,10 @@ final class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
             }
         }
         guard !data.isEmpty else {
-            logger.debug("empty data - nothing to send")
+            logger?.debug("empty data - nothing to send")
             return
         }
-        logger.debug("vibrationData: \(data.count) bytes - \(data.bytes)")
+        logger?.debug("vibrationData: \(data.count) bytes - \(data.bytes)")
         createAndSendMessage(.triggerVibration, data: data, sendImmediately: sendImmediately)
     }
 }

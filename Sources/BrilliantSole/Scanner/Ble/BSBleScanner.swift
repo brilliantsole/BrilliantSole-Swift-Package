@@ -9,7 +9,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public class BSBleScanner: BSBaseScanner {
     override private init() {
         super.init()
@@ -48,7 +48,7 @@ public class BSBleScanner: BSBaseScanner {
     }
 
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        logger.debug("discovered peripherial \(peripheral), advertisementData: \(advertisementData), rssi: \(RSSI)")
+        logger?.debug("discovered peripherial \(peripheral), advertisementData: \(advertisementData), rssi: \(RSSI)")
         onDiscoveredPeripheral(peripheral, advertisementData: advertisementData, rssi: RSSI)
     }
 
@@ -91,7 +91,7 @@ public class BSBleScanner: BSBaseScanner {
     private var connectionManagers: [String: BSBleConnectionManager] = .init()
     func getConnectionManager(for peripheral: CBPeripheral) -> BSBleConnectionManager? {
         guard let connectionManager = connectionManagers[peripheral.id] else {
-            logger.error("connectionManager not found for peripheral \(peripheral)")
+            logger?.error("connectionManager not found for peripheral \(peripheral)")
             return nil
         }
         return connectionManager

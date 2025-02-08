@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSDevicePairSensorDataManager {
     let pressureSensorDataManager: BSDevicePairPressureSensorDataManager = .init()
     let motionSensorDataManager: BSDevicePairMotionSensorDataManager = .init()

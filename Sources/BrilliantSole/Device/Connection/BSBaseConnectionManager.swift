@@ -8,7 +8,7 @@
 import Combine
 import OSLog
 
-private let logger = getLogger(category: "BSBaseConnectionManager")
+private let logger = getLogger(category: "BSBaseConnectionManager", disabled: true)
 
 class BSBaseConnectionManager: NSObject, BSConnectionManager {
     class var connectionType: BSConnectionType { fatalError("Must override") }
@@ -50,10 +50,10 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
         get { connectionStatusSubject.value }
         set {
             guard newValue != connectionStatus else {
-                logger.debug("redundant update to connectionStatus \(newValue.name)")
+                logger?.debug("redundant update to connectionStatus \(newValue.name)")
                 return
             }
-            logger.debug("updated connectionStatus \(newValue.name)")
+            logger?.debug("updated connectionStatus \(newValue.name)")
             connectionStatusSubject.value = newValue
 
             switch connectionStatus {
@@ -96,7 +96,7 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
 
     func connect(_continue: inout Bool) {
         guard !isConnected else {
-            logger.debug("already connected")
+            logger?.debug("already connected")
             _continue = false
             return
         }
@@ -111,12 +111,12 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
 
     func disconnect(_continue: inout Bool) {
         guard connectionStatus != .notConnected else {
-            logger.debug("already disconnected")
+            logger?.debug("already disconnected")
             _continue = false
             return
         }
         guard connectionStatus != .disconnecting else {
-            logger.debug("already disconnecting")
+            logger?.debug("already disconnecting")
             _continue = false
             return
         }
@@ -137,7 +137,7 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func parseRxData(_ data: Data) {
-        logger.debug("parsing \(data.count) bytes \(data.bytes)")
+        logger?.debug("parsing \(data.count) bytes \(data.bytes)")
         parseMessages(data) { messageType, data in
             self.parseRxMessage(messageType: messageType, data: data)
         }
@@ -145,7 +145,7 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func parseRxMessage(messageType: UInt8, data: Data) {
-        logger.debug("parsing rxMessage #\(messageType) \"\(BSTxRxMessageUtils.enumStrings[Int(messageType)])\" (\(data.count) bytes) \(data.bytes)")
+        logger?.debug("parsing rxMessage #\(messageType) \"\(BSTxRxMessageUtils.enumStrings[Int(messageType)])\" (\(data.count) bytes) \(data.bytes)")
         rxMessageSubject.send((messageType, data))
     }
 
@@ -157,6 +157,6 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func sendTxData(_ data: Data) {
-        logger.log("sending \(data.count) bytes \(data.bytes)")
+        logger?.debug("sending \(data.count) bytes \(data.bytes)")
     }
 }

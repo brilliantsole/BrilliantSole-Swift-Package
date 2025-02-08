@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import OSLog
 
 extension BSDevice {
     func onRxMessage(type: BSTxMessageType, data: Data) {
-        logger.debug("received message: \"\(BSTxRxMessageUtils.enumStrings[Int(type)])\" (\(data.count) bytes)")
+        logger?.debug("received message: \"\(BSTxRxMessageUtils.enumStrings[Int(type)])\" (\(data.count) bytes)")
         receivedTxRxMessages.insert(type)
         for manager in managers {
             if manager.canParseRxMessageEnum(type) {
@@ -20,7 +21,7 @@ extension BSDevice {
     }
 
     func onRxMessages() {
-        logger.debug("parsed rxMessages")
+        logger?.debug("parsed rxMessages")
         sendPendingTxMessages()
         if connectionStatus == .connecting {
             checkIfFullyConnected()
@@ -28,25 +29,25 @@ extension BSDevice {
     }
 
     func checkIfFullyConnected() {
-        logger.debug("checking if fully connected")
+        logger?.debug("checking if fully connected")
         guard didReceiveBatteryLevel else {
-            logger.debug("didn't receive batteryLevel - notFullyConnected")
+            logger?.debug("didn't receive batteryLevel - notFullyConnected")
             return
         }
         guard deviceInformationManager.hasAllInformation else {
-            logger.debug("deviceInformationManager doesn't hasAllInformation - notFullyConnected")
+            logger?.debug("deviceInformationManager doesn't hasAllInformation - notFullyConnected")
             return
         }
         guard connectionStatus == .connecting else {
-            logger.debug("connectionStatus is not connecting (got \(self.connectionStatus.name) - notFullyConnected")
+            logger?.debug("connectionStatus is not connecting (got \(self.connectionStatus.name) - notFullyConnected")
             return
         }
         guard informationManager.currentTime != 0 else {
-            logger.debug("currentTime is 0 - notFullyConnected")
+            logger?.debug("currentTime is 0 - notFullyConnected")
             return
         }
         let receivedAllRequiredTxRxMessages = checkIfReceivedAllRequiredTxRxMessages()
-        logger.debug("receivedAllRequiredTxRxMessages \(receivedAllRequiredTxRxMessages)")
+        logger?.debug("receivedAllRequiredTxRxMessages \(receivedAllRequiredTxRxMessages)")
         guard receivedAllRequiredTxRxMessages else {
             return
         }
@@ -57,7 +58,7 @@ extension BSDevice {
         var receivedAllRequiredTxRxMessages = true
         for messageType in BSTxRxMessageUtils.requiredTxRxMessageTypes {
             if !receivedTxRxMessages.contains(messageType) {
-                logger.debug("didn't receive mesageType \(BSTxRxMessageUtils.enumStrings[Int(messageType)])")
+                logger?.debug("didn't receive mesageType \(BSTxRxMessageUtils.enumStrings[Int(messageType)])")
                 receivedAllRequiredTxRxMessages = false
                 break
             }

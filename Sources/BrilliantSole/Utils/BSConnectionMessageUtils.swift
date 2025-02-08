@@ -9,13 +9,13 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSConnectionMessageUtils {
     static let enumStrings: [String] = initializeEnumStrings()
     static let enumStringMap: [String: UInt8] = initializeEnumStringMap()
 
     private static func initializeEnumStrings() -> [String] {
-        logger.debug("initializeEnumStrings")
+        logger?.debug("initializeEnumStrings")
         var enumStrings: [String] = []
         var offset: UInt8 = 0
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSBatteryLevelMessageType.self)
@@ -23,17 +23,17 @@ final class BSConnectionMessageUtils {
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSMetaConnectionMessageType.self)
         appendStrings(offset: &offset, enumStrings: &enumStrings, names: BSTxRxMessageUtils.enumStrings)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpMessageType.self)
-        logger.debug("enumStrings: \(enumStrings)")
+        logger?.debug("enumStrings: \(enumStrings)")
         return enumStrings
     }
 
     private static func initializeEnumStringMap() -> [String: UInt8] {
-        logger.debug("initializeEnumStringMap")
+        logger?.debug("initializeEnumStringMap")
         var enumStringMap: [String: UInt8] = [:]
         for (index, enumString) in enumStrings.enumerated() {
             enumStringMap[enumString] = UInt8(index)
         }
-        logger.debug("enumStringMap: \(enumStringMap)")
+        logger?.debug("enumStringMap: \(enumStringMap)")
         return enumStringMap
     }
 
@@ -53,7 +53,7 @@ final class BSConnectionMessageUtils {
         var data: Data = .init()
         for string in strings {
             guard let value = enumStringMap[string] else {
-                logger.error("no value found for enum \(string)")
+                logger?.error("no value found for enum \(string)")
                 continue
             }
             data.append(value)
@@ -63,7 +63,7 @@ final class BSConnectionMessageUtils {
 
     static func getMessageTypeForString(_ enumString: String) -> _BSConnectionMessageType? {
         guard let type = enumStringMap[enumString] else {
-            logger.error("no type defined for enumString \(enumString)")
+            logger?.error("no type defined for enumString \(enumString)")
             return nil
         }
         return type

@@ -9,11 +9,11 @@ import Foundation
 
 extension BSBaseClient {
     func parseServerData(_ data: Data) {
-        logger.debug("parsing serverData (\(data.count) bytes)")
+        logger?.debug("parsing serverData (\(data.count) bytes)")
         parseMessages(data) { messageType, data in
             self.parseServerMessage(type: messageType, data: data)
         }
-        logger.debug("sendPendingMessages")
+        logger?.debug("sendPendingMessages")
         checkIfFullyConnected()
     }
 
@@ -32,14 +32,14 @@ extension BSBaseClient {
         case .deviceMessage:
             parseDeviceMessage(data)
         default:
-            logger.error("uncaught serverMessageType \(serverMessageType.name)")
+            logger?.error("uncaught serverMessageType \(serverMessageType.name)")
         }
         
         receivedMessageTypes.insert(serverMessageType)
     }
 
     func sendRequiredMessages(sendImmediately: Bool = true) {
-        logger.debug("sending required messages")
+        logger?.debug("sending required messages")
         sendMessages(Self.requiredMessages, sendImmediately: sendImmediately)
     }
 }

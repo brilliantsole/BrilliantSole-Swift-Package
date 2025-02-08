@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSDevicePairPressureSensorDataManager {
     private var devicePressureData: [BSInsoleSide: BSPressureData] = .init()
     private var hasAllData: Bool { devicePressureData.count == 2 }
@@ -21,13 +21,13 @@ class BSDevicePairPressureSensorDataManager {
     }
 
     func onDevicePressureData(insoleSide: BSInsoleSide, pressureData: BSPressureData, timestamp: BSTimestamp) {
-        logger.debug("assigning \(insoleSide.name) pressure data")
+        logger?.debug("assigning \(insoleSide.name) pressure data")
         devicePressureData[insoleSide] = pressureData
         guard hasAllData else {
-            logger.debug("not all data received yet")
+            logger?.debug("not all data received yet")
             return
         }
-        logger.debug("calculating devicePair pressure data")
+        logger?.debug("calculating devicePair pressure data")
 
         var rawSum: Float = 0
         var normalizedSum: Float = 0
@@ -36,7 +36,7 @@ class BSDevicePairPressureSensorDataManager {
             rawSum += devicePressureData[insoleSide]!.scaledSum
             normalizedSum += devicePressureData[insoleSide]!.normalizedSum
         }
-        logger.debug("rawSum: \(rawSum), normalizedSum: \(normalizedSum)")
+        logger?.debug("rawSum: \(rawSum), normalizedSum: \(normalizedSum)")
 
         var centerOfPressure: BSCenterOfPressure?
         var normalizedCenterOfPressure: BSCenterOfPressure?
@@ -56,7 +56,7 @@ class BSDevicePairPressureSensorDataManager {
             centerOfPressure = .init(x: Double(centerOfPressureX), y: Double(centerOfPressureY))
             normalizedCenterOfPressure = centerOfPressureRange.updateAndGetNormalization(for: centerOfPressure!)
 
-            logger.debug("centerOfPressure: \(centerOfPressure!), normalizedCenterOfPressure: \(normalizedCenterOfPressure!)")
+            logger?.debug("centerOfPressure: \(centerOfPressure!), normalizedCenterOfPressure: \(normalizedCenterOfPressure!)")
         }
 
         let pressureData: BSDevicePairPressureData = .init(

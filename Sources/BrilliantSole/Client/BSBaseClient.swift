@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     override init() {
         super.init()
@@ -24,7 +24,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     private var cancellables: Set<AnyCancellable> = []
 
     func reset() {
-        logger.debug("resetting")
+        logger?.debug("resetting")
 
         isScanning = false
         isScanningAvailable = false
@@ -38,7 +38,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         for (_, device) in devices {
             guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
-                logger.debug("failed to cast connectionManager to BSClientConnectionManager")
+                logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
             connectionManager.isConnected = false
@@ -86,7 +86,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
         didSet {
-            logger.debug("updated connectionStatus \(self.connectionStatus.name)")
+            logger?.debug("updated connectionStatus \(self.connectionStatus.name)")
 
             connectionStatusSubject.send((self, connectionStatus))
 
@@ -115,7 +115,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
             case .notConnected:
                 reset()
                 if disconnectedUnintentionally && reconnectOnDisconnection {
-                    logger.debug("attempting reconnection")
+                    logger?.debug("attempting reconnection")
                     connect()
                     disconnectedUnintentionally = false
                 }
@@ -163,7 +163,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     func connect(_continue: inout Bool) {
         guard !isConnected else {
-            logger.debug("already connected")
+            logger?.debug("already connected")
             _continue = false
             return
         }
@@ -178,12 +178,12 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     func disconnect(_continue: inout Bool) {
         guard connectionStatus != .notConnected else {
-            logger.debug("already disconnected")
+            logger?.debug("already disconnected")
             _continue = false
             return
         }
         guard connectionStatus != .disconnecting else {
-            logger.debug("already disconnecting")
+            logger?.debug("already disconnecting")
             _continue = false
             return
         }
@@ -207,10 +207,10 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     private var pendingMessages: [BSServerMessage] = .init()
     func sendMessages(_ serverMessages: [BSServerMessage], sendImmediately: Bool = true) {
-        logger.debug("requesting to send \(serverMessages.count) messages")
+        logger?.debug("requesting to send \(serverMessages.count) messages")
         pendingMessages += serverMessages
         guard sendImmediately else {
-            logger.debug("not sending serverMessages immediately")
+            logger?.debug("not sending serverMessages immediately")
             return
         }
         sendPendingMessages()
@@ -218,26 +218,26 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     func sendPendingMessages() {
         guard !pendingMessages.isEmpty else {
-            logger.debug("pendingMessages is empty, not sending")
+            logger?.debug("pendingMessages is empty, not sending")
             return
         }
         var data: Data = .init()
         for message in pendingMessages {
-            logger.debug("appending \(message.type.name) serverMessage")
+            logger?.debug("appending \(message.type.name) serverMessage")
             message.appendTo(&data)
         }
         pendingMessages.removeAll()
 
         guard !data.isEmpty else {
-            logger.debug("data is empty, not sending")
+            logger?.debug("data is empty, not sending")
             return
         }
-        logger.debug("sending \(data.count) bytes...")
+        logger?.debug("sending \(data.count) bytes...")
         sendMessageData(data)
     }
 
     func sendMessageData(_ data: Data) {
-        logger.debug("sending \(data.count) bytes...")
+        logger?.debug("sending \(data.count) bytes...")
     }
 
     // MARK: - fullyConnected
@@ -246,20 +246,20 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     func checkIfFullyConnected() {
         guard connectionStatus == .connecting else { return }
 
-        logger.debug("checking if fully connected...")
+        logger?.debug("checking if fully connected...")
 
         guard receivedMessageTypes.contains(.isScanningAvailable) else {
-            logger.debug("didn't receive isScanningAvailable yet - not fully connected")
+            logger?.debug("didn't receive isScanningAvailable yet - not fully connected")
             return
         }
         if isScanningAvailable {
             guard receivedMessageTypes.contains(.isScanning) else {
-                logger.debug("didn't receive isScanning yet - not fully connected")
+                logger?.debug("didn't receive isScanning yet - not fully connected")
                 return
             }
         }
 
-        logger.debug("fully connected")
+        logger?.debug("fully connected")
         connectionStatus = .connected
     }
 }

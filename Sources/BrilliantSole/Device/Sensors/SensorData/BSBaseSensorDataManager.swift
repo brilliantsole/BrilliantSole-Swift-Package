@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSBaseSensorDataManager")
+private let logger = getLogger(category: "BSBaseSensorDataManager", disabled: true)
 
 class BSBaseSensorDataManager {
     class var sensorTypes: Set<BSSensorType> { [] }
@@ -17,10 +17,10 @@ class BSBaseSensorDataManager {
         guard canParseSensorData(sensorType) else {
             fatalError("unable to parse \(sensorType.name) sensor data")
         }
-        logger.debug("parsing \(sensorType.name) sensor data (\(data.count) bytes)")
+        logger?.debug("parsing \(sensorType.name) sensor data (\(data.count) bytes)")
     }
 
     func reset() {
-        logger.debug("resetting sensorDataManager \(String(describing: Self.self))")
+        logger?.debug("resetting sensorDataManager \(String(describing: Self.self))")
     }
 }

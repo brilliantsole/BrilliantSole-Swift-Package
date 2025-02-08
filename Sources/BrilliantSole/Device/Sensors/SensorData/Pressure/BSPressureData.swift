@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public struct BSPressureData {
     public let sensors: [BSPressureSensorData]
     public let scaledSum: Float
@@ -28,7 +28,7 @@ public struct BSPressureData {
     static func parse(_ data: Data, scalar: Float, positions: [BSPressureSensorPosition], ranges: inout [BSRange], centerOfPressureRange: inout BSCenterOfPressureRange) -> Self? {
         guard data.count == ranges.count * 2 else {
             let rangesCount = ranges.count * 2
-            logger.error("data count mismatch (expected \(rangesCount), got \(data.count)")
+            logger?.error("data count mismatch (expected \(rangesCount), got \(data.count)")
             return nil
         }
         var sensors: [BSPressureSensorData] = .init()
@@ -39,13 +39,13 @@ public struct BSPressureData {
             guard let rawValue = UInt16.parse(data, at: index * 2) else {
                 break
             }
-            logger.debug("#\(index) rawValue: \(rawValue)")
+            logger?.debug("#\(index) rawValue: \(rawValue)")
 
             let scaledValue = Float(rawValue) * scalar
-            logger.debug("#\(index) scaledValue: \(scaledValue)")
+            logger?.debug("#\(index) scaledValue: \(scaledValue)")
 
             let normalizedValue = ranges[index].updateAndGetNormalization(for: scaledValue, weightBySpan: true)
-            logger.debug("#\(index) normalizedValue: \(normalizedValue)")
+            logger?.debug("#\(index) normalizedValue: \(normalizedValue)")
 
             let sensor: BSPressureSensorData = .init(
                 position: positions[index],
@@ -53,15 +53,15 @@ public struct BSPressureData {
                 scaledValue: scaledValue,
                 normalizedValue: normalizedValue
             )
-            logger.debug("#\(index) sensor: \(String(describing: sensor))")
+            logger?.debug("#\(index) sensor: \(String(describing: sensor))")
             sensors.append(sensor)
 
             scaledSum += scaledValue
             normalizedSum += normalizedValue
-            logger.debug("partial (#\(index) scaledSum: \(scaledSum), normalizedValue: \(normalizedValue)")
+            logger?.debug("partial (#\(index) scaledSum: \(scaledSum), normalizedValue: \(normalizedValue)")
         }
 
-        logger.debug("final scaledSum: \(scaledSum), normalizedSum: \(normalizedSum)")
+        logger?.debug("final scaledSum: \(scaledSum), normalizedSum: \(normalizedSum)")
 
         var centerOfPressure: BSCenterOfPressure?
         var normalizedCenterOfPressure: BSCenterOfPressure?
@@ -72,13 +72,13 @@ public struct BSPressureData {
                 sensors[index].updateWeightedValue(scaledSum: scaledSum)
                 centerOfPressure! += sensors[index].position * Double(sensors[index].weightedValue)
             }
-            logger.debug("centerOfPressure: \(String(describing: centerOfPressure))")
+            logger?.debug("centerOfPressure: \(String(describing: centerOfPressure))")
 
             normalizedCenterOfPressure = centerOfPressureRange.updateAndGetNormalization(for: centerOfPressure!)
-            logger.debug("normalizedCenterOfPressure: \(String(describing: normalizedCenterOfPressure))")
+            logger?.debug("normalizedCenterOfPressure: \(String(describing: normalizedCenterOfPressure))")
         }
         else {
-            logger.debug("scaledSum is 0 - skipping centerOfPressure calculation")
+            logger?.debug("scaledSum is 0 - skipping centerOfPressure calculation")
         }
 
         let pressureData: BSPressureData = .init(

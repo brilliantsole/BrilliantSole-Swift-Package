@@ -11,8 +11,8 @@ import OSLog
 import UkatonMacros
 
 public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
-    static let _logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "BSUdpClient")
-    override var logger: Logger { Self._logger }
+    static let _logger = getLogger(category: "BSUdpClient", disabled: true)
+    override var logger: Logger? { Self._logger }
 
     override func reset() {
         super.reset()
@@ -31,10 +31,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     public var host: String = "127.0.0.1" {
         didSet {
             if connectionStatus != .notConnected {
-                logger.error("cannot change host while connected")
+                logger?.error("cannot change host while connected")
                 host = oldValue
             } else if !isValidIpAddress(host) {
-                logger.error("invalid host address")
+                logger?.error("invalid host address")
                 host = oldValue
             }
         }
@@ -48,10 +48,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     public var sendPort: UInt16 = 3000 {
         didSet {
             if connectionStatus != .notConnected {
-                logger.error("cannot change sendPort while connected")
+                logger?.error("cannot change sendPort while connected")
                 sendPort = oldValue
             } else if sendPort == 0 {
-                logger.error("invalid sendPort number")
+                logger?.error("invalid sendPort number")
                 sendPort = oldValue
             }
         }
@@ -60,10 +60,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     public var receivePort: UInt16 = 3001 {
         didSet {
             if connectionStatus != .notConnected {
-                logger.error("cannot change receivePort while connected")
+                logger?.error("cannot change receivePort while connected")
                 receivePort = oldValue
             } else if receivePort == 0 {
-                logger.error("invalid receivePort number")
+                logger?.error("invalid receivePort number")
                 receivePort = oldValue
             }
             setRemoteReceivePortMessage = createSetRemoteReceivePortMessage()
@@ -75,13 +75,13 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         guard let parsedReceivePort = UInt16.parse(data, littleEndian: false) else {
             return
         }
-        logger.debug("parsedReceivePort \(parsedReceivePort)")
+        logger?.debug("parsedReceivePort \(parsedReceivePort)")
 
         guard parsedReceivePort == receivePort else {
-            logger.error("invalid receivePort - expected \(self.receivePort) got \(parsedReceivePort)")
+            logger?.error("invalid receivePort - expected \(self.receivePort) got \(parsedReceivePort)")
             return
         }
-        logger.debug("successfully set receivePort")
+        logger?.debug("successfully set receivePort")
         didSetReceivePort = true
         sendRequiredMessages()
     }
@@ -114,7 +114,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     private var pingTimer: Timer?
     static let pingInterval: TimeInterval = 2.0
     func startPinging() {
-        logger.debug("startPinging")
+        logger?.debug("startPinging")
         if pingTimer?.isValid == true {
             stopPinging()
         }
@@ -126,7 +126,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     }
 
     func stopPinging() {
-        logger.debug("stopPinging")
+        logger?.debug("stopPinging")
         pingTimer?.invalidate()
         pingTimer = nil
     }
@@ -140,10 +140,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     @objc private func ping() {
         let message: BSUdpMessage
         if didSetReceivePort {
-            logger.debug("pinging")
+            logger?.debug("pinging")
             message = Self.pingMessage
         } else {
-            logger.debug("setting remote receive port")
+            logger?.debug("setting remote receive port")
             message = setRemoteReceivePortMessage
         }
         sendUdpMessages([message])
@@ -157,7 +157,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         if pongTimer?.isValid == true {
             stopWaitingForPong()
         }
-        logger.debug("waiting for pong...")
+        logger?.debug("waiting for pong...")
 
         DispatchQueue.main.async { [self] in
             pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
@@ -165,20 +165,20 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     }
 
     func stopWaitingForPong() {
-        logger.debug("stopWaitingForPong")
+        logger?.debug("stopWaitingForPong")
         pongTimer?.invalidate()
         pongTimer = nil
     }
 
     @objc private func pongTimeout() {
-        logger.debug("pongTimeout")
+        logger?.debug("pongTimeout")
         disconnectedUnintentionally = true
         disconnect()
     }
 
     static let pongMessage: BSUdpMessage = .init(type: .pong)
     func pong() {
-        logger.debug("ponging")
+        logger?.debug("ponging")
         sendUdpMessages([Self.pongMessage])
     }
 
@@ -192,10 +192,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
 
     private var pendingUdpMessages: [BSUdpMessage] = .init()
     private func sendUdpMessages(_ udpMessages: [BSUdpMessage], sendImmediately: Bool = true) {
-        logger.debug("requesting to send \(udpMessages.count) udp messages")
+        logger?.debug("requesting to send \(udpMessages.count) udp messages")
         pendingUdpMessages += udpMessages
         if !sendImmediately {
-            logger.debug("not sending udp messages immediately")
+            logger?.debug("not sending udp messages immediately")
             return
         }
         sendPendingUdpMessages()
@@ -203,12 +203,12 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
 
     func sendPendingUdpMessages() {
         guard !pendingUdpMessages.isEmpty else {
-            logger.debug("pendingUdpMessages is empty - not sending")
+            logger?.debug("pendingUdpMessages is empty - not sending")
             return
         }
         var data: Data = .init()
         for udpMessage in pendingUdpMessages {
-            logger.debug("appending \(udpMessage.type.name) udpMessage")
+            logger?.debug("appending \(udpMessage.type.name) udpMessage")
             udpMessage.appendTo(&data)
         }
         pendingUdpMessages.removeAll()
@@ -218,10 +218,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     private func sendUdpData(_ data: Data) {
         connection?.send(content: data, completion: .contentProcessed { [unowned self] error in
             if let error {
-                logger.error("send failed: \(error)")
+                logger?.error("send failed: \(error)")
                 return
             }
-            logger.debug("sent data")
+            logger?.debug("sent data")
         })
     }
 }

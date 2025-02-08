@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 struct BSConnectedDevicesJson: Codable {
     let connectedDeviceIds: [String]
 
@@ -22,11 +22,11 @@ struct BSConnectedDevicesJson: Codable {
             do {
                 self = try JSONDecoder().decode(Self.self, from: jsonData)
             } catch {
-                Self.logger.error("error decoding JSON: \(error)")
+                Self.logger?.error("error decoding JSON: \(error)")
                 return nil
             }
         } else {
-            Self.logger.error("unable to convert jsonString to data")
+            Self.logger?.error("unable to convert jsonString to data")
             return nil
         }
     }

@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public struct BSVibrationConfiguration {
     public var locations: [BSVibrationLocationFlag]
 
@@ -49,24 +49,24 @@ public struct BSVibrationConfiguration {
     func getData() -> Data? {
         var data: Data = .init()
         guard locations.count > 0 else {
-            logger.warning("no locations specified - returning nil")
+            logger?.warning("no locations specified - returning nil")
             return nil
         }
 
         let segmentsData = getSegmentsData()
         guard segmentsData.count > 0 else {
-            logger.warning("empty segmentsData - returning nil")
+            logger?.warning("empty segmentsData - returning nil")
             return nil
         }
 
-        logger.debug("vibration type \(type.data.bytes) (\(type.name), locations \(locations.data.bytes), segmentsData \(segmentsData.bytes)")
+        logger?.debug("vibration type \(type.data.bytes) (\(type.name), locations \(locations.data.bytes), segmentsData \(segmentsData.bytes)")
 
         data += locations.data
         data += type.data
         data.append(UInt8(segmentsData.count))
         data += segmentsData
 
-        logger.debug("serialized \(type.name) vibration: \(data.debugDescription) \(data.bytes)")
+        logger?.debug("serialized \(type.name) vibration: \(data.debugDescription) \(data.bytes)")
         return data
     }
 

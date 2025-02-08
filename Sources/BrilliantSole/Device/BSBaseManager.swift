@@ -7,7 +7,7 @@
 
 import OSLog
 
-private let logger = getLogger(category: "BSBaseManager")
+private let logger = getLogger(category: "BSBaseManager", disabled: true)
 
 typealias BSEnumToTxRx<MessageType: Hashable> = [MessageType: UInt8]
 typealias BSTxRxToEnum<MessageType: Hashable> = [UInt8: MessageType]
@@ -64,12 +64,12 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
             onRxMessage(messageType, data: data)
         }
         catch {
-            logger.error("\(error)")
+            logger?.error("\(error)")
         }
     }
 
     func onRxMessage(_ messageType: MessageType, data: Data) {
-        logger.debug("received \(messageType.name) message (\(data.count) bytes)")
+        logger?.debug("received \(messageType.name) message (\(data.count) bytes)")
     }
 
     func reset() {}

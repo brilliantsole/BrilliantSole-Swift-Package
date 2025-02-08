@@ -8,7 +8,7 @@
 import CoreBluetooth
 import UkatonMacros
 
-private let logger = getLogger(category: "BSBleUtils")
+private let logger = getLogger(category: "BSBleUtils", disabled: true)
 
 @EnumName
 enum BSBleUUIDType {
@@ -82,7 +82,7 @@ enum BSBleServiceUUID: String, BSBleUUID {
 
     init?(service: CBService) {
         guard let value = Self.allCases.first(where: { $0.uuid == service.uuid }) else {
-            logger.error("unknown service \(service.uuid)")
+            logger?.error("unknown service \(service.uuid)")
             return nil
         }
         self = value
@@ -176,7 +176,7 @@ enum BSBleCharacteristicUUID: String, BSBleUUID {
 
     init?(characteristic: CBCharacteristic) {
         guard let value = Self.allCases.first(where: { $0.uuid == characteristic.uuid }) else {
-            logger.error("unknown characteristic \(characteristic.uuid)")
+            logger?.error("unknown characteristic \(characteristic.uuid)")
             return nil
         }
         self = value

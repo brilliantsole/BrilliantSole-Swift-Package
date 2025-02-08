@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public final class BSDevicePair {
     // MARK: - shared
 
@@ -21,7 +21,7 @@ public final class BSDevicePair {
         self.init()
         self.isShared = isShared
         guard isShared else { return }
-        Self.logger.debug("initializing shared instance")
+        Self.logger?.debug("initializing shared instance")
         // listenToDeviceManager()
     }
 
@@ -34,7 +34,7 @@ public final class BSDevicePair {
     }
 
     func listenToDeviceManager() {
-        logger.debug("listening to deviceManager for new devices...")
+        logger?.debug("listening to deviceManager for new devices...")
         BSDeviceManager.availableDevicePublisher.sink { [self] device in
             self.add(device: device)
         }.store(in: &cancellables)

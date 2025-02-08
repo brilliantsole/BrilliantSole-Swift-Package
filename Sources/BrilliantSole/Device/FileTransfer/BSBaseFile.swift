@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public class BSBaseFile: BSFile {
     public class var fileType: BSFileType {
         fatalError("Subclasses must implement `fileType`")

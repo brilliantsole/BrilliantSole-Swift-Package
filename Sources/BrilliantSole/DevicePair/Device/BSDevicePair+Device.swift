@@ -19,7 +19,7 @@ public extension BSDevicePair {
                     remove(device: device)
                 }
                 else {
-                    logger.error("no \(insoleSide.name) device to remove")
+                    logger?.error("no \(insoleSide.name) device to remove")
                 }
             }
         }
@@ -27,20 +27,20 @@ public extension BSDevicePair {
 
     func add(device: BSDevice) {
         guard device.isInsole else {
-            logger.debug("device is not insole")
+            logger?.debug("device is not insole")
             return
         }
         let insoleSide = device.insoleSide!
 
         if devices[insoleSide] != nil {
             guard device != devices[insoleSide] else {
-                logger.debug("already added device")
+                logger?.debug("already added device")
                 return
             }
             remove(device: device)
         }
 
-        logger.debug("adding device \"\(device.name)\"")
+        logger?.debug("adding device \"\(device.name)\"")
 
         devices[insoleSide] = device
         addListeners(device: device)
@@ -49,7 +49,7 @@ public extension BSDevicePair {
 
     func remove(device: BSDevice) {
         guard device.isInsole else {
-            logger.debug("device is not insole")
+            logger?.debug("device is not insole")
             return
         }
 
@@ -58,13 +58,13 @@ public extension BSDevicePair {
             remove(insoleSide: insoleSide)
         }
         else {
-            logger.debug("devicePair doesn't contain \(device.name)")
+            logger?.debug("devicePair doesn't contain \(device.name)")
         }
     }
 
     func remove(insoleSide: BSInsoleSide) {
         guard let device = devices[insoleSide] else {
-            logger.debug("no \(insoleSide.name) device")
+            logger?.debug("no \(insoleSide.name) device")
             return
         }
         removeListeners(device: device)
@@ -82,7 +82,7 @@ public extension BSDevicePair {
     internal func getDeviceInsoleSide(_ device: BSDevice) -> BSInsoleSide? {
         guard let insoleSide = device.insoleSide
         else {
-            self.logger.error("device \(device.name) missing insoleSide")
+            self.logger?.error("device \(device.name) missing insoleSide")
             return nil
         }
         return insoleSide

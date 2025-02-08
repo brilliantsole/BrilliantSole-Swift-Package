@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMessageType> {
     override class var requiredMessageTypes: [BSSensorConfigurationMessageType]? {
         [.getSensorConfiguration]
@@ -38,39 +38,39 @@ final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMes
     private(set) var sensorConfiguration: BSSensorConfiguration {
         get { sensorConfigurationSubject.value }
         set {
-            logger.debug("updated sensorConfiguration to \(newValue)")
+            logger?.debug("updated sensorConfiguration to \(newValue)")
             sensorConfigurationSubject.value = newValue
         }
     }
 
     private func parseSensorConfiguration(_ data: Data) {
         guard let newSensorConfiguration: BSSensorConfiguration = .parse(data) else {
-            logger.error("failed to parse sensorConfiguration")
+            logger?.error("failed to parse sensorConfiguration")
             return
         }
-        logger.debug("parsed sensorConfiguration: \(newSensorConfiguration)")
+        logger?.debug("parsed sensorConfiguration: \(newSensorConfiguration)")
         sensorConfiguration = newSensorConfiguration
     }
 
     func getSensorConfiguration(sendImmediately: Bool = true) {
-        logger.debug("getting sensorConfiguration")
+        logger?.debug("getting sensorConfiguration")
         createAndSendMessage(.getSensorConfiguration, sendImmediately: sendImmediately)
     }
 
     func setSensorConfiguration(_ newSensorConfiguration: BSSensorConfiguration, clearRest: Bool = false, sendImmediately: Bool = true) {
         guard !newSensorConfiguration.isEmpty else {
-            logger.warning("ignoring empty sensorConfiguration")
+            logger?.warning("ignoring empty sensorConfiguration")
             return
         }
         guard !newSensorConfiguration.isASubsetOf(sensorConfiguration) else {
-            logger.debug("newSensorConfiguration is a subset - not setting")
+            logger?.debug("newSensorConfiguration is a subset - not setting")
             return
         }
         var _newSensorConfiguration = newSensorConfiguration
         if clearRest {
             sensorConfiguration.sensorTypes.filter { _newSensorConfiguration.contains($0) }.forEach { _newSensorConfiguration[$0] = ._0ms }
         }
-        logger.debug("sending setSensorConfiguration: \(_newSensorConfiguration)")
+        logger?.debug("sending setSensorConfiguration: \(_newSensorConfiguration)")
         createAndSendMessage(.setSensorConfiguration, data: _newSensorConfiguration.getData(), sendImmediately: sendImmediately)
     }
 
@@ -86,11 +86,11 @@ final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMes
     func getSensorRate(_ sensorType: BSSensorType) -> BSSensorRate? { sensorConfiguration[sensorType] }
     func setSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool = true) {
         guard containsSensorType(sensorType) else {
-            logger.debug("sensorConfiguration does not contain \(sensorType.name)")
+            logger?.debug("sensorConfiguration does not contain \(sensorType.name)")
             return
         }
         guard let currentSensorRate = getSensorRate(sensorType), currentSensorRate != sensorRate else {
-            logger.debug("sensorType \(sensorType.name) already has sensorRate \(sensorRate.name)")
+            logger?.debug("sensorType \(sensorType.name) already has sensorRate \(sensorRate.name)")
             return
         }
         var newSensorConfiguration: BSSensorConfiguration = .init()

@@ -8,7 +8,7 @@
 import Foundation
 import Spatial
 
-private let logger = getLogger(category: "BSRotation3D")
+private let logger = getLogger(category: "BSRotation3D", disabled: true)
 
 public typealias BSRotation3D = Rotation3D
 
@@ -63,7 +63,7 @@ extension BSRotation3D {
 
         let rotation: Self = .init(eulerAngles: .init(x: pitch, y: yaw, z: roll, order: .xyz))
 
-        logger.debug("parsed rotation: \(rotation)")
+        logger?.debug("parsed rotation: \(rotation)")
 
         return rotation
     }

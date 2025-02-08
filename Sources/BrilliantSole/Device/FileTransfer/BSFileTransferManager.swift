@@ -11,7 +11,7 @@ import UkatonMacros
 
 public typealias BSFileLength = UInt32
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
         [.getMaxFileLength,
@@ -72,18 +72,18 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         get { maxFileLengthSubject.value }
         set {
             maxFileLengthSubject.value = newValue
-            logger.debug("updated maxFileLength to \(newValue)")
+            logger?.debug("updated maxFileLength to \(newValue)")
         }
     }
 
     func getMaxFileLength(sendImmediately: Bool = true) {
-        logger.debug("getting maxFileLength")
+        logger?.debug("getting maxFileLength")
         createAndSendMessage(.getMaxFileLength, sendImmediately: sendImmediately)
     }
 
     private func parseMaxFileLength(_ data: Data) {
         guard let newMaxFileLength = BSFileLength.parse(data) else { return }
-        logger.debug("parsed maxFileLength \(newMaxFileLength)")
+        logger?.debug("parsed maxFileLength \(newMaxFileLength)")
         maxFileLength = newMaxFileLength
     }
 
@@ -98,12 +98,12 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         get { fileTypeSubject.value }
         set {
             fileTypeSubject.value = newValue
-            logger.debug("updated fileType to \(newValue.name)")
+            logger?.debug("updated fileType to \(newValue.name)")
         }
     }
 
     func getFileType(sendImmediately: Bool = true) {
-        logger.debug("getting fileTransferType")
+        logger?.debug("getting fileTransferType")
         createAndSendMessage(.getFileTransferType, sendImmediately: sendImmediately)
     }
 
@@ -111,13 +111,13 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         guard let newFileType = BSFileType.parse(data) else {
             return
         }
-        logger.debug("parsed fileType \(newFileType.name)")
+        logger?.debug("parsed fileType \(newFileType.name)")
         fileType = newFileType
     }
 
     func setFileTransferType(_ newFileType: BSFileType, sendImmediately: Bool = true) {
         guard fileType != newFileType else {
-            logger.debug("redundant fileType assignment \(newFileType.name)")
+            logger?.debug("redundant fileType assignment \(newFileType.name)")
             return
         }
         createAndSendMessage(.setFileTransferType, data: newFileType.data, sendImmediately: sendImmediately)
@@ -134,27 +134,27 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         get { fileLengthSubject.value }
         set {
             fileLengthSubject.value = newValue
-            logger.debug("updated fileLength to \(newValue)")
+            logger?.debug("updated fileLength to \(newValue)")
         }
     }
 
     func getFileLength(sendImmediately: Bool = true) {
-        logger.debug("getting fileLength")
+        logger?.debug("getting fileLength")
         createAndSendMessage(.getFileLength, sendImmediately: sendImmediately)
     }
 
     private func parseFileLength(_ data: Data) {
         guard let newFileLength: BSFileLength = .parse(data) else { return }
-        logger.debug("parsed fileLength \(newFileLength)")
+        logger?.debug("parsed fileLength \(newFileLength)")
         fileLength = newFileLength
     }
 
     func setFileLength(_ newFileLength: BSFileLength, sendImmediately: Bool = true) {
         guard newFileLength != fileLength else {
-            logger.debug("redundant fileLength assignment \(newFileLength)")
+            logger?.debug("redundant fileLength assignment \(newFileLength)")
             return
         }
-        logger.debug("setting fileLength to \(newFileLength) \(newFileLength.getData().bytes)")
+        logger?.debug("setting fileLength to \(newFileLength) \(newFileLength.getData().bytes)")
         createAndSendMessage(.setFileLength, data: newFileLength.getData(), sendImmediately: sendImmediately)
     }
 
@@ -169,34 +169,34 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         get { fileChecksumSubject.value }
         set {
             fileChecksumSubject.value = newValue
-            logger.debug("updated checksum to \(newValue)")
+            logger?.debug("updated checksum to \(newValue)")
         }
     }
 
     func getFileChecksum(sendImmediately: Bool = true) {
-        logger.debug("getting fileChecksum")
+        logger?.debug("getting fileChecksum")
         createAndSendMessage(.getFileChecksum, sendImmediately: sendImmediately)
     }
 
     private func parseChecksum(_ data: Data) {
         guard let newFileChecksum = BSFileChecksum.parse(data) else { return }
-        logger.debug("parsed fileChecksum \(newFileChecksum)")
+        logger?.debug("parsed fileChecksum \(newFileChecksum)")
         fileChecksum = newFileChecksum
     }
 
     func setChecksum(_ newFileChecksum: BSFileChecksum, sendImmediately: Bool = true) {
         guard newFileChecksum != fileChecksum else {
-            logger.debug("redundant checksum assignment \(newFileChecksum)")
+            logger?.debug("redundant checksum assignment \(newFileChecksum)")
             return
         }
-        logger.debug("setting checksum \(newFileChecksum)")
+        logger?.debug("setting checksum \(newFileChecksum)")
         createAndSendMessage(.setFileChecksum, data: newFileChecksum.getData(), sendImmediately: sendImmediately)
     }
 
     // MARK: - fileTransferCommand
 
     private func setFileTransferCommand(_ fileTransferCommand: BSFileTransferCommand, sendImmediately: Bool = true) {
-        logger.debug("setting fileTransferCommand \(fileTransferCommand.name)")
+        logger?.debug("setting fileTransferCommand \(fileTransferCommand.name)")
         createAndSendMessage(.setFileTransferCommand, data: fileTransferCommand.data, sendImmediately: sendImmediately)
     }
 
@@ -211,17 +211,17 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         get { fileTransferStatusSubject.value }
         set {
             fileTransferStatusSubject.value = newValue
-            logger.debug("updated fileTransferStatus to \(newValue.name)")
+            logger?.debug("updated fileTransferStatus to \(newValue.name)")
 
             if fileTransferStatus == .sending {
-                logger.debug("starting to send file")
+                logger?.debug("starting to send file")
                 sendFileBlock(sendImmediately: false)
             }
         }
     }
 
     func getFileTransferStatus(sendImmediately: Bool = true) {
-        logger.debug("getting fileTransferStatus")
+        logger?.debug("getting fileTransferStatus")
         createAndSendMessage(.getFileTransferStatus, sendImmediately: sendImmediately)
     }
 
@@ -229,7 +229,7 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         guard let newFileTransferStatus = BSFileTransferStatus.parse(data) else {
             return
         }
-        logger.debug("parsed fileTransferStatus \(newFileTransferStatus.name)")
+        logger?.debug("parsed fileTransferStatus \(newFileTransferStatus.name)")
         fileTransferStatus = newFileTransferStatus
     }
 
@@ -237,19 +237,19 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     private func parseFileTransferBlock(_ data: Data) {
         guard fileTransferStatus == .receiving else {
-            logger.error("cannot parse fileTransferBlock when fileTransferStatus is not .receiving")
+            logger?.error("cannot parse fileTransferBlock when fileTransferStatus is not .receiving")
             return
         }
 
         let fileBlockLength = data.count
-        logger.debug("received fileBlock of length \(fileBlockLength)")
+        logger?.debug("received fileBlock of length \(fileBlockLength)")
 
         var currentFileLength = fileDataToReceive.count
         let newFileLength = currentFileLength + fileBlockLength
-        logger.debug("updating fileLength from \(currentFileLength) to \(newFileLength)")
+        logger?.debug("updating fileLength from \(currentFileLength) to \(newFileLength)")
 
         guard newFileLength <= fileLength else {
-            logger.error("newFileLength \(newFileLength) is greater than fileLength \(self.fileLength) - cancelling now")
+            logger?.error("newFileLength \(newFileLength) is greater than fileLength \(self.fileLength) - cancelling now")
             cancelFileTransfer()
             return
         }
@@ -257,17 +257,17 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         fileDataToReceive.append(contentsOf: data)
         currentFileLength = fileDataToReceive.count
         let progress = Float(currentFileLength) / Float(fileLength)
-        logger.debug("fileToReceive length \(currentFileLength)/\(self.fileLength) (\(progress)%)")
+        logger?.debug("fileToReceive length \(currentFileLength)/\(self.fileLength) (\(progress)%)")
         fileTransferProgressSubject.send((fileType, .receiving, progress))
 
         if currentFileLength == fileLength {
-            logger.debug("finished receiving file")
+            logger?.debug("finished receiving file")
             let receivedFileChecksum = fileDataToReceive.crc32()
             guard receivedFileChecksum == fileChecksum else {
-                logger.error("file checksums don't match - expected \(self.fileChecksum), got \(receivedFileChecksum)")
+                logger?.error("file checksums don't match - expected \(self.fileChecksum), got \(receivedFileChecksum)")
                 return
             }
-            logger.debug("file checksums match \(receivedFileChecksum)")
+            logger?.debug("file checksums match \(receivedFileChecksum)")
             fileTransferCompleteSubject.send((fileType, .receiving))
             fileReceivedSubject.send((fileType, fileDataToReceive))
         }
@@ -283,23 +283,23 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     private func parseFileBytesTransferred(_ data: Data) {
         guard fileTransferStatus == .sending else {
-            logger.debug("currently not sending file")
+            logger?.debug("currently not sending file")
             return
         }
         guard waitingToSendMoreData else {
-            logger.debug("not waiting to send more data")
+            logger?.debug("not waiting to send more data")
             return
         }
 
         guard let currentBytesTransferred = UInt16.parse(data) else { return }
-        logger.debug("currentBytesTransferred: \(currentBytesTransferred)")
+        logger?.debug("currentBytesTransferred: \(currentBytesTransferred)")
 
         guard currentBytesTransferred == bytesTransferred else {
-            logger.error("bytesTransferred not equal - got \(currentBytesTransferred), expected \(self.bytesTransferred)")
+            logger?.error("bytesTransferred not equal - got \(currentBytesTransferred), expected \(self.bytesTransferred)")
             return
         }
 
-        logger.debug("sending next file block")
+        logger?.debug("sending next file block")
         sendFileBlock(sendImmediately: false)
     }
 
@@ -325,30 +325,30 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     func sendFile(_ file: inout BSFile, sendImmediately: Bool = true) -> Bool {
         guard fileTransferStatus == .idle else {
-            logger.warning("cannot send file - status is \(self.fileTransferStatus.name)")
+            logger?.warning("cannot send file - status is \(self.fileTransferStatus.name)")
             return false
         }
         guard let fileData = file.getFileData() else {
-            logger.error("unable to get file data")
+            logger?.error("unable to get file data")
             return false
         }
 
         let newFileType = file.fileType
-        logger.debug("sending \(newFileType.name) file of length \(fileData.count)")
+        logger?.debug("sending \(newFileType.name) file of length \(fileData.count)")
 
         let fileChecksum = fileData.crc32()
 
         if file.fileType != fileType {
-            logger.debug("different fileTypes - sending")
+            logger?.debug("different fileTypes - sending")
         }
         else if fileData.count != fileLength {
-            logger.debug("different fileLengths - sending")
+            logger?.debug("different fileLengths - sending")
         }
         else if fileChecksum != self.fileChecksum {
-            logger.debug("different fileChecksums - sending")
+            logger?.debug("different fileChecksums - sending")
         }
         else {
-            logger.debug("already sent file")
+            logger?.debug("already sent file")
             return false
         }
 
@@ -367,23 +367,23 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     private func sendFileBlock(sendImmediately: Bool = true) {
         guard fileTransferStatus == .sending else {
-            logger.error("cannot send block when fileTransferStatus is \(self.fileTransferStatus.name)")
+            logger?.error("cannot send block when fileTransferStatus is \(self.fileTransferStatus.name)")
             return
         }
         guard let fileDataToSend, !fileDataToSend.isEmpty else {
-            logger.error("no fileDataToSend")
+            logger?.error("no fileDataToSend")
             return
         }
 
         let remainingBytes = UInt16(fileDataToSend.count) - UInt16(bytesTransferred)
-        logger.debug("remainingBytes: \(remainingBytes)")
+        logger?.debug("remainingBytes: \(remainingBytes)")
 
         let progress = Float(bytesTransferred) / Float(fileDataToSend.count)
-        logger.debug("progress: \(progress * 100)%")
+        logger?.debug("progress: \(progress * 100)%")
         fileTransferProgressSubject.send((fileType, .sending, progress))
 
         guard remainingBytes > 0 else {
-            logger.debug("finished sending file")
+            logger?.debug("finished sending file")
             fileTransferCompleteSubject.send((fileType, .sending))
             waitingToSendMoreData = false
             return
@@ -391,17 +391,17 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         waitingToSendMoreData = true
 
         let fileBlockLength = min(remainingBytes, maxMessageLength)
-        logger.debug("maxMessageLength: \(self.maxMessageLength), fileBlockLength: \(fileBlockLength)")
+        logger?.debug("maxMessageLength: \(self.maxMessageLength), fileBlockLength: \(fileBlockLength)")
 
         let fileBlockToSend = fileDataToSend.subdata(in: Data.Index(bytesTransferred) ..< Data.Index(bytesTransferred + fileBlockLength))
         bytesTransferred += fileBlockLength
-        logger.debug("bytesTransferred: \(self.bytesTransferred)")
+        logger?.debug("bytesTransferred: \(self.bytesTransferred)")
         createAndSendMessage(.setFileTransferBlock, data: fileBlockToSend, sendImmediately: sendImmediately)
     }
 
     func receiveFile(fileType: BSFileType, sendImmediately: Bool = true) {
         guard fileTransferStatus == .idle else {
-            logger.debug("cannot receive file - status \(self.fileTransferStatus.name) isn't idle")
+            logger?.debug("cannot receive file - status \(self.fileTransferStatus.name) isn't idle")
             return
         }
         setFileTransferType(fileType, sendImmediately: false)
@@ -410,10 +410,10 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     func cancelFileTransfer(sendImmediately: Bool = true) {
         guard fileTransferStatus != .idle else {
-            logger.warning("fileTransferStatus already idle - no need to cancel")
+            logger?.warning("fileTransferStatus already idle - no need to cancel")
             return
         }
-        logger.debug("cancelling file transfer")
+        logger?.debug("cancelling file transfer")
         setFileTransferCommand(.cancel, sendImmediately: sendImmediately)
     }
 }

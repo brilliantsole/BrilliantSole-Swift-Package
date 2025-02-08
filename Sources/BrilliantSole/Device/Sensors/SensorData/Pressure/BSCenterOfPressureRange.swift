@@ -11,7 +11,7 @@ import UkatonMacros
 
 public typealias BSCenterOfPressure = simd_double2
 
-@StaticLogger
+@StaticLogger(disabled: true)
 struct BSCenterOfPressureRange {
     var x: BSRange = .init()
     var y: BSRange = .init()
@@ -26,7 +26,7 @@ struct BSCenterOfPressureRange {
         y.update(with: Float(value.y))
 #if DEBUG
         let string = String(describing: self)
-        logger.debug("updated to \(string)")
+        logger?.debug("updated to \(string)")
 #endif
     }
 

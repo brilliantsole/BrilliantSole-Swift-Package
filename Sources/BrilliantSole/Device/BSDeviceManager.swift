@@ -9,7 +9,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public final class BSDeviceManager {
     // MARK: - availableDevices
 
@@ -52,20 +52,20 @@ public final class BSDeviceManager {
 
     private nonisolated(unsafe) static var cancellables: Set<AnyCancellable> = .init()
     static func onDeviceCreated(_ device: BSDevice) {
-        logger.debug("adding device")
+        logger?.debug("adding device")
         device.isConnectedPublisher.sink { _ in
-            logger.debug("device \(device.name) isConnected? \(device.isConnected)")
+            logger?.debug("device \(device.name) isConnected? \(device.isConnected)")
             onDeviceIsConnected(device)
         }.store(in: &cancellables)
     }
 
     static func onDeviceIsConnected(_ device: BSDevice) {
         if device.isConnected {
-            logger.debug("adding \(device.name) to connectedDevices")
+            logger?.debug("adding \(device.name) to connectedDevices")
             connectedDevices.insert(device)
             deviceConnectedSubject.send(device)
             if !availableDevices.contains(device) {
-                logger.debug("adding \(device.name) to availableDevices")
+                logger?.debug("adding \(device.name) to availableDevices")
                 availableDevices.insert(device)
                 availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
@@ -73,12 +73,12 @@ public final class BSDeviceManager {
             }
         }
         else if connectedDevices.contains(device) {
-            logger.debug("removing \(device.name) from connectedDevices")
+            logger?.debug("removing \(device.name) from connectedDevices")
             connectedDevices.remove(device)
             deviceDisconnectedSubject.send(device)
         }
         if availableDevices.contains(device) {
-            logger.debug("updating connectedDevicesSubject and isDeviceConnectedSubject for \(device.name)")
+            logger?.debug("updating connectedDevicesSubject and isDeviceConnectedSubject for \(device.name)")
             connectedDevicesSubject.send(connectedDevices)
             isDeviceConnectedSubject.send((device, device.isConnected))
         }

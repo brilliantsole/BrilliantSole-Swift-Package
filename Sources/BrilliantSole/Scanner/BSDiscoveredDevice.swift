@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public class BSDiscoveredDevice {
     let id: String
 
@@ -22,10 +22,10 @@ public class BSDiscoveredDevice {
         get { nameSubject.value }
         set {
             guard name != newValue else {
-                logger.debug("redundant name assignment \(newValue)")
+                logger?.debug("redundant name assignment \(newValue)")
                 return
             }
-            logger.debug("updated name \(newValue)")
+            logger?.debug("updated name \(newValue)")
             nameSubject.value = newValue
         }
     }
@@ -40,10 +40,10 @@ public class BSDiscoveredDevice {
         set {
             guard newValue != nil else { return }
             guard deviceType != newValue else {
-                logger.debug("redundant deviceType assignment \(newValue?.name ?? "nil")")
+                logger?.debug("redundant deviceType assignment \(newValue?.name ?? "nil")")
                 return
             }
-            logger.debug("updated deviceType \(newValue?.name ?? "nil")")
+            logger?.debug("updated deviceType \(newValue?.name ?? "nil")")
             deviceTypeSubject.value = newValue
         }
     }
@@ -58,10 +58,10 @@ public class BSDiscoveredDevice {
         set {
             guard newValue != nil else { return }
 //            guard rssi != newValue else {
-//                logger.debug("redundant rssi assignment \(newValue ?? 0)")
+//                logger?.debug("redundant rssi assignment \(newValue ?? 0)")
 //                return
 //            }
-            logger.debug("updated rssi \(newValue ?? 0)")
+            logger?.debug("updated rssi \(newValue ?? 0)")
             rssiSubject.value = newValue
         }
     }
@@ -99,7 +99,7 @@ public class BSDiscoveredDevice {
             self.rssi = rssi
         }
         lastTimeUpdated = .now
-        logger.debug("updated \(self.id)")
+        logger?.debug("updated \(self.id)")
     }
 
     func update(discoveredDeivceJson: BSDiscoveredDeviceJson) {

@@ -10,7 +10,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSBarometerSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [.barometer] }
 
@@ -33,7 +33,7 @@ final class BSBarometerSensorDataManager: BSBaseSensorDataManager {
 
     private func parseBarometer(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let barometer: BSBarometer = .parse(data, scalar: scalar) else { return }
-        logger.debug("barometer: \(barometer) \(timestamp)ms")
+        logger?.debug("barometer: \(barometer) \(timestamp)ms")
         barometerSubject.send((barometer, timestamp))
     }
 }

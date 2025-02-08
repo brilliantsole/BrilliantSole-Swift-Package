@@ -11,7 +11,7 @@ extension BSBleScanner: CBCentralManagerDelegate {
     // MARK: - state
 
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        logger.debug("centralManager state: \(String(describing: central.state))")
+        logger?.debug("centralManager state: \(String(describing: central.state))")
         isScanningAvailable = centralManager.state == .poweredOn
     }
 
@@ -24,24 +24,24 @@ extension BSBleScanner: CBCentralManagerDelegate {
 
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
         if let error {
-            logger.error("error disconnecting from peripheral \(peripheral): \(error)")
+            logger?.error("error disconnecting from peripheral \(peripheral): \(error)")
         }
-        logger.debug("disconnected from peripheral \(peripheral)")
+        logger?.debug("disconnected from peripheral \(peripheral)")
         let connectionManager = getConnectionManager(for: peripheral)
         connectionManager?.onPeripheralStateUpdate()
     }
 
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?) {
         if let error {
-            logger.error("error disconnecting from peripheral \(peripheral): \(error)")
+            logger?.error("error disconnecting from peripheral \(peripheral): \(error)")
         }
-        logger.debug("disconnected from \(peripheral) at \(timestamp), isReconnecting: \(isReconnecting)")
+        logger?.debug("disconnected from \(peripheral) at \(timestamp), isReconnecting: \(isReconnecting)")
         let connectionManager = getConnectionManager(for: peripheral)
         connectionManager?.onPeripheralStateUpdate()
     }
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: (any Error)?) {
-        logger.debug("failed to connect to peripheral \(peripheral) error: \(String(describing: error))")
+        logger?.debug("failed to connect to peripheral \(peripheral) error: \(String(describing: error))")
         let connectionManager = getConnectionManager(for: peripheral)
         connectionManager?.onPeripheralStateUpdate()
     }

@@ -14,7 +14,7 @@ public extension BSDevicePair {
         get { isFullyConnectedSubject.value }
         set {
             guard newValue != isFullyConnected else {
-                logger.debug("redundant isFullyConnected update \(newValue)")
+                logger?.debug("redundant isFullyConnected update \(newValue)")
                 return
             }
             isFullyConnectedSubject.value = newValue
@@ -23,7 +23,7 @@ public extension BSDevicePair {
 
     func checkIsHalfConnected() {
         let newIsHalfConnected = connectedDeviceCount == 1
-        logger.debug("newIsHalfConnected: \(newIsHalfConnected)")
+        logger?.debug("newIsHalfConnected: \(newIsHalfConnected)")
         isHalfConnected = newIsHalfConnected
     }
 
@@ -33,7 +33,7 @@ public extension BSDevicePair {
         get { isHalfConnectedSubject.value }
         set {
             guard newValue != isHalfConnected else {
-                logger.debug("redundant isHalfConnected update \(newValue)")
+                logger?.debug("redundant isHalfConnected update \(newValue)")
                 return
             }
             isHalfConnectedSubject.value = newValue
@@ -42,7 +42,7 @@ public extension BSDevicePair {
 
     func checkIsFullyConnected() {
         let newIsFullyConnected = connectedDeviceCount == 2
-        logger.debug("newIsFullyConnected: \(newIsFullyConnected)")
+        logger?.debug("newIsFullyConnected: \(newIsFullyConnected)")
         isFullyConnected = newIsFullyConnected
 
         checkIsHalfConnected()
@@ -62,7 +62,7 @@ public extension BSDevicePair {
 
     func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
         guard let insoleSide = device.insoleSide else {
-            logger.error("device.insoleSide not found")
+            logger?.error("device.insoleSide not found")
             return
         }
         deviceConnectionStatusSubject.send((self, insoleSide, device, connectionStatus))
@@ -70,7 +70,7 @@ public extension BSDevicePair {
 
     func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
         guard let insoleSide = device.insoleSide else {
-            logger.error("device.insoleSide not found")
+            logger?.error("device.insoleSide not found")
             return
         }
         deviceIsConnectedSubject.send((self, insoleSide, device, isConnected))

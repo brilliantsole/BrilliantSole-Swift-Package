@@ -7,6 +7,6 @@
 
 import OSLog
 
-func getLogger(category: String) -> Logger {
-    Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: category)
+func getLogger(category: String, disabled: Bool = false) -> Logger? {
+    disabled ? nil : Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: category)
 }

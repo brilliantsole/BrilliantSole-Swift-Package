@@ -7,7 +7,7 @@
 
 import Foundation
 
-private let logger = getLogger(category: "BSClient")
+private let logger = getLogger(category: "BSClient", disabled: true)
 
 protocol BSDeviceClient {
     func sendConnectToDeviceMessage(id: String, sendImmediately: Bool)
@@ -38,23 +38,23 @@ extension BSDeviceClient {
 
 extension BSDeviceClient {
     func sendConnectToDeviceMessage(id: String, sendImmediately: Bool) {
-        logger.debug("requesting connection to \(id)")
+        logger?.debug("requesting connection to \(id)")
         let serverMessage: BSServerMessage = .init(type: .connectToDevice, data: BSStringUtils.toBytes(id, includeLength: true))
         sendMessages([serverMessage], sendImmediately: sendImmediately)
     }
 
     func sendDisconnectFromDeviceMessage(id: String, sendImmediately: Bool) {
-        logger.debug("requesting disconnection from \(id)")
+        logger?.debug("requesting disconnection from \(id)")
         let serverMessage: BSServerMessage = .init(type: .disconnectFromDevice, data: BSStringUtils.toBytes(id, includeLength: true))
         sendMessages([serverMessage], sendImmediately: sendImmediately)
     }
 
     func sendDeviceMessages(_ messages: [BSConnectionMessage], id: String, sendImmediately: Bool) {
-        logger.debug("sending \(messages.count) message to \(id)")
+        logger?.debug("sending \(messages.count) message to \(id)")
         var data: Data = .init()
         data += BSStringUtils.toBytes(id, includeLength: true)
         for message in messages {
-            logger.debug("appending \(message.typeString) message")
+            logger?.debug("appending \(message.typeString) message")
             message.appendTo(&data)
         }
         let serverMessage: BSServerMessage = .init(type: .deviceMessage, data: data)

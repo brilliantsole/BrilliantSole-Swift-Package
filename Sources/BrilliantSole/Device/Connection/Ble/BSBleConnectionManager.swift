@@ -10,7 +10,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
 
@@ -51,14 +51,14 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         guard let characteristic = characteristics[BSBleCharacteristicUUID.tx] else {
             fatalError("tx characteristic not found")
         }
-        logger.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name) \(data.bytes)")
+        logger?.debug("writing \(data.count) bytes to \(BSBleCharacteristicUUID.tx.name) \(data.bytes)")
         peripheral.writeValue(data, for: characteristic, type: BSBleCharacteristicUUID.tx.writeType)
     }
 
     // MARK: - peripheral
 
     func onPeripheralStateUpdate() {
-        logger.debug("peripheral state update: \(self.peripheral.state.rawValue)")
+        logger?.debug("peripheral state update: \(self.peripheral.state.rawValue)")
         switch peripheral.state {
         case .connected:
             peripheral.discoverServices(BSBleServiceUUID.allUuids)
@@ -72,28 +72,28 @@ class BSBleConnectionManager: BSBaseConnectionManager {
     }
 
     func checkIfFullyConnected() {
-        logger.debug("checking if fully connected")
+        logger?.debug("checking if fully connected")
         guard connectionStatus == .connecting else {
-            logger.debug("connectionStatus is not connecting (got \(self.connectionStatus.name) - notFullyConnected")
+            logger?.debug("connectionStatus is not connecting (got \(self.connectionStatus.name) - notFullyConnected")
             return
         }
         if let missingServiceUuid = BSBleServiceUUID.allCases.first(where: { !services.keys.contains($0) }) {
-            logger.debug("missingServiceUuid \(missingServiceUuid.name) - notFullyConnected")
+            logger?.debug("missingServiceUuid \(missingServiceUuid.name) - notFullyConnected")
             return
         }
         if let missingCharacteristicUuid = BSBleCharacteristicUUID.allCases.first(where: { !characteristics.keys.contains($0) }) {
-            logger.debug("missingCharacteristicUuid \(missingCharacteristicUuid.name) - notFullyConnected")
+            logger?.debug("missingCharacteristicUuid \(missingCharacteristicUuid.name) - notFullyConnected")
             return
         }
         if let (characteristicNotRead, _) = characteristics.first(where: { $0.key.readOnConnection && $0.value.properties.contains(.read) && $0.value.value == nil }) {
-            logger.debug("characteristicNotRead \(characteristicNotRead.name) - notFullyConnected")
+            logger?.debug("characteristicNotRead \(characteristicNotRead.name) - notFullyConnected")
             return
         }
         if let (characteristicNotNotifying, _) = characteristics.first(where: { $0.key.notifyOnConnection && $0.value.properties.contains(.notify) && !$0.value.isNotifying }) {
-            logger.debug("characteristicNotNotifying \(characteristicNotNotifying.name) - notFullyConnected")
+            logger?.debug("characteristicNotNotifying \(characteristicNotNotifying.name) - notFullyConnected")
             return
         }
-        logger.debug("fully connected")
+        logger?.debug("fully connected")
         connectionStatus = .connected
     }
 }

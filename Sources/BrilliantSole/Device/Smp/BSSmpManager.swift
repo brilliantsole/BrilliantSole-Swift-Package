@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSSmpManager: BSBaseManager<BSSmpMessageType> {
     override class var requiredMessageTypes: [BSSmpMessageType]? {
         [

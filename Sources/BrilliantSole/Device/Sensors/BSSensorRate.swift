@@ -8,7 +8,7 @@
 import Foundation
 import UkatonMacros
 
-private let logger = getLogger(category: "BSSensorRate")
+private let logger = getLogger(category: "BSSensorRate", disabled: true)
 
 @EnumName
 public enum BSSensorRate: UInt16, CaseIterable, Sendable {
@@ -25,7 +25,7 @@ extension BSSensorRate {
     static func parse(_ data: Data, at offset: Data.Index = .zero, littleEndian: Bool = true) -> Self? {
         guard let rawValue = RawValue.parse(data, at: offset, littleEndian: littleEndian) else { return nil }
         guard let value = Self(rawValue: rawValue) else {
-            logger.error("invalid \(self) rawValue \(rawValue)")
+            logger?.error("invalid \(self) rawValue \(rawValue)")
             return nil
         }
         return value

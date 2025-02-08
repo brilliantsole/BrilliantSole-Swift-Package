@@ -7,7 +7,7 @@
 
 import Foundation
 
-private let logger = getLogger(category: "BSVibrationWaveformEffectSegments")
+private let logger = getLogger(category: "BSVibrationWaveformEffectSegments", disabled: true)
 
 public typealias BSVibrationWaveformEffectSegments = [BSVibrationWaveformEffectSegment]
 

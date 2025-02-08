@@ -9,7 +9,7 @@ import Foundation
 
 extension BSBaseClient {
     func parseDiscoveredDevice(_ data: Data) {
-        logger.debug("parsing discoveredDevice \(data.count) bytes")
+        logger?.debug("parsing discoveredDevice \(data.count) bytes")
         guard let discoveredDeviceJson = BSDiscoveredDeviceJson(data: data) else {
             return
         }
@@ -25,19 +25,19 @@ extension BSBaseClient {
     }
 
     func parseExpiredDiscoveredDevice(_ data: Data) {
-        logger.debug("parsing expiredDiscoveredDevice \(data.count) bytes")
+        logger?.debug("parsing expiredDiscoveredDevice \(data.count) bytes")
 
         guard let id = BSStringUtils.getString(from: data, includesLength: true) else {
             return
         }
-        logger.debug("expired id: \(id)")
+        logger?.debug("expired id: \(id)")
 
         var discoveredDevice = allDiscoveredDevices[id]
         if let discoveredDevice {
             remove(discoveredDevice: discoveredDevice)
         }
         else {
-            logger.debug("couldn't find discoveredDevice with id \(id)")
+            logger?.debug("couldn't find discoveredDevice with id \(id)")
         }
     }
 }

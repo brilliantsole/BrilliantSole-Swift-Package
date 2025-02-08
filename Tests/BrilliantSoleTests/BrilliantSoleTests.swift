@@ -95,8 +95,10 @@ struct BSTests {
 
     func connectToDevice(withName name: String? = nil, onConnectedDevice: ((BSDevice) -> Void)? = nil) {
         var foundDevice = false
+        print("starting scan")
         BSBleScanner.shared.startScan()
         BSBleScanner.shared.discoveredDevicePublisher.sink { [self] discoveredDevice in
+            print("discoveredDevice \(discoveredDevice.name)")
             guard name == nil || discoveredDevice.name == name else { return }
             guard !foundDevice else { return }
             foundDevice = true
@@ -130,7 +132,15 @@ struct BSTests {
 
     @Test func deviceSensorDataTest() async throws {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
-            device.setSensorRate(sensorType: .pressure, sensorRate: ._100ms)
+            device.setSensorRate(sensorType: .orientation, sensorRate: ._100ms)
+            device.pressureDataPublisher.sink { _, pressureData, _ in
+                for (index, sensor) in pressureData.sensors.enumerated() {
+                    print("#\(index): \(sensor.rawValue)")
+                }
+            }.store(in: &cancellablesStore.cancellables)
+            device.orientationPublisher.sink { _, orientation, _ in
+                print("orientation \(orientation.eulerAngles(order: .xyz))")
+            }.store(in: &cancellablesStore.cancellables)
         })
         try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }

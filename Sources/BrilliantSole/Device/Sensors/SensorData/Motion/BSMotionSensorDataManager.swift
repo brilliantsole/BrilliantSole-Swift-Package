@@ -12,7 +12,7 @@ import UkatonMacros
 
 public typealias BSStepCount = UInt32
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [
         .acceleration,
@@ -99,7 +99,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     private func parseVector(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let vector = BSVector3D.parse(data, scalar: scalar) else { return }
-        logger.debug("parsed \(sensorType.name) vector: \(vector) (\(timestamp)ms")
+        logger?.debug("parsed \(sensorType.name) vector: \(vector) (\(timestamp)ms")
         guard let vectorSubject = getVectorSubject(for: sensorType) else {
             fatalError("no vectorSubject defined for sensorType \(sensorType.name)")
         }
@@ -132,7 +132,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     private func parseQuaternion(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let quaternion = BSQuaternion.parse(data, scalar: scalar) else { return }
-        logger.debug("parsed \(sensorType.name) quaternion: \(String(describing: quaternion)) (\(timestamp)ms")
+        logger?.debug("parsed \(sensorType.name) quaternion: \(String(describing: quaternion)) (\(timestamp)ms")
         guard let quaternionSubject = getQuaternionSubject(for: sensorType) else {
             fatalError("no quaternionSubject defined for sensorType \(sensorType.name)")
         }
@@ -148,7 +148,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     func parseOrientation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let orientation = BSRotation3D.parse(data, scalar: scalar) else { return }
-        logger.debug("parsed orientation: \(orientation) (\(timestamp)ms")
+        logger?.debug("parsed orientation: \(orientation) (\(timestamp)ms")
         orientationSubject.send((orientation, timestamp))
     }
 
@@ -161,7 +161,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     private func parseActivity(data: Data, timestamp: BSTimestamp) {
         let activity = BSActivityFlag.parse(data)
-        logger.debug("parsed activity: \(activity) (\(timestamp)ms)")
+        logger?.debug("parsed activity: \(activity) (\(timestamp)ms)")
         activitySubject.send((activity, timestamp))
     }
 
@@ -173,7 +173,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     private func parseStepDetection(data: Data, timestamp: BSTimestamp) {
-        logger.debug("step detected (\(timestamp)ms)")
+        logger?.debug("step detected (\(timestamp)ms)")
         stepDetectionSubject.send(timestamp)
     }
 
@@ -186,7 +186,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     private func parseStepCount(data: Data, timestamp: BSTimestamp) {
         guard let stepCount = BSStepCount.parse(data, littleEndian: false) else { return }
-        logger.debug("stepCount: \(stepCount) (\(timestamp)ms)")
+        logger?.debug("stepCount: \(stepCount) (\(timestamp)ms)")
         stepCountSubject.send((stepCount, timestamp))
     }
 
@@ -201,7 +201,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         guard let deviceOrientation = BSDeviceOrientation.parse(data) else {
             return
         }
-        logger.debug("deviceOrientation: \(deviceOrientation.name) (\(timestamp)ms")
+        logger?.debug("deviceOrientation: \(deviceOrientation.name) (\(timestamp)ms")
         deviceOrientationSubject.send((deviceOrientation, timestamp))
     }
 }

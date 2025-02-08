@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSBaseScanner")
+private let logger = getLogger(category: "BSBaseScanner", disabled: true)
 
 public class BSBaseScanner: NSObject, BSScanner {
     public class var connectionType: BSConnectionType { fatalError("not implemented") }
@@ -23,12 +23,12 @@ public class BSBaseScanner: NSObject, BSScanner {
     public var isScanningAvailable: Bool {
         get { isScanningAvailableSubject.value }
         set {
-            logger.debug("updated isScanningAvailable \(newValue)")
+            logger?.debug("updated isScanningAvailable \(newValue)")
             isScanningAvailableSubject.value = newValue
             if isScanningAvailable {
                 scanningIsAvailableSubject.send()
                 if scanWhenAvailable {
-                    logger.debug("reattempting scan")
+                    logger?.debug("reattempting scan")
                     startScan(scanWhenAvailable: scanWhenAvailable)
                 }
             }
@@ -58,7 +58,7 @@ public class BSBaseScanner: NSObject, BSScanner {
     public var isScanning: Bool {
         get { isScanningSubject.value }
         set {
-            logger.debug("updated isScannng \(newValue)")
+            logger?.debug("updated isScannng \(newValue)")
             isScanningSubject.value = newValue
             if isScanning {
                 scanStartSubject.send()
@@ -93,20 +93,20 @@ public class BSBaseScanner: NSObject, BSScanner {
 
     public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         guard !isScanning else {
-            logger.debug("already scanning")
+            logger?.debug("already scanning")
             _continue = false
             return
         }
         guard isScanningAvailable else {
-            logger.warning("scanning is not available")
+            logger?.warning("scanning is not available")
             _continue = false
-            logger.debug("waiting until scaning is available")
+            logger?.debug("waiting until scaning is available")
             self.scanWhenAvailable = scanWhenAvailable
             return
         }
         discoveredDevices.removeAll()
         devices.removeAll()
-        logger.debug("starting scan")
+        logger?.debug("starting scan")
         _continue = true
     }
 
@@ -119,11 +119,11 @@ public class BSBaseScanner: NSObject, BSScanner {
 
     public func stopScan(_continue: inout Bool) {
         guard isScanning else {
-            logger.debug("already not scanning")
+            logger?.debug("already not scanning")
             _continue = false
             return
         }
-        logger.debug("stopping scan")
+        logger?.debug("stopping scan")
         _continue = true
     }
 
@@ -142,7 +142,7 @@ public class BSBaseScanner: NSObject, BSScanner {
     }
 
     func add(discoveredDevice: BSDiscoveredDevice) {
-        logger.debug("adding discoveredDevice \(discoveredDevice.name)")
+        logger?.debug("adding discoveredDevice \(discoveredDevice.name)")
         if allDiscoveredDevices[discoveredDevice.id] !== discoveredDevice {
             allDiscoveredDevices[discoveredDevice.id] = discoveredDevice
         }
@@ -153,9 +153,9 @@ public class BSBaseScanner: NSObject, BSScanner {
     }
 
     func remove(discoveredDevice: BSDiscoveredDevice) {
-        logger.debug("removing discoveredDevice \(discoveredDevice.name)")
+        logger?.debug("removing discoveredDevice \(discoveredDevice.name)")
         guard discoveredDevices[discoveredDevice.id] != nil else {
-            logger.error("no discoveredDevice \(discoveredDevice.name) found")
+            logger?.error("no discoveredDevice \(discoveredDevice.name) found")
             return
         }
         discoveredDevices[discoveredDevice.id] = nil
@@ -187,7 +187,7 @@ public class BSBaseScanner: NSObject, BSScanner {
         var deviceIdsToRemove: [String] = .init()
         for (id, discoveredDevice) in discoveredDevices {
             if discoveredDevice.timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
-                logger.debug("discoveredDevice \(discoveredDevice.name) expired")
+                logger?.debug("discoveredDevice \(discoveredDevice.name) expired")
                 deviceIdsToRemove.append(id)
             }
         }
@@ -217,7 +217,7 @@ public class BSBaseScanner: NSObject, BSScanner {
             fatalError("invalid discoveredDevice \(discoveredDevices)")
         }
         if allDevices[discoveredDevice.id] == nil {
-            logger.debug("no device found for \(discoveredDevice.name)")
+            logger?.debug("no device found for \(discoveredDevice.name)")
             if createIfNotFound {
                 _ = createDevice(discoveredDevice: discoveredDevice)
             }
@@ -230,7 +230,7 @@ public class BSBaseScanner: NSObject, BSScanner {
 
     private var deviceIsConnectedCancellables = Set<AnyCancellable>()
     func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
-        logger.debug("creating device for \(discoveredDevice.name)")
+        logger?.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device
         device.isConnectedPublisher.sink { [weak self] device, isConnected in

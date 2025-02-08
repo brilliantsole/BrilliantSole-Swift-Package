@@ -31,13 +31,13 @@ extension BSDiscoveredDevice {
     private func parseAdvertisementData(_ advertisementData: [String: Any]) -> (BSDeviceType?) {
         var deviceType: BSDeviceType?
         if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data, !manufacturerData.isEmpty {
-            logger.debug("manufacturerData \(manufacturerData)")
+            logger?.debug("manufacturerData \(manufacturerData)")
             if manufacturerData.count >= 5 {
-                logger.debug("deviceType byte: \(manufacturerData[4])")
+                logger?.debug("deviceType byte: \(manufacturerData[4])")
                 deviceType = .parse(manufacturerData, at: 4)
             }
         } else {
-            logger.debug("no serviceData found in advertisementData")
+            logger?.debug("no serviceData found in advertisementData")
         }
         return deviceType
     }

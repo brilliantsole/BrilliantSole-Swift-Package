@@ -10,7 +10,7 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSPressureSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [.pressure] }
 
@@ -41,10 +41,10 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     func parsePressureData(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
         guard let pressureData = BSPressureData.parse(data, scalar: scalar, positions: pressurePositions, ranges: &pressureSensorRanges, centerOfPressureRange: &centerOfPressureRange) else {
-            logger.error("failed to parse pressure data")
+            logger?.error("failed to parse pressure data")
             return
         }
-        logger.debug("pressureData: \(String(describing: pressureData)) (\(timestamp)ms")
+        logger?.debug("pressureData: \(String(describing: pressureData)) (\(timestamp)ms")
         pressureDataSubject.send((pressureData, timestamp))
     }
 
@@ -63,7 +63,7 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
     var pressurePositions: [BSPressureSensorPosition] {
         get { pressurePositionsSubject.value }
         set {
-            logger.debug("updated pressurePositions to \(newValue)")
+            logger?.debug("updated pressurePositions to \(newValue)")
             pressurePositionsSubject.value = newValue
 
             pressureSensorRanges = .init(repeating: .init(), count: pressurePositions.count)
@@ -80,10 +80,10 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
             let y = Double(data[data.startIndex + index + 1])
 
             let pressurePosition: BSPressureSensorPosition = .init(x: x, y: y) * Self.pressurePositionScalar
-            logger.debug("pressurePosition \(newPressurePositions.count): \(pressurePosition)")
+            logger?.debug("pressurePosition \(newPressurePositions.count): \(pressurePosition)")
             newPressurePositions.append(pressurePosition)
         }
-        logger.debug("parsed pressurePositions: \(newPressurePositions)")
+        logger?.debug("parsed pressurePositions: \(newPressurePositions)")
         pressurePositions = newPressurePositions
     }
 }

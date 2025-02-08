@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSSensorConfiguration")
+private let logger = getLogger(category: "BSSensorConfiguration", disabled: true)
 
 public typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 
@@ -21,15 +21,15 @@ extension BSSensorConfiguration {
 
     static func parse(_ data: Data) -> Self? {
         guard data.count.isMultiple(of: 3) else {
-            logger.error("Invalid data length (\(data.count)) - must be multiple of 3")
+            logger?.error("Invalid data length (\(data.count)) - must be multiple of 3")
             return nil
         }
 
         var configuration: Self = .init()
-        logger.debug("parsing sensor configuration (\(data.count) bytes)")
+        logger?.debug("parsing sensor configuration (\(data.count) bytes)")
         for index in stride(from: 0, to: data.count, by: 3) {
             guard let sensorType = BSSensorType(rawValue: data[data.startIndex + index]) else {
-                logger.error("Invalid sensor type (\(data[index])) at index \(index)")
+                logger?.error("Invalid sensor type (\(data[index])) at index \(index)")
                 continue
             }
 
@@ -37,7 +37,7 @@ extension BSSensorConfiguration {
                 continue
             }
 
-            logger.debug("\(sensorType.name): \(sensorRate.name)")
+            logger?.debug("\(sensorType.name): \(sensorRate.name)")
             configuration[sensorType] = sensorRate
         }
         return configuration

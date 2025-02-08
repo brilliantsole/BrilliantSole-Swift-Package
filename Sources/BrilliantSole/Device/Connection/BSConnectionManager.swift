@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSConnectionManager")
+private let logger = getLogger(category: "BSConnectionManager", disabled: true)
 
 public typealias BSBatteryLevel = UInt8
 

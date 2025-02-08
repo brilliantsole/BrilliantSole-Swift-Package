@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public struct BSRange {
     public private(set) var min: Float = -.infinity
     public private(set) var max: Float = .infinity
@@ -20,7 +20,7 @@ public struct BSRange {
         span = 0
 #if DEBUG
         let string = String(describing: self)
-        logger.debug("reset range \(string)")
+        logger?.debug("reset range \(string)")
 #endif
     }
 
@@ -34,7 +34,7 @@ public struct BSRange {
         span = max - min
 #if DEBUG
         let string = String(describing: self)
-        logger.debug("updated range \(string)")
+        logger?.debug("updated range \(string)")
 #endif
     }
 

@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 public struct BSDevicePairPressureData {
     public let rawSum: Float
     public let normalizedSum: Float

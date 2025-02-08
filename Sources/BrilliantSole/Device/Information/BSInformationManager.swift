@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSMtu = UInt16
 private let defaultMtu: BSMtu = 23
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     override class var requiredMessageTypes: [BSInformationMessageType]? {
         [
@@ -55,13 +55,13 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var mtu: UInt16 {
         get { mtuSubject.value }
         set {
-            logger.debug("updated mtu to \(newValue)")
+            logger?.debug("updated mtu to \(newValue)")
             mtuSubject.value = newValue
         }
     }
 
     func getMtu(sendImmediately: Bool = true) {
-        logger.debug("getting mtu")
+        logger?.debug("getting mtu")
         createAndSendMessage(.getMtu, sendImmediately: sendImmediately)
     }
 
@@ -69,7 +69,7 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
 
     private func parseMtu(_ data: Data) {
         guard let newMtu = UInt16.parse(data) else { return }
-        logger.debug("parsed mtu: \(newMtu)")
+        logger?.debug("parsed mtu: \(newMtu)")
         mtu = newMtu
     }
 
@@ -80,19 +80,19 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var id: String {
         get { idSubject.value }
         set {
-            logger.debug("updated id to \(newValue)")
+            logger?.debug("updated id to \(newValue)")
             idSubject.value = newValue
         }
     }
 
     func getId(sendImmediately: Bool = true) {
-        logger.debug("getting id")
+        logger?.debug("getting id")
         createAndSendMessage(.getId, sendImmediately: sendImmediately)
     }
 
     private func parseId(_ data: Data) {
         let newId: String = .parse(data)
-        logger.debug("parsed id: \(newId)")
+        logger?.debug("parsed id: \(newId)")
         id = newId
     }
 
@@ -103,24 +103,24 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var name: String {
         get { nameSubject.value }
         set {
-            logger.debug("updated name to \(newValue)")
+            logger?.debug("updated name to \(newValue)")
             nameSubject.value = newValue
         }
     }
 
     func getName(sendImmediately: Bool = true) {
-        logger.debug("getting name")
+        logger?.debug("getting name")
         createAndSendMessage(.getName, sendImmediately: sendImmediately)
     }
 
     private func parseName(_ data: Data) {
         let newName: String = .parse(data)
-        logger.debug("parsed name: \(newName)")
+        logger?.debug("parsed name: \(newName)")
         name = newName
     }
 
     func initName(_ newName: String) {
-        logger.debug("initializing name to \(newName)")
+        logger?.debug("initializing name to \(newName)")
         name = newName
     }
 
@@ -134,13 +134,13 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var deviceType: BSDeviceType {
         get { deviceTypeSubject.value }
         set {
-            logger.debug("updated deviceType to \(newValue.name)")
+            logger?.debug("updated deviceType to \(newValue.name)")
             deviceTypeSubject.value = newValue
         }
     }
 
     func getDeviceType(sendImmediately: Bool = true) {
-        logger.debug("getting deviceType")
+        logger?.debug("getting deviceType")
         createAndSendMessage(.getDeviceType, sendImmediately: sendImmediately)
     }
 
@@ -148,12 +148,12 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         guard let newDeviceType = BSDeviceType.parse(data) else {
             return
         }
-        logger.debug("parsed deviceType: \(newDeviceType.name)")
+        logger?.debug("parsed deviceType: \(newDeviceType.name)")
         deviceType = newDeviceType
     }
 
     func initDeviceType(_ newDeviceType: BSDeviceType) {
-        logger.debug("initializing deviceType to \(newDeviceType.name)")
+        logger?.debug("initializing deviceType to \(newDeviceType.name)")
         deviceType = newDeviceType
     }
 
@@ -168,7 +168,7 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     private(set) var currentTime: BSTimestamp {
         get { _currentTime }
         set {
-            logger.debug("updated currentTime to \(newValue)")
+            logger?.debug("updated currentTime to \(newValue)")
             _currentTime = newValue
             currentTimeSubject.value = newValue
             if currentTime == 0 {
@@ -178,28 +178,28 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     }
 
     func getCurrentTime(sendImmediately: Bool = true) {
-        logger.debug("getting currentTime")
+        logger?.debug("getting currentTime")
         createAndSendMessage(.getCurrentTime, sendImmediately: sendImmediately)
     }
 
     private func parseCurrentTime(_ data: Data) {
         guard let newCurrentTime = BSTimestamp.parse(data) else { return }
-        logger.debug("parsed currentTime: \(newCurrentTime)")
+        logger?.debug("parsed currentTime: \(newCurrentTime)")
         currentTime = newCurrentTime
     }
 
     private func setCurrentTime(_ newCurrentTime: BSTimestamp, sendImmediately: Bool = true) {
         guard newCurrentTime != currentTime else {
-            logger.debug("redundant currentTime assignment \(newCurrentTime)")
+            logger?.debug("redundant currentTime assignment \(newCurrentTime)")
             return
         }
-        logger.debug("setting currentTime \(newCurrentTime)")
+        logger?.debug("setting currentTime \(newCurrentTime)")
         createAndSendMessage(.setCurrentTime, data: newCurrentTime.getData(), sendImmediately: sendImmediately)
     }
 
     private func updateCurrentTime(sendImmediately: Bool = true) {
         let newCurrentTime = getUtcTime()
-        logger.debug("updating currentTime to \(newCurrentTime)")
+        logger?.debug("updating currentTime to \(newCurrentTime)")
         setCurrentTime(newCurrentTime, sendImmediately: sendImmediately)
     }
 }

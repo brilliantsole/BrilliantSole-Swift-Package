@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSDeviceInformationValue = String
 public typealias BSDeviceInformation = [BSDeviceInformationType: BSDeviceInformationValue]
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSDeviceInformationManager {
     private(set) var deviceInformation: BSDeviceInformation = .init()
 
@@ -27,7 +27,7 @@ class BSDeviceInformationManager {
                 return
             }
             if hasAllInformation {
-                logger.debug("got all deviceInformation")
+                logger?.debug("got all deviceInformation")
                 deviceInformationSubject.send(deviceInformation)
             }
         }
@@ -54,7 +54,7 @@ class BSDeviceInformationManager {
         }
 
         if missingKey != nil {
-            logger.debug("missing deviceInformationType \(missingKey!.name)")
+            logger?.debug("missing deviceInformationType \(missingKey!.name)")
         }
 
         let newHasAllInformation = missingKey == nil
@@ -63,6 +63,6 @@ class BSDeviceInformationManager {
         }
 
         hasAllInformation = newHasAllInformation
-        logger.debug("updated hasAllInformation to \(newHasAllInformation)")
+        logger?.debug("updated hasAllInformation to \(newHasAllInformation)")
     }
 }

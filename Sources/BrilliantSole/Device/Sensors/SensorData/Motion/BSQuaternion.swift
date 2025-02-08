@@ -8,7 +8,7 @@
 import Foundation
 import simd
 
-private let logger = getLogger(category: "BSQuaternion")
+private let logger = getLogger(category: "BSQuaternion", disabled: true)
 
 public typealias BSQuaternion = simd_quatd
 private let quaternionNumberFormatter: NumberFormatter = {
@@ -59,7 +59,7 @@ extension BSQuaternion {
 
         let quaternion: Self = .init(ix: x, iy: y, iz: z, r: w) * Double(scalar)
 
-        logger.debug("parsed quaternion: \(quaternion.debugDescription)")
+        logger?.debug("parsed quaternion: \(quaternion.debugDescription)")
 
         return quaternion
     }

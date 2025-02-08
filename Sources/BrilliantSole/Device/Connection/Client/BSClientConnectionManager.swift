@@ -7,7 +7,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 class BSClientConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .udp }
 
@@ -38,7 +38,7 @@ class BSClientConnectionManager: BSBaseConnectionManager {
 
     public internal(set) var isConnected: Bool = false {
         didSet {
-            logger.debug("updated isConnected \(self.isConnected)")
+            logger?.debug("updated isConnected \(self.isConnected)")
             connectionStatus = isConnected ? .connected : .notConnected
 
             if isConnected {
@@ -60,12 +60,12 @@ class BSClientConnectionManager: BSBaseConnectionManager {
 
     func onDeviceEvent(type: UInt8, data: Data) {
         guard type < BSDeviceEventMessageUtils.enumStrings.count else {
-            logger.debug("invalid deviceEventType \(type)")
+            logger?.debug("invalid deviceEventType \(type)")
             return
         }
 
         let typeString = BSDeviceEventMessageUtils.enumStrings[Int(type)]
-        logger.debug("deviceEventString \(typeString) (\(data.count) bytes)")
+        logger?.debug("deviceEventString \(typeString) (\(data.count) bytes)")
 
         switch typeString {
         case BSConnectionEventType.isConnected.name:
@@ -82,16 +82,16 @@ class BSClientConnectionManager: BSBaseConnectionManager {
             self.batteryLevelSubject.send(batteryLevel)
         case let deviceInformationTypeName where BSDeviceInformationType.allCases.contains(where: { $0.name == deviceInformationTypeName }):
             guard let deviceInformationType = BSDeviceInformationType(name: deviceInformationTypeName) else {
-                logger.error("failed to parse deviceInformationTypeName \(deviceInformationTypeName)")
+                logger?.error("failed to parse deviceInformationTypeName \(deviceInformationTypeName)")
                 return
             }
             let string = String.parse(data)
-            logger.debug("\(deviceInformationType.name): \(string)")
+            logger?.debug("\(deviceInformationType.name): \(string)")
             deviceInformationSubject.send((deviceInformationType, string))
         default:
-            logger.debug("miscellaneous deviceEvent \"\(typeString)\" (\(data.count) bytes)")
+            logger?.debug("miscellaneous deviceEvent \"\(typeString)\" (\(data.count) bytes)")
             guard let txRxMessageType = BSTxRxMessageUtils.enumStringMap[typeString] else {
-                logger.error("failed to get txRxMessageType for \"\(typeString)\"")
+                logger?.error("failed to get txRxMessageType for \"\(typeString)\"")
                 return
             }
             rxMessageSubject.send((txRxMessageType, data))
@@ -113,7 +113,7 @@ class BSClientConnectionManager: BSBaseConnectionManager {
     ]
     static let requiredDeviceInformationMessages: [BSConnectionMessage] = requiredDeviceInformationMessageTypes.compactMap(BSConnectionMessageUtils.createMessage)
     private func requestDeviceInformation() {
-        logger.debug("requesting deviceInformation")
+        logger?.debug("requesting deviceInformation")
         client.sendDeviceMessages(Self.requiredDeviceInformationMessages, id: id)
     }
 }

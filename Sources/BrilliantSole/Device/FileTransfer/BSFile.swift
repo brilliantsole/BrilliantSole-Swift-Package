@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-private let logger = getLogger(category: "BSFile")
+private let logger = getLogger(category: "BSFile", disabled: true)
 
 public protocol BSFile {
     static var fileType: BSFileType { get }
@@ -27,7 +27,7 @@ public extension BSFile {
 
         guard let fileURL = bundle.url(forResource: fileName, withExtension: Self.fileType.fileExtension) else {
             let errorString = "file \(fileName).\(Self.fileType.fileExtension) not found"
-            logger.error("\(errorString)")
+            logger?.error("\(errorString)")
             return nil
         }
 
@@ -37,7 +37,7 @@ public extension BSFile {
             self.fileData = fileData
             return fileData
         } catch {
-            logger.error("Error loading file: \(error)")
+            logger?.error("Error loading file: \(error)")
             return nil
         }
     }

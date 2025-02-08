@@ -11,7 +11,7 @@ import Spatial
 
 public typealias BSVector3D = Vector3D
 
-private let logger = getLogger(category: "BSVector3D")
+private let logger = getLogger(category: "BSVector3D", disabled: true)
 
 private let vector3DNumberFormatter: NumberFormatter = {
     let nf = NumberFormatter()
@@ -60,7 +60,7 @@ extension BSVector3D {
 
         let vector: Self = .init(x: x, y: y, z: z).uniformlyScaled(by: Double(scalar))
 
-        logger.debug("parsed vector: \(vector)")
+        logger?.debug("parsed vector: \(vector)")
 
         return vector
     }

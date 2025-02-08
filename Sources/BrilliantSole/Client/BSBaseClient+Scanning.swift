@@ -16,7 +16,7 @@ extension BSBaseClient {
     }
 
     func checkIfScanning(sendImmediately: Bool = true) {
-        logger.debug("checking if scanning")
+        logger?.debug("checking if scanning")
         sendMessages([.init(type: .isScanning)], sendImmediately: sendImmediately)
     }
 

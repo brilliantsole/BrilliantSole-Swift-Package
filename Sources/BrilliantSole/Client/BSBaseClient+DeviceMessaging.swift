@@ -9,7 +9,7 @@ import Foundation
 
 extension BSBaseClient {
     func parseDeviceMessage(_ data: Data) {
-        logger.debug("parsing deviceMessage (\(data.count) bytes) \(data.bytes)")
+        logger?.debug("parsing deviceMessage (\(data.count) bytes) \(data.bytes)")
 
         var offset: Data.Index = 0
         guard let id = BSStringUtils.getString(from: data, includesLength: true) else {
@@ -17,16 +17,16 @@ extension BSBaseClient {
         }
         offset += id.count + 1
 
-        logger.debug("received deviceMessage from \(id)")
+        logger?.debug("received deviceMessage from \(id)")
         guard let device = allDevices[id] else {
-            logger.debug("no device found for id \(id)")
+            logger?.debug("no device found for id \(id)")
             return
         }
 
         let messageData = data[(data.startIndex + offset)...]
-        logger.debug("parsing \(messageData.count) bytes for device \(id) \(messageData.bytes)")
+        logger?.debug("parsing \(messageData.count) bytes for device \(id) \(messageData.bytes)")
         guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
-            logger.debug("failed to cast connectionManager to BSClientConnectionManager")
+            logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
             return
         }
         parseMessages(messageData) { deviceEventType, deviceEventData in

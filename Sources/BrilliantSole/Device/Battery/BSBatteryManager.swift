@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     override class var requiredMessageTypes: [BSBatteryMessageType]? {
         [.getIsBatteryCharging, .getBatteryCurrent]
@@ -40,19 +40,19 @@ final class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     var isBatteryCharging: Bool {
         get { isBatteryChargingSubject.value }
         set {
-            logger.debug("updated isBatteryCharging to \(newValue)")
+            logger?.debug("updated isBatteryCharging to \(newValue)")
             isBatteryChargingSubject.value = newValue
         }
     }
 
     func getIsBatteryCharging(sendImmediately: Bool = true) {
-        logger.debug("getting isBatteryCharging")
+        logger?.debug("getting isBatteryCharging")
         createAndSendMessage(.getIsBatteryCharging, sendImmediately: sendImmediately)
     }
 
     private func parseIsBatteryCharging(_ data: Data) {
         guard let newIsBatteryCharging = Bool.parse(data) else { return }
-        logger.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
+        logger?.debug("parsed isBatteryCharging: \(newIsBatteryCharging)")
         isBatteryCharging = newIsBatteryCharging
     }
 
@@ -66,19 +66,19 @@ final class BSBatteryManager: BSBaseManager<BSBatteryMessageType> {
     private(set) var batteryCurrent: Float {
         get { batteryCurrentSubject.value }
         set {
-            logger.debug("updated batteryCurrent to \(newValue)")
+            logger?.debug("updated batteryCurrent to \(newValue)")
             batteryCurrentSubject.value = newValue
         }
     }
 
     func getBatteryCurrent(sendImmediately: Bool = true) {
-        logger.debug("getting batteryCurrent")
+        logger?.debug("getting batteryCurrent")
         createAndSendMessage(.getBatteryCurrent, sendImmediately: sendImmediately)
     }
 
     private func parseBatteryCurrent(_ data: Data) {
         guard let newBatteryCurrent = Float.parse(data) else { return }
-        logger.debug("parsed batteryCurrent: \(newBatteryCurrent)")
+        logger?.debug("parsed batteryCurrent: \(newBatteryCurrent)")
         batteryCurrent = newBatteryCurrent
     }
 }

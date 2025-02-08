@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     override class var requiredMessageTypes: [BSSensorDataMessageType]? {
         [
@@ -38,7 +38,7 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     // MARK: - pressurePositions
 
     func getPressurePositions(sendImmediately: Bool = true) {
-        logger.debug("getting pressurePositions")
+        logger?.debug("getting pressurePositions")
         createAndSendMessage(.getPressurePositions, sendImmediately: sendImmediately)
     }
 
@@ -57,13 +57,13 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     private(set) var sensorScalars: BSSensorScalars {
         get { sensorScalarsSubject.value }
         set {
-            logger.debug("updated sensorScalars to \(newValue)")
+            logger?.debug("updated sensorScalars to \(newValue)")
             sensorScalarsSubject.value = newValue
         }
     }
 
     func getSensorScalars(sendImmediately: Bool = true) {
-        logger.debug("getting sensorScalars")
+        logger?.debug("getting sensorScalars")
         createAndSendMessage(.getSensorScalars, sendImmediately: sendImmediately)
     }
 
@@ -74,10 +74,10 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
                 return
             }
             guard let sensorScalar: Float = .parse(data, at: index + 1) else { return }
-            logger.debug("\(sensorType.name) scalar: \(sensorScalar)")
+            logger?.debug("\(sensorType.name) scalar: \(sensorScalar)")
             newSensorScalars[sensorType] = sensorScalar
         }
-        logger.debug("parsed sensorScalars: \(newSensorScalars)")
+        logger?.debug("parsed sensorScalars: \(newSensorScalars)")
         sensorScalars = newSensorScalars
     }
 
@@ -91,7 +91,7 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     private func parseSensorData(_ data: Data) {
         var offset: Data.Index = .zero
         guard let timestamp = parseTimestamp(data, at: &offset) else { return }
-        logger.debug("timestamp: \(timestamp)ms")
+        logger?.debug("timestamp: \(timestamp)ms")
         parseMessages(data, messageCallback: { sensorType, data in
             self.parseSensorDataMessage(sensorType: sensorType, data: data, timestamp: timestamp)
         }, at: offset, parseMessageLengthAs2Bytes: false)

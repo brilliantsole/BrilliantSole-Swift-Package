@@ -9,13 +9,13 @@ import Foundation
 import OSLog
 import UkatonMacros
 
-@StaticLogger
+@StaticLogger(disabled: true)
 final class BSDeviceEventMessageUtils {
     static let enumStrings: [String] = initializeEnumStrings()
     static let enumStringMap: [String: UInt8] = initializeEnumStringMap()
 
     private static func initializeEnumStrings() -> [String] {
-        logger.debug("initializeEnumStrings")
+        logger?.debug("initializeEnumStrings")
         var enumStrings: [String] = []
         var offset: UInt8 = 0
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSConnectionMessageType.self)
@@ -35,17 +35,17 @@ final class BSDeviceEventMessageUtils {
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSTfliteMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpEventType.self)
-        logger.debug("enumStrings: \(enumStrings)")
+        logger?.debug("enumStrings: \(enumStrings)")
         return enumStrings
     }
 
     private static func initializeEnumStringMap() -> [String: UInt8] {
-        logger.debug("initializeEnumStringMap")
+        logger?.debug("initializeEnumStringMap")
         var enumStringMap: [String: UInt8] = [:]
         for (index, enumString) in enumStrings.enumerated() {
             enumStringMap[enumString] = UInt8(index)
         }
-        logger.debug("enumStringMap: \(enumStringMap)")
+        logger?.debug("enumStringMap: \(enumStringMap)")
         return enumStringMap
     }
 
@@ -65,7 +65,7 @@ final class BSDeviceEventMessageUtils {
         var data: Data = .init()
         for string in strings {
             guard let value = enumStringMap[string] else {
-                logger.error("no value found for enum \(string)")
+                logger?.error("no value found for enum \(string)")
                 continue
             }
             data.append(value)
