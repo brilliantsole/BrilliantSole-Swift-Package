@@ -1,6 +1,15 @@
 {
-  "originHash" : "0e1b2266b1c8a181a5d62f5b02237a215a0dc3e685a1e0d076b0113cc145657f",
+  "originHash" : "1c404e3d8478b43d860828b28d5005fa769fb994a442289fd052d25781615531",
   "pins" : [
+    {
+      "identity" : "ios-nrf-connect-device-manager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager",
+      "state" : {
+        "revision" : "761efdbfd800be3fd30f7e34b585feb75fdaba03",
+        "version" : "1.9.1"
+      }
+    },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
@@ -11,12 +20,30 @@
       }
     },
     {
+      "identity" : "swiftcbor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/valpackett/SwiftCBOR.git",
+      "state" : {
+        "revision" : "418dab41b09a5da0d45d7b788c59085979ff4dae",
+        "version" : "0.4.7"
+      }
+    },
+    {
       "identity" : "ukatonswiftmacros",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zakaton/UkatonSwiftMacros.git",
       "state" : {
         "branch" : "main",
         "revision" : "de499a28bb4204ec3385f7be41244e4ef4b03874"
+      }
+    },
+    {
+      "identity" : "zipfoundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/weichsel/ZIPFoundation.git",
+      "state" : {
+        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+        "version" : "0.9.19"
       }
     }
   ],

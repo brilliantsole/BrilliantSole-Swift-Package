@@ -16,19 +16,21 @@ let package = Package(
     dependencies: [
         // ignore warning - removing (name: "UkatonMacros") prevents compilation
         .package(name: "UkatonMacros", url: "https://github.com/zakaton/UkatonSwiftMacros.git", branch: "main"),
+        .package(name: "iOSMcuManagerLibrary", url: "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager", .upToNextMajor(from: "1.9.1")),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "BrilliantSole",
-            dependencies: ["UkatonMacros"]
+            dependencies: ["UkatonMacros", "iOSMcuManagerLibrary"]
         ),
         .testTarget(
             name: "BrilliantSoleTests",
             dependencies: ["BrilliantSole"],
             resources: [
                 .copy("Resources/model.tflite"),
+                .copy("Resources/firmware.bin"),
             ]
         ),
     ]

@@ -213,4 +213,16 @@ struct BSTests {
         udpClient.connect()
         try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
     }
+
+    @Test func firmwareTest() async throws {
+        connectToDevice(withName: "Brilliant Sole", onConnectedDevice: { device in
+            guard device.canUpdateFirmware else {
+                print("cannot update firmware")
+                return
+            }
+            print("updating firmware...")
+            device.updateFirmware(fileName: "firmware", extension: "bin", bundle: .module)
+        })
+        try await Task.sleep(nanoseconds: 2 * 60 * 1_000_000_000)
+    }
 }
