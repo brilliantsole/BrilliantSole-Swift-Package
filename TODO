@@ -1,4 +1,4 @@
 BSUdpClient
-    isConnected when isScanning metadata & devices info is received
+    checkIfFullyConnected (check if scanning info is received)
     test
 firmware
