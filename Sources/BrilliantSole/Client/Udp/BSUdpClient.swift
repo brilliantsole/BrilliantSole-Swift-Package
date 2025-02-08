@@ -83,7 +83,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         }
         logger.debug("successfully set receivePort")
         didSetReceivePort = true
-        connectionStatus = .connected
+        sendRequiredMessages()
     }
 
     // MARK: - connection

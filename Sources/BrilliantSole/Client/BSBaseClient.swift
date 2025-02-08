@@ -34,6 +34,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         pendingMessages.removeAll()
 
+        receivedMessageTypes.removeAll()
+
         for (_, device) in devices {
             guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
                 logger.debug("failed to cast connectionManager to BSClientConnectionManager")
@@ -108,7 +110,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
             switch connectionStatus {
             case .connected:
-                sendRequiredMessages(sendImmediately: false)
+                // sendRequiredMessages(sendImmediately: false)
+                break
             case .notConnected:
                 reset()
                 if disconnectedUnintentionally && reconnectOnDisconnection {
@@ -235,5 +238,28 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     func sendMessageData(_ data: Data) {
         logger.debug("sending \(data.count) bytes...")
+    }
+
+    // MARK: - fullyConnected
+
+    var receivedMessageTypes: Set<BSServerMessageType> = []
+    func checkIfFullyConnected() {
+        guard connectionStatus == .connecting else { return }
+
+        logger.debug("checking if fully connected...")
+
+        guard receivedMessageTypes.contains(.isScanningAvailable) else {
+            logger.debug("didn't receive isScanningAvailable yet - not fully connected")
+            return
+        }
+        if isScanningAvailable {
+            guard receivedMessageTypes.contains(.isScanning) else {
+                logger.debug("didn't receive isScanning yet - not fully connected")
+                return
+            }
+        }
+
+        logger.debug("fully connected")
+        connectionStatus = .connected
     }
 }

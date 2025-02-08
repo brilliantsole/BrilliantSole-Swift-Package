@@ -1,4 +1,3 @@
 BSUdpClient
-    checkIfFullyConnected (check if scanning info is received)
-    test
+    test connection
 firmware

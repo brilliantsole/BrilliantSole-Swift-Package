@@ -184,14 +184,12 @@ struct BSTests {
 
     @Test func udpClientTest() async throws {
         let udpClient = BSUdpClient.shared
-        udpClient.isScanningAvailablePublisher.sink { _ in
+        udpClient.connectedPublisher.sink { _ in
+            print("connected")
             if udpClient.isScanningAvailable {
                 print("startScan")
                 udpClient.startScan()
             }
-        }.store(in: &cancellablesStore.cancellables)
-        udpClient.isScanningPublisher.sink { _ in
-            print("isScanning \(udpClient.isScanning)")
         }.store(in: &cancellablesStore.cancellables)
         udpClient.connect()
 

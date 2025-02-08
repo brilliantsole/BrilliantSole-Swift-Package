@@ -14,6 +14,7 @@ extension BSBaseClient {
             self.parseServerMessage(type: messageType, data: data)
         }
         logger.debug("sendPendingMessages")
+        checkIfFullyConnected()
     }
 
     func parseServerMessage(type serverMessageType: BSServerMessageType, data: Data) {
@@ -33,6 +34,8 @@ extension BSBaseClient {
         default:
             logger.error("uncaught serverMessageType \(serverMessageType.name)")
         }
+        
+        receivedMessageTypes.insert(serverMessageType)
     }
 
     func sendRequiredMessages(sendImmediately: Bool = true) {
