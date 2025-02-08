@@ -79,10 +79,10 @@ extension BSUdpClient {
     }
 
     private func receiveMessage(_ connection: NWConnection) {
-        connection.receiveMessage { [weak self] data, _, _, error in
+        connection.receiveMessage { [weak self] data, _, isComplete, error in
             guard let self else { return }
 
-            if let data {
+            if let data, isComplete {
                 onUdpData(data)
             }
             if let error {
@@ -95,8 +95,8 @@ extension BSUdpClient {
     private func onUdpData(_ data: Data) {
         logger.debug("received udpData (\(data.count) bytes)")
         stopWaitingForPong()
-        parseMessages(data) { type, data in
-            self.onUdpMessage(type: type, data: data)
+        parseMessages(data) { udpMessageType, udpMessageData in
+            self.onUdpMessage(type: udpMessageType, data: udpMessageData)
         }
         sendPendingMessages()
         sendPendingUdpMessages()

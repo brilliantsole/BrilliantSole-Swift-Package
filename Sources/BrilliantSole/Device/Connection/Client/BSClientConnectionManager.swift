@@ -68,7 +68,7 @@ class BSClientConnectionManager: BSBaseConnectionManager {
         logger.debug("deviceEventString \(typeString) (\(data.count) bytes)")
 
         switch typeString {
-        case BSConnectionEventType.connectionStatus.name:
+        case BSConnectionEventType.isConnected.name:
             guard let isConnected = Bool.parse(data) else {
                 return
             }
@@ -89,9 +89,9 @@ class BSClientConnectionManager: BSBaseConnectionManager {
             logger.debug("\(deviceInformationType.name): \(string)")
             deviceInformationSubject.send((deviceInformationType, string))
         default:
-            logger.debug("miscellaneous deviceEvent \(typeString) (\(data.count) bytes)")
+            logger.debug("miscellaneous deviceEvent \"\(typeString)\" (\(data.count) bytes)")
             guard let txRxMessageType = BSTxRxMessageUtils.enumStringMap[typeString] else {
-                logger.error("failed to get txRxMessageType for \(typeString)")
+                logger.error("failed to get txRxMessageType for \"\(typeString)\"")
                 return
             }
             rxMessageSubject.send((txRxMessageType, data))

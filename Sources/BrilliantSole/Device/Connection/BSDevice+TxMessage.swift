@@ -53,7 +53,7 @@ extension BSDevice {
                 pendingTxMessageIndex += 1
             }
         }
-        logger.debug("there are still \(self.pendingTxMessages.count) pending messages")
+        logger.debug("there are \(self.pendingTxMessages.count) pending messages")
         
         guard !txData.isEmpty else {
             logger.debug("txData is empty - nothing to send")

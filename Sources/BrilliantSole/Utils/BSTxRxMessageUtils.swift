@@ -32,6 +32,7 @@ final class BSTxRxMessageUtils {
         for manager in BSManagers {
             manager.initTxRxEnum(at: &offset, enumStrings: &enumStrings)
         }
+        logger.debug("enumStrings: \(enumStrings)")
         return enumStrings
     }
 
@@ -41,6 +42,7 @@ final class BSTxRxMessageUtils {
         for (index, enumString) in enumStrings.enumerated() {
             enumStringMap[enumString] = UInt8(index)
         }
+        logger.debug("enumStringMap \(enumStringMap)")
         return enumStringMap
     }
 
@@ -50,6 +52,7 @@ final class BSTxRxMessageUtils {
         for manager in BSManagers {
             requiredTxRxMessageTypes += manager.requiredTxRxMessageTypes
         }
+        logger.debug("requiredTxRxMessageTypes: \(requiredTxRxMessageTypes)")
         return requiredTxRxMessageTypes
     }
 

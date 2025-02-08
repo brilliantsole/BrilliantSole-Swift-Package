@@ -50,7 +50,7 @@ extension BSDeviceClient {
     }
 
     func sendDeviceMessages(_ messages: [BSConnectionMessage], id: String, sendImmediately: Bool) {
-        logger.debug("sending \(messages.count) to \(id)")
+        logger.debug("sending \(messages.count) message to \(id)")
         var data: Data = .init()
         data += BSStringUtils.toBytes(id, includeLength: true)
         for message in messages {

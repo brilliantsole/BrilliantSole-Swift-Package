@@ -174,7 +174,6 @@ struct BSTests {
         }.store(in: &cancellablesStore.cancellables)
         devicePair.isFullyConnectedPublisher.sink { isFullyConnected in
             if isFullyConnected {
-                print("yay, fully connected")
                 BSBleScanner.shared.stopScan()
                 devicePair.setSensorRate(sensorType: .pressure, sensorRate: ._40ms)
             }
@@ -191,8 +190,17 @@ struct BSTests {
                 udpClient.startScan()
             }
         }.store(in: &cancellablesStore.cancellables)
+        var device: BSDevice?
+        udpClient.discoveredDevicePublisher.sink { discoveredDevice in
+            guard device == nil else { return }
+            print("connecting to discoveredDevice \(discoveredDevice.name)")
+            device = discoveredDevice.connect()
+            device?.connectedPublisher.sink { _ in
+                udpClient.stopScan()
+                device?.setSensorRate(sensorType: .acceleration, sensorRate: ._100ms)
+            }.store(in: &cancellablesStore.cancellables)
+        }.store(in: &cancellablesStore.cancellables)
         udpClient.connect()
-
         try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
     }
 }

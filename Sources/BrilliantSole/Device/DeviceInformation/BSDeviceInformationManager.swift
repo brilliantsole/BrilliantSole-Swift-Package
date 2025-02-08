@@ -49,7 +49,7 @@ class BSDeviceInformationManager {
     }
 
     private func updateHasAllInformation() {
-        let missingKey = BSDeviceInformationType.allCases.first {
+        let missingKey = BSDeviceInformationType.allCases.filter(\.isRequired).first {
             !deviceInformation.keys.contains($0)
         }
 
