@@ -31,6 +31,8 @@ let package = Package(
             resources: [
                 .copy("Resources/model.tflite"),
                 .copy("Resources/firmware.bin"),
+                .copy("Resources/firmware2.bin"),
+                .copy("Resources/firmware3.bin"),
             ]
         ),
     ]

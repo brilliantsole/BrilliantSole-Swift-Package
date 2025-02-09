@@ -6,6 +6,7 @@
 //
 
 import Combine
+import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
@@ -57,6 +58,8 @@ public final class BSDevice {
     public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
         didSet {
             logger?.debug("updated connectionStatus \(self.connectionStatus.name)")
+
+            updateCanUpgradeFirmware()
 
             connectionStatusSubject.send((self, connectionStatus))
 
@@ -424,8 +427,43 @@ public final class BSDevice {
     // MARK: - tfliteClassification
 
     let tfliteClassificationSubject: PassthroughSubject<(BSDevice, BSTfliteClassification), Never> = .init()
-    var tfliteClassificationPublisher: AnyPublisher<(BSDevice, BSTfliteClassification), Never> {
+    public var tfliteClassificationPublisher: AnyPublisher<(BSDevice, BSTfliteClassification), Never> {
         tfliteClassificationSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - firmware
+
+    public internal(set) var canUpgradeFirmware: Bool = false
+    var firmwareUpgradeManager: FirmwareUpgradeManager?
+
+    let firmwareUpgradeDidStartSubject: PassthroughSubject<BSDevice, Never> = .init()
+    public var firmwareUpgradeDidStartPublisher: AnyPublisher<BSDevice, Never> {
+        firmwareUpgradeDidStartSubject.eraseToAnyPublisher()
+    }
+
+    let firmwareUpgradeStateDidChangeSubject: PassthroughSubject<(BSDevice, FirmwareUpgradeState, FirmwareUpgradeState), Never> = .init()
+    public var firmwareUpgradeStateDidChangePublisher: AnyPublisher<(BSDevice, FirmwareUpgradeState, FirmwareUpgradeState), Never> {
+        firmwareUpgradeStateDidChangeSubject.eraseToAnyPublisher()
+    }
+
+    let firmwareUpgradeDidCompleteSubject: PassthroughSubject<BSDevice, Never> = .init()
+    public var firmwareUpgradeDidCompletePublisher: AnyPublisher<BSDevice, Never> {
+        firmwareUpgradeDidCompleteSubject.eraseToAnyPublisher()
+    }
+
+    let firmwareUpgradeDidFailSubject: PassthroughSubject<(BSDevice, FirmwareUpgradeState, any Error), Never> = .init()
+    public var firmwareUpgradeDidFailPublisher: AnyPublisher<(BSDevice, FirmwareUpgradeState, any Error), Never> {
+        firmwareUpgradeDidFailSubject.eraseToAnyPublisher()
+    }
+
+    let firmwareUpgradeDidCancelSubject: PassthroughSubject<(BSDevice, FirmwareUpgradeState), Never> = .init()
+    public var firmwareUpgradeDidCancelPublisher: AnyPublisher<(BSDevice, FirmwareUpgradeState), Never> {
+        firmwareUpgradeDidCancelSubject.eraseToAnyPublisher()
+    }
+
+    let firmwareUploadProgressDidChangeSubject: PassthroughSubject<(BSDevice, Int, Int, Float, Date), Never> = .init()
+    public var firmwareUploadProgressDidChangePublisher: AnyPublisher<(BSDevice, Int, Int, Float, Date), Never> {
+        firmwareUploadProgressDidChangeSubject.eraseToAnyPublisher()
     }
 }
 

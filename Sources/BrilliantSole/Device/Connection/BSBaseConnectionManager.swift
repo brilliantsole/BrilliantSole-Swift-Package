@@ -8,7 +8,7 @@
 import Combine
 import OSLog
 
-private let logger = getLogger(category: "BSBaseConnectionManager", disabled: true)
+private let logger = getLogger(category: "BSBaseConnectionManager", disabled: false)
 
 class BSBaseConnectionManager: NSObject, BSConnectionManager {
     class var connectionType: BSConnectionType { fatalError("Must override") }
