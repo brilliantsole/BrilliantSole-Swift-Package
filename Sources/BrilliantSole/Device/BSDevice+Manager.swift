@@ -26,6 +26,7 @@ extension BSDevice {
         setupFileTransfer()
         setupTfliteManager()
         setupVibrationManager()
+        setupFirmwareManager()
         for manager in managers {
             manager.setSendTxMessages { txMessages, sendImmediately in
                 self.sendTxMessages(txMessages, sendImmediately: sendImmediately)

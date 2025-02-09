@@ -230,7 +230,7 @@ struct BSTests {
                 didUpgradeFirmware = true
             }.store(in: &cancellablesStore.cancellables)
             print("updating firmware...")
-            device.upgradeFirmware(fileName: "firmware3", fileExtension: "bin", bundle: .module)
+            device.upgradeFirmware(fileName: "firmware", fileExtension: "bin", bundle: .module)
         })
         try await Task.sleep(nanoseconds: 3 * 60 * 1_000_000_000)
     }

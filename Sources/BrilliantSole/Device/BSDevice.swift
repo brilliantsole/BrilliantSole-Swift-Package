@@ -433,8 +433,9 @@ public final class BSDevice {
 
     // MARK: - firmware
 
+    let firmwareManager: BSFirmwareManager = .init()
+
     public internal(set) var canUpgradeFirmware: Bool = false
-    var firmwareUpgradeManager: FirmwareUpgradeManager?
 
     let firmwareUpgradeDidStartSubject: PassthroughSubject<BSDevice, Never> = .init()
     public var firmwareUpgradeDidStartPublisher: AnyPublisher<BSDevice, Never> {

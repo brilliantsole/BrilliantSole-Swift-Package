@@ -10,6 +10,29 @@ import Foundation
 import iOSMcuManagerLibrary
 
 public extension BSDevice {
+    internal func setupFirmwareManager() {
+        firmwareManager.firmwareUpgradeDidStartPublisher.sink { _ in
+            self.firmwareUpgradeDidStartSubject.send(self)
+        }.store(in: &managerCancellables)
+        firmwareManager.firmwareUpgradeDidFailPublisher.sink { state, error in
+            self.firmwareUpgradeDidFailSubject.send((self, state, error))
+        }.store(in: &managerCancellables)
+        firmwareManager.firmwareUpgradeDidCancelPublisher.sink { state in
+            self.firmwareUpgradeDidCancelSubject.send((self, state))
+        }.store(in: &managerCancellables)
+        firmwareManager.firmwareUpgradeDidCompletePublisher.sink { _ in
+            self.firmwareUpgradeDidCompleteSubject.send(self)
+        }.store(in: &managerCancellables)
+        firmwareManager.firmwareUpgradeStateDidChangePublisher.sink { previousState, newState in
+            self.firmwareUpgradeStateDidChangeSubject.send((self, previousState, newState))
+        }.store(in: &managerCancellables)
+        firmwareManager.firmwareUploadProgressDidChangePublisher.sink { bytesSent, imageSize, progress, timestamp in
+            self.firmwareUploadProgressDidChangeSubject.send((self, bytesSent, imageSize, progress, timestamp))
+        }.store(in: &managerCancellables)
+    }
+
+    // MARK: - canUpgradeFirmware
+
     private func checkCanUpgradeFirmware() -> Bool {
         guard is_iOS || isMacOs else {
             logger?.debug("firmware upgrades only work on iOS and macOS")
@@ -40,6 +63,18 @@ public extension BSDevice {
         canUpgradeFirmware = newCanUpgradeFirmware
     }
 
+    // MARK: - state
+
+    var isUpgradingFirmware: Bool {
+        firmwareManager.isInProgress
+    }
+
+    var isFirmwareUpgradePaused: Bool {
+        firmwareManager.isPaused
+    }
+
+    // MARK: - commands
+
     func upgradeFirmware(fileName: String = "firmware", fileExtension: String = "bin", bundle: Bundle = .main) {
         guard canUpgradeFirmware else {
             return
@@ -51,18 +86,18 @@ public extension BSDevice {
             return
         }
 
-        do {
-            let bleTransport = McuMgrBleTransport(bleConnectionManager.peripheral)
-            firmwareUpgradeManager = FirmwareUpgradeManager(transport: bleTransport, delegate: self)
-            guard let packageURL = bundle.url(forResource: fileName, withExtension: fileExtension) else {
-                logger?.error("file \(fileName).\(fileExtension) not found")
-                return
-            }
-            let package = try McuMgrPackage(from: packageURL)
-            let configuration: FirmwareUpgradeConfiguration = .init(estimatedSwapTime: 10.0, pipelineDepth: 2, upgradeMode: .confirmOnly)
-            try firmwareUpgradeManager?.start(package: package, using: configuration)
-        } catch {
-            logger?.error("error updating firmware: \(error.localizedDescription)")
-        }
+        firmwareManager.upgradeFirmware(fileName: fileName, fileExtension: fileExtension, bundle: bundle, peripheral: bleConnectionManager.peripheral)
+    }
+
+    func cancelFirmwareUpgrade() {
+        firmwareManager.cancel()
+    }
+
+    func resumeFirmwareUpgrade() {
+        firmwareManager.resume()
+    }
+
+    func pauseFirmwareUpgrade() {
+        firmwareManager.pause()
     }
 }
