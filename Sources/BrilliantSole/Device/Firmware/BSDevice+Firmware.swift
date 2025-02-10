@@ -7,7 +7,6 @@
 
 import CoreBluetooth
 import Foundation
-import iOSMcuManagerLibrary
 
 public extension BSDevice {
     internal func setupFirmwareManager() {

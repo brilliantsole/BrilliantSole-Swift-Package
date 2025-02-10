@@ -214,24 +214,26 @@ struct BSTests {
         try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
     }
 
-    @Test func firmwareTest() async throws {
-        var didUpgradeFirmware = false
-        connectToDevice(withName: "Brilliant Sole", onConnectedDevice: { device in
-            guard device.canUpgradeFirmware else {
-                print("cannot update firmware")
-                return
-            }
-            guard !didUpgradeFirmware else {
-                print("already upgraded firmware")
-                return
-            }
-            device.firmwareUpgradeDidCompleteSubject.sink { _ in
-                print("firmware updated successfully")
-                didUpgradeFirmware = true
-            }.store(in: &cancellablesStore.cancellables)
-            print("updating firmware...")
-            device.upgradeFirmware(fileName: "firmware", fileExtension: "bin", bundle: .module)
-        })
-        try await Task.sleep(nanoseconds: 3 * 60 * 1_000_000_000)
-    }
+    #if os(macOS)
+        @Test func firmwareTest() async throws {
+            var didUpgradeFirmware = false
+            connectToDevice(withName: "Brilliant Sole", onConnectedDevice: { device in
+                guard device.canUpgradeFirmware else {
+                    print("cannot update firmware")
+                    return
+                }
+                guard !didUpgradeFirmware else {
+                    print("already upgraded firmware")
+                    return
+                }
+                device.firmwareUpgradeDidCompleteSubject.sink { _ in
+                    print("firmware updated successfully")
+                    didUpgradeFirmware = true
+                }.store(in: &cancellablesStore.cancellables)
+                print("updating firmware...")
+                device.upgradeFirmware(fileName: "firmware", fileExtension: "bin", bundle: .module)
+            })
+            try await Task.sleep(nanoseconds: 3 * 60 * 1_000_000_000)
+        }
+    #endif
 }

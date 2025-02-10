@@ -1,13 +1,13 @@
 {
-  "originHash" : "1c404e3d8478b43d860828b28d5005fa769fb994a442289fd052d25781615531",
+  "originHash" : "74f23572491b13914790fc2cf654e681276874a0f7193aef3ba7a1e4fe7e107d",
   "pins" : [
     {
       "identity" : "ios-nrf-connect-device-manager",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager",
+      "location" : "https://github.com/brilliantsole/IOS-nRF-Connect-Device-Manager.git",
       "state" : {
-        "revision" : "761efdbfd800be3fd30f7e34b585feb75fdaba03",
-        "version" : "1.9.1"
+        "branch" : "main",
+        "revision" : "7ac86eea77a0ddcc4ed2a074c792fd0047154a90"
       }
     },
     {
