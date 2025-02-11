@@ -8,7 +8,16 @@
 import UkatonMacros
 
 @EnumName(accessLevel: "public")
-public enum BSConnectionType: CaseIterable, Sendable {
+public enum BSConnectionType: BSNamedEnum, CaseIterable, Sendable {
     case ble
     case udp
+
+    public var scanner: BSScanner {
+        switch self {
+        case .ble:
+            BSBleScanner.shared
+        case .udp:
+            BSUdpClient.shared
+        }
+    }
 }

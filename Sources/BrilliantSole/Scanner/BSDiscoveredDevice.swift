@@ -18,7 +18,7 @@ public class BSDiscoveredDevice {
         nameSubject.eraseToAnyPublisher()
     }
 
-    private(set) var name: String {
+    public private(set) var name: String {
         get { nameSubject.value }
         set {
             guard name != newValue else {
@@ -35,7 +35,7 @@ public class BSDiscoveredDevice {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
-    private(set) var deviceType: BSDeviceType? {
+    public private(set) var deviceType: BSDeviceType? {
         get { deviceTypeSubject.value }
         set {
             guard newValue != nil else { return }

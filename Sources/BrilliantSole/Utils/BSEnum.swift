@@ -9,11 +9,11 @@ import Foundation
 
 private let logger = getLogger(category: "BSEnum", disabled: true)
 
-public protocol BSNamedEnum {
+public protocol BSNamedEnum: Identifiable {
     var name: String { get }
 }
 
-extension BSNamedEnum: Identifiable {
+public extension BSNamedEnum {
     var id: String { name }
 }
 

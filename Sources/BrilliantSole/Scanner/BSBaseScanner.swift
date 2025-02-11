@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSBaseScanner", disabled: true)
+private let logger = getLogger(category: "BSBaseScanner", disabled: false)
 
 public class BSBaseScanner: NSObject, BSScanner {
     public class var connectionType: BSConnectionType { fatalError("not implemented") }
@@ -33,6 +33,7 @@ public class BSBaseScanner: NSObject, BSScanner {
                 }
             }
             else {
+                stopScan()
                 scanningIsUnavailableSubject.send()
             }
         }
@@ -91,7 +92,7 @@ public class BSBaseScanner: NSObject, BSScanner {
         startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
     }
 
-    public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+    func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         guard !isScanning else {
             logger?.debug("already scanning")
             _continue = false

@@ -52,7 +52,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     // MARK: - scanning
 
-    override public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+    override func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         super.startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
         guard _continue else {
             return

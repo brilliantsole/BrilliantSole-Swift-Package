@@ -9,14 +9,14 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 public class BSBleScanner: BSBaseScanner {
     override private init() {
         super.init()
         isScanningAvailable = centralManager.state == .poweredOn
     }
 
-    nonisolated(unsafe) static let shared = BSBleScanner()
+    public nonisolated(unsafe) static let shared = BSBleScanner()
 
     override public static var connectionType: BSConnectionType { .ble }
 
@@ -26,7 +26,7 @@ public class BSBleScanner: BSBaseScanner {
 
     // MARK: - scanning
 
-    override public func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
+    override func startScan(scanWhenAvailable: Bool, _continue: inout Bool) {
         super.startScan(scanWhenAvailable: scanWhenAvailable, _continue: &_continue)
         guard _continue else {
             return

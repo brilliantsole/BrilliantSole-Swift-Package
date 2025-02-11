@@ -12,6 +12,22 @@ extension BSBleScanner: CBCentralManagerDelegate {
 
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger?.debug("centralManager state: \(String(describing: central.state))")
+        switch central.state {
+        case .unknown:
+            logger?.debug("centralManager state \"unknown\"")
+        case .resetting:
+            logger?.debug("centralManager state \"resetting\"")
+        case .unsupported:
+            logger?.debug("centralManager state \"unsupported\"")
+        case .unauthorized:
+            logger?.debug("centralManager state \"unauthorized\"")
+        case .poweredOff:
+            logger?.debug("centralManager state \"poweredOff\"")
+        case .poweredOn:
+            logger?.debug("centralManager state \"poweredOn\"")
+        @unknown default:
+            logger?.debug("centralManager state \"unknoen\"")
+        }
         isScanningAvailable = centralManager.state == .poweredOn
     }
 
