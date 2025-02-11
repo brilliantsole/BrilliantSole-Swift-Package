@@ -13,6 +13,10 @@ public protocol BSNamedEnum {
     var name: String { get }
 }
 
+extension BSNamedEnum: Identifiable {
+    var id: String { name }
+}
+
 extension BSNamedEnum where Self: CaseIterable {
     init?(name: String, useCamelCase: Bool = true) {
         if let matchingCase = Self.allCases.first(where: { $0.name == (useCamelCase ? camelCaseToSpaces(name) : name) }) {
