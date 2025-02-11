@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSBatteryLevelMessageType: UInt8, BSEnum {
     case batteryLevel
 }

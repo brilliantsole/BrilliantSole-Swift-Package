@@ -8,7 +8,7 @@
 import Foundation
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSVibrationWaveformEffectSegmentType: UInt8, BSEnum {
     case effect
     case delay

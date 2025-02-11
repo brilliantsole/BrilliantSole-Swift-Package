@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSTfliteMessageType: UInt8, BSEnum {
     case getTfliteName
     case setTfliteName

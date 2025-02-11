@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSFileTransferDirection: UInt8, BSEnum {
     case sending
     case receiving

@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSSensorConfigurationMessageType: UInt8, BSEnum {
     case getSensorConfiguration
     case setSensorConfiguration

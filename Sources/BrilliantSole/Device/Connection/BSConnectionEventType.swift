@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSConnectionEventType: UInt8, BSEnum {
     case connectionStatus
     case isConnected

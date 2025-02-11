@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSFileTransferStatus: UInt8, BSEnum {
     case idle
     case sending

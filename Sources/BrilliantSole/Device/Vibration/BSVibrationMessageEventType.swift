@@ -8,5 +8,5 @@
 import Foundation
 import UkatonMacros
 
-// @EnumName
+// @EnumName(accessLevel: "public")
 // public enum BSVibrationMessageEventType: UInt8, BSEnum {}

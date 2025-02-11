@@ -10,7 +10,7 @@ import UkatonMacros
 
 private let logger = getLogger(category: "BSBleUtils", disabled: true)
 
-@EnumName
+@EnumName(accessLevel: "public")
 enum BSBleUUIDType {
     case batteryLevel
     case deviceInformation
@@ -55,7 +55,7 @@ extension BSBleUUID {
     }
 }
 
-@EnumName
+@EnumName(accessLevel: "public")
 enum BSBleServiceUUID: String, BSBleUUID {
     nonisolated(unsafe) static let uuids: [Self: CBUUID] = initializeUUIDs()
 
@@ -89,7 +89,7 @@ enum BSBleServiceUUID: String, BSBleUUID {
     }
 }
 
-@EnumName
+@EnumName(accessLevel: "public")
 enum BSBleCharacteristicUUID: String, BSBleUUID {
     nonisolated(unsafe) static let uuids: [Self: CBUUID] = initializeUUIDs()
 

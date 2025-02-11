@@ -21,7 +21,7 @@ public extension BSDevicePair {
         }
     }
 
-    func checkIsHalfConnected() {
+    internal func checkIsHalfConnected() {
         let newIsHalfConnected = connectedDeviceCount == 1
         logger?.debug("newIsHalfConnected: \(newIsHalfConnected)")
         isHalfConnected = newIsHalfConnected
@@ -40,17 +40,43 @@ public extension BSDevicePair {
         }
     }
 
-    func checkIsFullyConnected() {
+    internal func checkIsFullyConnected() {
         let newIsFullyConnected = connectedDeviceCount == 2
         logger?.debug("newIsFullyConnected: \(newIsFullyConnected)")
         isFullyConnected = newIsFullyConnected
 
         checkIsHalfConnected()
+        checkConnectionStatus()
+    }
+
+    // MARK: - connectionStatus
+
+    private(set) var connectionStatus: BSDevicePairConnectionStatus {
+        get { connectionStatusSubject.value }
+        set {
+            guard newValue != connectionStatus else {
+                logger?.debug("redundant connectionStatus update \(newValue.name)")
+                return
+            }
+            connectionStatusSubject.value = newValue
+        }
+    }
+
+    private func checkConnectionStatus() {
+        let newConnectionStatus: BSDevicePairConnectionStatus
+        if isFullyConnected {
+            newConnectionStatus = .fullyConnected
+        } else if isHalfConnected {
+            newConnectionStatus = .halfConnected
+        } else {
+            newConnectionStatus = .notConnected
+        }
+        connectionStatus = newConnectionStatus
     }
 
     // MARK: - deviceConnectionListeners
 
-    func addDeviceConnectionListeners(device: BSDevice) {
+    internal func addDeviceConnectionListeners(device: BSDevice) {
         device.connectionStatusPublisher.sink { device, connectionStatus in
             self.onDeviceConnectionStatus(device: device, connectionStatus: connectionStatus)
         }.store(in: &deviceCancellables[device]!)
@@ -60,7 +86,7 @@ public extension BSDevicePair {
         }.store(in: &deviceCancellables[device]!)
     }
 
-    func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
+    internal func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
         guard let insoleSide = device.insoleSide else {
             logger?.error("device.insoleSide not found")
             return
@@ -68,7 +94,7 @@ public extension BSDevicePair {
         deviceConnectionStatusSubject.send((self, insoleSide, device, connectionStatus))
     }
 
-    func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
+    internal func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
         guard let insoleSide = device.insoleSide else {
             logger?.error("device.insoleSide not found")
             return

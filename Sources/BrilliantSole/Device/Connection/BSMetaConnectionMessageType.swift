@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSMetaConnectionMessageType: UInt8, BSEnum {
     case rx
     case tx

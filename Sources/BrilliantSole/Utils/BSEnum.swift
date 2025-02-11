@@ -9,7 +9,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSEnum", disabled: true)
 
-protocol BSNamedEnum {
+public protocol BSNamedEnum {
     var name: String { get }
 }
 

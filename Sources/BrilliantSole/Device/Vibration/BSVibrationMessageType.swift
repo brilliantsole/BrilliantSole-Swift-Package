@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSVibrationMessageType: UInt8, BSEnum {
     case triggerVibration
 }

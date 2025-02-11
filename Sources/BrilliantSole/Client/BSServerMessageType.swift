@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 enum BSServerMessageType: UInt8, BSEnum {
     case isScanningAvailable
     case isScanning

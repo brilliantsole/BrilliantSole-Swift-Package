@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSInformationMessageType: UInt8, BSEnum {
     case getMtu
     case getId

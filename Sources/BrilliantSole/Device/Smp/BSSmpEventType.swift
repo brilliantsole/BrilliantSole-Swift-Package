@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSSmpEventType: UInt8, BSEnum {
     case firmwareImages
     case firmwareUploadProgress

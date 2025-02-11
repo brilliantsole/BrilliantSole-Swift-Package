@@ -13,7 +13,7 @@ import UkatonMacros
 public final class BSDevicePair {
     // MARK: - shared
 
-    nonisolated(unsafe) static let shared = BSDevicePair(isShared: true)
+    public nonisolated(unsafe) static let shared = BSDevicePair(isShared: true)
 
     private var isShared: Bool = false
 
@@ -66,17 +66,22 @@ public final class BSDevicePair {
 
     // MARK: - connection
 
+    let connectionStatusSubject: CurrentValueSubject<BSDevicePairConnectionStatus, Never> = .init(.notConnected)
+    public var connectionStatusPublisher: AnyPublisher<BSDevicePairConnectionStatus, Never> {
+        connectionStatusSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - isFullyConnected
 
     let isFullyConnectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
-    var isFullyConnectedPublisher: AnyPublisher<Bool, Never> {
+    public var isFullyConnectedPublisher: AnyPublisher<Bool, Never> {
         isFullyConnectedSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isHalfConnected
 
     let isHalfConnectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
-    var isHalfConnectedPublisher: AnyPublisher<Bool, Never> {
+    public var isHalfConnectedPublisher: AnyPublisher<Bool, Never> {
         isHalfConnectedSubject.eraseToAnyPublisher()
     }
 

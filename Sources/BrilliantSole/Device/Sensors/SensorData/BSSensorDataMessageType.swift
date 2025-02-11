@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSSensorDataMessageType: UInt8, BSEnum {
     case getPressurePositions
     case getSensorScalars

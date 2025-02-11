@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSConnectionType: CaseIterable, Sendable {
     case ble
     case udp

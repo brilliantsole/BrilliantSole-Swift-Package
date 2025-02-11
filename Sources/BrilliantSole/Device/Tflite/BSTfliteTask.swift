@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSTfliteTask: UInt8, BSEnum {
     case classification
     case regression

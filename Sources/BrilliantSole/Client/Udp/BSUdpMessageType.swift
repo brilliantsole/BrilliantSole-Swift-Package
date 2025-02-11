@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 enum BSUdpMessageType: UInt8, BSEnum {
     case ping
     case pong

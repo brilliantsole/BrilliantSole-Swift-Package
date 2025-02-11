@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSSmpMessageType: UInt8, BSEnum {
     case smp
 }

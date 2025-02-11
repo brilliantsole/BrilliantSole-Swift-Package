@@ -8,7 +8,7 @@
 import Foundation
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSDeviceType: UInt8, BSEnum {
     case leftInsole
     case rightInsole

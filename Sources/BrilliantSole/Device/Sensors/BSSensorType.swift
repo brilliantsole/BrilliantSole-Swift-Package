@@ -8,7 +8,7 @@
 import Foundation
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSSensorType: UInt8, BSEnum {
     case pressure
 

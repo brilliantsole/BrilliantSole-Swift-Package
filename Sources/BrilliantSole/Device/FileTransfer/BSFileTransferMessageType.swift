@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSFileTransferMessageType: UInt8, BSEnum {
     case getMaxFileLength
     case getFileTransferType

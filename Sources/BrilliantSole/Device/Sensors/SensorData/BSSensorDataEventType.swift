@@ -7,5 +7,5 @@
 
 import UkatonMacros
 
-// @EnumName
+// @EnumName(accessLevel: "public")
 // public enum BSSensorDataEventType: UInt8, BSEnum {}

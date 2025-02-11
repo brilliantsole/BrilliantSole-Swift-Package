@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSInsoleSide: CaseIterable, Sendable {
     case left
     case right

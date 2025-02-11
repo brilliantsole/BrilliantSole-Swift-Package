@@ -7,5 +7,5 @@
 
 import UkatonMacros
 
-// @EnumName
+// @EnumName(accessLevel: "public")
 // public enum BSTfliteEventType: UInt8, BSEnum {}

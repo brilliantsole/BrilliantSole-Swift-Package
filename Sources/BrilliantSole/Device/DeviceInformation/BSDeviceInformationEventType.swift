@@ -7,7 +7,7 @@
 
 import UkatonMacros
 
-@EnumName
+@EnumName(accessLevel: "public")
 public enum BSDeviceInformationEventType: UInt8, BSEnum {
     case deviceInformation
 }
