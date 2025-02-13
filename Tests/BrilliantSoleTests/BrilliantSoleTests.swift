@@ -11,7 +11,7 @@ nonisolated(unsafe) var tfliteFile: BSTfliteFile = .init(
     fileName: "model",
     bundle: .module,
     modelName: "gestures",
-    sensorTypes: [.linearAcceleration, .gyroscope],
+    sensorTypes: [.gyroscope, .linearAcceleration],
     task: .classification,
     sensorRate: ._10ms,
     captureDelay: 500,
