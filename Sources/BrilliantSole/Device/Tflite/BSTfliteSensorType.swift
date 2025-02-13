@@ -69,9 +69,9 @@ public enum BSTfliteSensorType: CaseIterable {
 
 public typealias BSTfliteSensorTypes = Set<BSTfliteSensorType>
 
-extension Set where Element == BSTfliteSensorType {
-    static func parse(_ data: Data) -> Set<Element>? {
-        var set: Set<Element> = []
+extension Collection where Element == BSTfliteSensorType {
+    static func parse(_ data: Data) -> BSTfliteSensorTypes? {
+        var set: BSTfliteSensorTypes = []
         for rawValue in data {
             guard let value = Element(rawValue: rawValue) else {
                 return nil

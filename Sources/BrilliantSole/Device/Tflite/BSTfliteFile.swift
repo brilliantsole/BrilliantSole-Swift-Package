@@ -14,8 +14,8 @@ public class BSTfliteFile: BSBaseFile {
     override public class var fileType: BSFileType { .tflite }
 
     public let tfliteName: String
-    public let sensorTypes: Set<BSTfliteSensorType>
-    public func getSensorTypes() -> Set<BSSensorType> {
+    public let sensorTypes: BSTfliteSensorTypes
+    public func getSensorTypes() -> [BSSensorType] {
         .init(sensorTypes.map { $0.sensorType })
     }
 

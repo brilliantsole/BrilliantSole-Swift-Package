@@ -10,7 +10,7 @@ import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 public final class BSDevice {
     // MARK: - init
 

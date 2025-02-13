@@ -176,7 +176,7 @@ struct BSTests {
                 print("detected \"\(classification.name)\" gesture")
             }.store(in: &cancellablesStore.cancellables)
         })
-        try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
+        try await Task.sleep(nanoseconds: 1 * 60 * 1_000_000_000)
     }
 
     @Test func devicePairTest() async throws {

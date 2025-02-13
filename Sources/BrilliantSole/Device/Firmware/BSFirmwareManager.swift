@@ -11,7 +11,7 @@ import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     // MARK: - firmwareUpgradeManager
 
