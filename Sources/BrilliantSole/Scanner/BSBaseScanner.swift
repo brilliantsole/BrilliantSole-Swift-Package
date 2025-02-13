@@ -105,8 +105,12 @@ public class BSBaseScanner: NSObject, BSScanner {
             self.scanWhenAvailable = scanWhenAvailable
             return
         }
-        discoveredDevices.removeAll()
+        discoveredDevicesMap.removeAll()
         devices.removeAll()
+
+        discoveredDevices.removeAll()
+        discoveredDevicesSubject.value = discoveredDevices
+
         logger?.debug("starting scan")
         _continue = true
     }
@@ -130,11 +134,18 @@ public class BSBaseScanner: NSObject, BSScanner {
 
     // MARK: - discoveredDevices
 
-    public var discoveredDevices: [String: BSDiscoveredDevice] = .init()
+    public var discoveredDevicesMap: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
+
     private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     public var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
         discoveredDeviceSubject.eraseToAnyPublisher()
+    }
+
+    public private(set) var discoveredDevices: [BSDiscoveredDevice] = .init()
+    private let discoveredDevicesSubject: CurrentValueSubject<[BSDiscoveredDevice], Never> = .init([])
+    public var discoveredDevicesPublisher: AnyPublisher<[BSDiscoveredDevice], Never> {
+        discoveredDevicesSubject.eraseToAnyPublisher()
     }
 
     private let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
@@ -147,20 +158,26 @@ public class BSBaseScanner: NSObject, BSScanner {
         if allDiscoveredDevices[discoveredDevice.id] !== discoveredDevice {
             allDiscoveredDevices[discoveredDevice.id] = discoveredDevice
         }
-        if discoveredDevices[discoveredDevice.id] !== discoveredDevice {
-            discoveredDevices[discoveredDevice.id] = discoveredDevice
+        if discoveredDevicesMap[discoveredDevice.id] !== discoveredDevice {
+            discoveredDevicesMap[discoveredDevice.id] = discoveredDevice
             discoveredDeviceSubject.send(discoveredDevice)
+
+            discoveredDevices.append(discoveredDevice)
+            discoveredDevicesSubject.value = discoveredDevices
         }
     }
 
     func remove(discoveredDevice: BSDiscoveredDevice) {
         logger?.debug("removing discoveredDevice \(discoveredDevice.name)")
-        guard discoveredDevices[discoveredDevice.id] != nil else {
+        guard discoveredDevicesMap[discoveredDevice.id] != nil else {
             logger?.error("no discoveredDevice \(discoveredDevice.name) found")
             return
         }
-        discoveredDevices[discoveredDevice.id] = nil
+        discoveredDevicesMap[discoveredDevice.id] = nil
         expiredDeviceSubject.send(discoveredDevice)
+
+        discoveredDevices.removeAll { $0.id == discoveredDevice.id }
+        discoveredDevicesSubject.value = discoveredDevices
     }
 
     public func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
@@ -186,13 +203,13 @@ public class BSBaseScanner: NSObject, BSScanner {
     private static let discoveredDeviceExpirationInterval: TimeInterval = 5
     @objc func checkExpiredDiscoveredDevices() {
         var deviceIdsToRemove: [String] = .init()
-        for (id, discoveredDevice) in discoveredDevices {
+        for (id, discoveredDevice) in discoveredDevicesMap {
             if discoveredDevice.timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
                 logger?.debug("discoveredDevice \(discoveredDevice.name) expired")
                 deviceIdsToRemove.append(id)
             }
         }
-        deviceIdsToRemove.forEach { remove(discoveredDevice: discoveredDevices[$0]!) }
+        deviceIdsToRemove.forEach { remove(discoveredDevice: discoveredDevicesMap[$0]!) }
     }
 
     private static let checkExpiredDiscoveredDevicesInterval: TimeInterval = 1
@@ -214,8 +231,8 @@ public class BSBaseScanner: NSObject, BSScanner {
     var allDevices: [String: BSDevice] = .init()
 
     private func getDevice(discoveredDevice: BSDiscoveredDevice, createIfNotFound: Bool = false) -> BSDevice? {
-        guard discoveredDevices[discoveredDevice.id] != nil else {
-            fatalError("invalid discoveredDevice \(discoveredDevices)")
+        guard discoveredDevicesMap[discoveredDevice.id] != nil else {
+            fatalError("invalid discoveredDevice \(discoveredDevicesMap)")
         }
         if allDevices[discoveredDevice.id] == nil {
             logger?.debug("no device found for \(discoveredDevice.name)")

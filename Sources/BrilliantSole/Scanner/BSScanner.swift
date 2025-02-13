@@ -37,8 +37,11 @@ public protocol BSScanner {
 
     // MARK: - discoveredDevices
 
-    var discoveredDevices: [String: BSDiscoveredDevice] { get }
+    var discoveredDevicesMap: [String: BSDiscoveredDevice] { get }
+    var discoveredDevices: [BSDiscoveredDevice] { get }
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
+
+    var discoveredDevicesPublisher: AnyPublisher<[BSDiscoveredDevice], Never> { get }
     var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
 
     mutating func connect(to device: BSDiscoveredDevice) -> BSDevice

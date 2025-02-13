@@ -29,7 +29,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         isScanning = false
         isScanningAvailable = false
 
-        discoveredDevices.removeAll()
+        discoveredDevicesMap.removeAll()
         // devices.removeAll()
 
         pendingMessages.removeAll()
