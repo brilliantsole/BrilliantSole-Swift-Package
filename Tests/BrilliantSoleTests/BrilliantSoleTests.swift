@@ -171,6 +171,10 @@ struct BSTests {
                     device.enableTfliteInferencing()
                 }
             }.store(in: &cancellablesStore.cancellables)
+
+            device.tfliteClassificationPublisher.sink { _, classification in
+                print("detected \"\(classification.name)\" gesture")
+            }.store(in: &cancellablesStore.cancellables)
         })
         try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
     }
