@@ -12,11 +12,18 @@ import UkatonMacros
 
 @StaticLogger(disabled: true)
 public final class BSDevice {
+    public nonisolated(unsafe) static let none = BSDevice(isNone: true)
+    private let isNone: Bool
+
     // MARK: - init
 
-    init() {
+    init(isNone: Bool = false) {
+        self.isNone = isNone
         setupManagers()
-        BSDeviceManager.onDeviceCreated(self)
+
+        if !isNone {
+            BSDeviceManager.onDeviceCreated(self)
+        }
     }
 
     convenience init(name: String, deviceType: BSDeviceType?) {
@@ -29,6 +36,7 @@ public final class BSDevice {
 
     convenience init(discoveredDevice: BSDiscoveredDevice) {
         self.init(name: discoveredDevice.name, deviceType: discoveredDevice.deviceType)
+        discoveredDevice.device = self
     }
 
     func reset() {
@@ -480,4 +488,8 @@ extension BSDevice: Hashable {
 
         return !lhs.id.isEmpty && lhs.id == rhs.id
     }
+}
+
+extension BSDevice: BSDeviceMetadata {
+    public var device: BSDevice? { self }
 }

@@ -165,7 +165,7 @@ struct BSTests {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.sendTfliteModel(&tfliteFile)
 
-            device.isTfliteReadyPublisher.sink { device, isTfliteReady in
+            device.isTfliteReadyPublisher.sink { _, isTfliteReady in
                 if isTfliteReady {
                     print("tflite is ready")
                     device.enableTfliteInferencing()

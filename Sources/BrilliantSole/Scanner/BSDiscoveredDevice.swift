@@ -10,59 +10,44 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public class BSDiscoveredDevice {
-    let id: String
+public final class BSDiscoveredDevice {
+    public nonisolated(unsafe) static let none = BSDiscoveredDevice(scanner: BSBleScanner.shared, id: "none", name: "none", deviceType: .leftInsole)
 
-    private let nameSubject: CurrentValueSubject<String, Never> = .init("")
-    public var namePublisher: AnyPublisher<String, Never> {
+    public let id: String
+
+    private lazy var nameSubject: CurrentValueSubject<(BSDiscoveredDevice, String), Never> = .init((self, self.name))
+    public var namePublisher: AnyPublisher<(BSDiscoveredDevice, String), Never> {
         nameSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var name: String {
-        get { nameSubject.value }
-        set {
-            guard name != newValue else {
-                logger?.debug("redundant name assignment \(newValue)")
-                return
-            }
-            logger?.debug("updated name \(newValue)")
-            nameSubject.value = newValue
+    public private(set) var name: String = "" {
+        didSet {
+            logger?.debug("updated name \(self.name)")
+            nameSubject.send((self, name))
         }
     }
 
-    private let deviceTypeSubject: CurrentValueSubject<BSDeviceType?, Never> = .init(nil)
-    public var deviceTypePublisher: AnyPublisher<BSDeviceType?, Never> {
+    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType), Never> = .init((self, self.deviceType))
+    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType), Never> {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var deviceType: BSDeviceType? {
-        get { deviceTypeSubject.value }
-        set {
-            guard newValue != nil else { return }
-            guard deviceType != newValue else {
-                logger?.debug("redundant deviceType assignment \(newValue?.name ?? "nil")")
-                return
-            }
-            logger?.debug("updated deviceType \(newValue?.name ?? "nil")")
-            deviceTypeSubject.value = newValue
+    public private(set) var deviceType: BSDeviceType = .leftInsole {
+        didSet {
+            logger?.debug("updated deviceType \(self.deviceType.name)")
+            deviceTypeSubject.send((self, deviceType))
         }
     }
 
-    private let rssiSubject: CurrentValueSubject<Int?, Never> = .init(nil)
-    public var rssiaPublisher: AnyPublisher<Int?, Never> {
+    private lazy var rssiSubject: CurrentValueSubject<(BSDiscoveredDevice, Int), Never> = .init((self, self.rssi))
+    public var rssiPublisher: AnyPublisher<(BSDiscoveredDevice, Int), Never> {
         rssiSubject.eraseToAnyPublisher()
     }
 
-    private(set) var rssi: Int? {
-        get { rssiSubject.value }
-        set {
-            guard newValue != nil else { return }
-//            guard rssi != newValue else {
-//                logger?.debug("redundant rssi assignment \(newValue ?? 0)")
-//                return
-//            }
-            logger?.debug("updated rssi \(newValue ?? 0)")
-            rssiSubject.value = newValue
+    public private(set) var rssi: Int = 0 {
+        didSet {
+            logger?.debug("updated rssi \(self.rssi)")
+            rssiSubject.send((self, rssi))
         }
     }
 
@@ -73,8 +58,12 @@ public class BSDiscoveredDevice {
         self.id = id
         self.lastTimeUpdated = .now
         self.name = name
-        self.deviceType = deviceType
-        self.rssi = rssi
+        if let deviceType {
+            self.deviceType = deviceType
+        }
+        if let rssi {
+            self.rssi = rssi
+        }
     }
 
     convenience init(scanner: BSScanner, discoveredDeviceJson: BSDiscoveredDeviceJson) {
@@ -110,11 +99,32 @@ public class BSDiscoveredDevice {
 
     private(set) var scanner: BSScanner
 
+    // MARK: - connectionStatus
+
+    private lazy var connectionStatusSubject: CurrentValueSubject<(BSDiscoveredDevice, BSConnectionStatus), Never> = .init((self, connectionStatus))
+    public var connectionStatusPublisher: AnyPublisher<(BSDiscoveredDevice, BSConnectionStatus), Never> {
+        connectionStatusSubject.eraseToAnyPublisher()
+    }
+
+    var connectionStatus: BSConnectionStatus { device?.connectionStatus ?? .notConnected }
+
     // MARK: - device
 
     func connect() -> BSDevice { scanner.connect(to: self) }
     func disconnect() -> BSDevice? { scanner.disconnect(from: self) }
     func toggleConnection() -> BSDevice { scanner.toggleConnection(to: self) }
 
-    var device: BSDevice? { scanner.devices[id] }
+    private var connectionStatusCancellables: Set<AnyCancellable> = []
+    public var device: BSDevice? {
+        didSet {
+            connectionStatusCancellables.removeAll()
+            device?.connectionStatusPublisher.sink { [self] _, connectionStatus in
+                connectionStatusSubject.send((self, connectionStatus))
+            }.store(in: &connectionStatusCancellables)
+        }
+    }
 }
+
+extension BSDiscoveredDevice: Identifiable {}
+
+extension BSDiscoveredDevice: BSDeviceMetadata {}
