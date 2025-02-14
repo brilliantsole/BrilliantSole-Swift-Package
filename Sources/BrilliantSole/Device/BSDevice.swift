@@ -93,38 +93,38 @@ public final class BSDevice: ObservableObject {
     }
 
     private let notConnectedSubject: PassthroughSubject<BSDevice, Never> = .init()
-    var notConnectedPublisher: AnyPublisher<BSDevice, Never> {
+    public var notConnectedPublisher: AnyPublisher<BSDevice, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
     private let connectedSubject: PassthroughSubject<BSDevice, Never> = .init()
-    var connectedPublisher: AnyPublisher<BSDevice, Never> {
+    public var connectedPublisher: AnyPublisher<BSDevice, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
     private let connectingSubject: PassthroughSubject<BSDevice, Never> = .init()
-    var connectingPublisher: AnyPublisher<BSDevice, Never> {
+    public var connectingPublisher: AnyPublisher<BSDevice, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
     private let disconnectingSubject: PassthroughSubject<BSDevice, Never> = .init()
-    var disconnectingPublisher: AnyPublisher<BSDevice, Never> {
+    public var disconnectingPublisher: AnyPublisher<BSDevice, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isConnected
 
     lazy var isConnectedSubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.isConnected))
-    var isConnectedPublisher: AnyPublisher<(BSDevice, Bool), Never> {
+    public var isConnectedPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
 
-    var isConnected: Bool { connectionStatus == .connected }
+    public var isConnected: Bool { connectionStatus == .connected }
 
     // MARK: - batteryLevel
 
     lazy var batteryLevelSubject: CurrentValueSubject<(BSDevice, BSBatteryLevel), Never> = .init((self, self.batteryLevel))
-    var batteryLevelPublisher: AnyPublisher<(BSDevice, BSBatteryLevel), Never> {
+    public var batteryLevelPublisher: AnyPublisher<(BSDevice, BSBatteryLevel), Never> {
         batteryLevelSubject.eraseToAnyPublisher()
     }
 
@@ -143,14 +143,14 @@ public final class BSDevice: ObservableObject {
     // MARK: - batteryCurrent
 
     lazy var batteryCurrentSubject: CurrentValueSubject<(BSDevice, Float), Never> = .init((self, self.batteryCurrent))
-    var batteryCurrentPublisher: AnyPublisher<(BSDevice, Float), Never> {
+    public var batteryCurrentPublisher: AnyPublisher<(BSDevice, Float), Never> {
         batteryCurrentSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isBatteryCharging
 
     lazy var isBatteryChargingSubject: CurrentValueSubject<(BSDevice, Bool), Never> = .init((self, self.isBatteryCharging))
-    var isBatteryChargingPublisher: AnyPublisher<(BSDevice, Bool), Never> {
+    public var isBatteryChargingPublisher: AnyPublisher<(BSDevice, Bool), Never> {
         isBatteryChargingSubject.eraseToAnyPublisher()
     }
 
