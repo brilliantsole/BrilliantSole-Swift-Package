@@ -9,7 +9,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 public class BSBleScanner: BSBaseScanner {
     override private init() {
         super.init()
@@ -67,8 +67,8 @@ public class BSBleScanner: BSBaseScanner {
         }
         else {
             discoveredDevice = .init(scanner: self, peripheral: peripheral)
-            add(discoveredDevice: discoveredDevice!)
         }
+        add(discoveredDevice: discoveredDevice!)
     }
 
     private func onDiscoveredPeripheral(_ peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
@@ -82,8 +82,8 @@ public class BSBleScanner: BSBaseScanner {
         }
         else {
             discoveredDevice = .init(scanner: self, peripheral: peripheral)
-            add(discoveredDevice: discoveredDevice!)
         }
+        add(discoveredDevice: discoveredDevice!)
     }
 
     // MARK: - device

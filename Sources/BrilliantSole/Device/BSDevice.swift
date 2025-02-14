@@ -11,7 +11,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public final class BSDevice {
+public final class BSDevice: ObservableObject {
     public nonisolated(unsafe) static let none = BSDevice(isNone: true)
     private let isNone: Bool
 
@@ -59,12 +59,13 @@ public final class BSDevice {
     // MARK: - connectionStatus
 
     lazy var connectionStatusSubject: CurrentValueSubject<(BSDevice, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
-    var connectionStatusPublisher: AnyPublisher<(BSDevice, BSConnectionStatus), Never> {
+    public var connectionStatusPublisher: AnyPublisher<(BSDevice, BSConnectionStatus), Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
     public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
         didSet {
+            guard connectionStatus != oldValue else { return }
             logger?.debug("updated connectionStatus \(self.connectionStatus.name)")
 
             updateCanUpgradeFirmware()
@@ -131,7 +132,7 @@ public final class BSDevice {
 
     public internal(set) var batteryLevel: BSBatteryLevel = 0 {
         didSet {
-            logger?.debug("updated batteryLevel \(self.batteryLevel)")
+            guard batteryLevel != oldValue else { return }
             didReceiveBatteryLevel = true
             batteryLevelSubject.send((self, batteryLevel))
         }

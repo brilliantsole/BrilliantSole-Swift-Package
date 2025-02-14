@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSBaseScanner", disabled: true)
+private let logger = getLogger(category: "BSBaseScanner", disabled: false)
 
 public class BSBaseScanner: NSObject, BSScanner {
     public class var connectionType: BSConnectionType { fatalError("not implemented") }
@@ -204,7 +204,7 @@ public class BSBaseScanner: NSObject, BSScanner {
     @objc func checkExpiredDiscoveredDevices() {
         var deviceIdsToRemove: [String] = .init()
         for (id, discoveredDevice) in discoveredDevicesMap {
-            if discoveredDevice.timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
+            if let timeSinceLastUpdate = discoveredDevice.timeSinceLastUpdate, timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
                 logger?.debug("discoveredDevice \(discoveredDevice.name) expired")
                 deviceIdsToRemove.append(id)
             }

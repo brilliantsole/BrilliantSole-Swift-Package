@@ -11,7 +11,7 @@ import UkatonMacros
 
 @StaticLogger(disabled: true)
 public final class BSDiscoveredDevice {
-    public nonisolated(unsafe) static let none = BSDiscoveredDevice(scanner: BSBleScanner.shared, id: "none", name: "none", deviceType: .leftInsole)
+    public nonisolated(unsafe) static let none = BSDiscoveredDevice(scanner: BSBleScanner.shared, id: "none", name: "BS Placeholder", deviceType: .leftInsole, rssi: -20)
 
     public let id: String
 
@@ -27,26 +27,26 @@ public final class BSDiscoveredDevice {
         }
     }
 
-    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType), Never> = .init((self, self.deviceType))
-    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType), Never> {
+    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType?), Never> = .init((self, self.deviceType))
+    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType?), Never> {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var deviceType: BSDeviceType = .leftInsole {
+    public private(set) var deviceType: BSDeviceType? {
         didSet {
-            logger?.debug("updated deviceType \(self.deviceType.name)")
+            logger?.debug("updated deviceType \(self.deviceType?.name ?? "nil")")
             deviceTypeSubject.send((self, deviceType))
         }
     }
 
-    private lazy var rssiSubject: CurrentValueSubject<(BSDiscoveredDevice, Int), Never> = .init((self, self.rssi))
-    public var rssiPublisher: AnyPublisher<(BSDiscoveredDevice, Int), Never> {
+    private lazy var rssiSubject: CurrentValueSubject<(BSDiscoveredDevice, Int?), Never> = .init((self, self.rssi))
+    public var rssiPublisher: AnyPublisher<(BSDiscoveredDevice, Int?), Never> {
         rssiSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var rssi: Int = 0 {
+    public private(set) var rssi: Int? {
         didSet {
-            logger?.debug("updated rssi \(self.rssi)")
+            logger?.debug("updated rssi \(self.rssi ?? 0)")
             rssiSubject.send((self, rssi))
         }
     }
@@ -70,12 +70,41 @@ public final class BSDiscoveredDevice {
         self.init(scanner: scanner, id: discoveredDeviceJson.id, name: discoveredDeviceJson.name, deviceType: discoveredDeviceJson.deviceType, rssi: discoveredDeviceJson.rssi)
     }
 
-    // MARK: - update
+    // MARK: - lastTimeUpdated
 
-    private var lastTimeUpdated: Date
-    var timeSinceLastUpdate: TimeInterval {
-        return Date().timeIntervalSince(lastTimeUpdated)
+    public private(set) var lastTimeUpdated: Date {
+        didSet {
+            lastTimeUpdatedSubject.send((self, lastTimeUpdated))
+            timeSinceLastUpdate = lastTimeUpdated.timeIntervalSince(oldValue)
+        }
     }
+
+    private lazy var lastTimeUpdatedSubject: CurrentValueSubject<(BSDiscoveredDevice, Date), Never> = .init((self, self.lastTimeUpdated))
+    public var lastTimeUpdatedPublisher: AnyPublisher<(BSDiscoveredDevice, Date), Never> {
+        lastTimeUpdatedSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - timeSinceLastUpdate
+
+    public private(set) var timeSinceLastUpdate: BSTimeInterval? {
+        didSet {
+            timeSinceLastUpdateSubject.send((self, timeSinceLastUpdate))
+        }
+    }
+
+    public var timeSinceLastUpdateString: String? {
+        guard let timeSinceLastUpdate else {
+            return nil
+        }
+        return timeIntervalString(interval: timeSinceLastUpdate)
+    }
+
+    private lazy var timeSinceLastUpdateSubject: CurrentValueSubject<(BSDiscoveredDevice, BSTimeInterval?), Never> = .init((self, self.timeSinceLastUpdate))
+    public var timeSinceLastUpdatePublisher: AnyPublisher<(BSDiscoveredDevice, BSTimeInterval?), Never> {
+        timeSinceLastUpdateSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - update
 
     func update(name: String? = nil, deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
         if let name {
@@ -97,13 +126,13 @@ public final class BSDiscoveredDevice {
 
     // MARK: - scanner
 
-    private(set) var scanner: BSScanner
+    public private(set) var scanner: BSScanner
 
     // MARK: - connection
 
-    func connect() -> BSDevice { scanner.connect(to: self) }
-    func disconnect() -> BSDevice? { scanner.disconnect(from: self) }
-    func toggleConnection() -> BSDevice { scanner.toggleConnection(to: self) }
+    public func connect() -> BSDevice { scanner.connect(to: self) }
+    public func disconnect() -> BSDevice? { scanner.disconnect(from: self) }
+    public func toggleConnection() -> BSDevice { scanner.toggleConnection(to: self) }
 
     // MARK: - device
 

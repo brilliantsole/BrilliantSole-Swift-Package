@@ -25,8 +25,8 @@ extension BSBaseClient {
         }
         else {
             discoveredDevice = BSDiscoveredDevice(scanner: self, discoveredDeviceJson: discoveredDeviceJson)
-            add(discoveredDevice: discoveredDevice!)
         }
+        add(discoveredDevice: discoveredDevice!)
     }
 
     func parseExpiredDiscoveredDevice(_ data: Data) {
