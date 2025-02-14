@@ -14,10 +14,10 @@ extension BSBaseClient {
             return
         }
 
-        guard discoveredDeviceJson.deviceType != nil else {
-            logger?.debug("discoveredDeviceJson has no deviceType - waiting until it does")
-            return
-        }
+//        guard discoveredDeviceJson.deviceType != nil else {
+//            logger?.debug("discoveredDeviceJson has no deviceType - waiting until it does")
+//            return
+//        }
 
         var discoveredDevice = allDiscoveredDevices[discoveredDeviceJson.id]
         if let discoveredDevice {

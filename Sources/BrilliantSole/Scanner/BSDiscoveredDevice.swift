@@ -99,32 +99,24 @@ public final class BSDiscoveredDevice {
 
     private(set) var scanner: BSScanner
 
-    // MARK: - connectionStatus
-
-    private lazy var connectionStatusSubject: CurrentValueSubject<(BSDiscoveredDevice, BSConnectionStatus), Never> = .init((self, connectionStatus))
-    public var connectionStatusPublisher: AnyPublisher<(BSDiscoveredDevice, BSConnectionStatus), Never> {
-        connectionStatusSubject.eraseToAnyPublisher()
-    }
-
-    var connectionStatus: BSConnectionStatus { device?.connectionStatus ?? .notConnected }
-
-    // MARK: - device
+    // MARK: - connection
 
     func connect() -> BSDevice { scanner.connect(to: self) }
     func disconnect() -> BSDevice? { scanner.disconnect(from: self) }
     func toggleConnection() -> BSDevice { scanner.toggleConnection(to: self) }
 
-    private var connectionStatusCancellables: Set<AnyCancellable> = []
+    // MARK: - device
+
+    private lazy var deviceSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDevice?), Never> = .init((self, nil))
+    public var devicePublisher: AnyPublisher<(BSDiscoveredDevice, BSDevice?), Never> {
+        deviceSubject.eraseToAnyPublisher()
+    }
+
     public var device: BSDevice? {
         didSet {
-            connectionStatusCancellables.removeAll()
-            device?.connectionStatusPublisher.sink { [self] _, connectionStatus in
-                connectionStatusSubject.send((self, connectionStatus))
-            }.store(in: &connectionStatusCancellables)
+            deviceSubject.send((self, device))
         }
     }
 }
 
 extension BSDiscoveredDevice: Identifiable {}
-
-extension BSDiscoveredDevice: BSDeviceMetadata {}

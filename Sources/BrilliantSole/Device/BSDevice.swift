@@ -489,7 +489,3 @@ extension BSDevice: Hashable {
         return !lhs.id.isEmpty && lhs.id == rhs.id
     }
 }
-
-extension BSDevice: BSDeviceMetadata {
-    public var device: BSDevice? { self }
-}
