@@ -9,7 +9,7 @@ import UkatonMacros
 
 @StaticLogger(disabled: true)
 class BSClientConnectionManager: BSBaseConnectionManager {
-    override class var connectionType: BSConnectionType { .udp }
+    override class var connectionType: BSConnectionType { .udpClient }
 
     // MARK: - client
 
