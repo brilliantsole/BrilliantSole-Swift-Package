@@ -28,19 +28,19 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     var listener: NWListener?
     var reconnectTask: DispatchWorkItem?
 
-    public var host: String = "127.0.0.1" {
+    public var ipAddress: String = "127.0.0.1" {
         didSet {
             if connectionStatus != .notConnected {
                 logger?.error("cannot change host while connected")
-                host = oldValue
-            } else if !isValidIpAddress(host) {
+                ipAddress = oldValue
+            } else if !isValidIpAddress(ipAddress) {
                 logger?.error("invalid host address")
-                host = oldValue
+                ipAddress = oldValue
             }
         }
     }
 
-    private func isValidIpAddress(_ ip: String) -> Bool {
+    public func isValidIpAddress(_ ip: String) -> Bool {
         let regex = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"
         return ip.range(of: regex, options: .regularExpression) != nil
     }
@@ -107,6 +107,8 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         stopPinging()
         reconnectTask?.cancel()
         reconnectTask = nil
+
+        connectionStatus = .notConnected
     }
 
     // MARK: - ping

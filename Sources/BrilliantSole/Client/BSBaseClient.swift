@@ -80,7 +80,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     // MARK: - connection
 
     lazy var connectionStatusSubject: CurrentValueSubject<(BSClient, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
-    var connectionStatusPublisher: AnyPublisher<(BSClient, BSConnectionStatus), Never> {
+    public var connectionStatusPublisher: AnyPublisher<(BSClient, BSConnectionStatus), Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
@@ -125,30 +125,30 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         }
     }
 
-    private let notConnectedSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
-    var notConnectedPublisher: AnyPublisher<BSDeviceClient, Never> {
+    private let notConnectedSubject: PassthroughSubject<BSClient, Never> = .init()
+    public var notConnectedPublisher: AnyPublisher<BSClient, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectedSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
-    var connectedPublisher: AnyPublisher<BSDeviceClient, Never> {
+    private let connectedSubject: PassthroughSubject<BSClient, Never> = .init()
+    public var connectedPublisher: AnyPublisher<BSClient, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectingSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
-    var connectingPublisher: AnyPublisher<BSDeviceClient, Never> {
+    private let connectingSubject: PassthroughSubject<BSClient, Never> = .init()
+    public var connectingPublisher: AnyPublisher<BSClient, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
-    private let disconnectingSubject: PassthroughSubject<BSDeviceClient, Never> = .init()
-    var disconnectingPublisher: AnyPublisher<BSDeviceClient, Never> {
+    private let disconnectingSubject: PassthroughSubject<BSClient, Never> = .init()
+    public var disconnectingPublisher: AnyPublisher<BSClient, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isConnected
 
     lazy var isConnectedSubject: CurrentValueSubject<(BSClient, Bool), Never> = .init((self, self.isConnected))
-    var isConnectedPublisher: AnyPublisher<(BSClient, Bool), Never> {
+    public var isConnectedPublisher: AnyPublisher<(BSClient, Bool), Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
 

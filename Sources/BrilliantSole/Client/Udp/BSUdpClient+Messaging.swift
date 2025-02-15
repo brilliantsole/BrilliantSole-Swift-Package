@@ -12,7 +12,7 @@ extension BSUdpClient {
     // MARK: - sending
 
     func startSending() {
-        let hostNW = NWEndpoint.Host(host)
+        let hostNW = NWEndpoint.Host(ipAddress)
         let portNW = NWEndpoint.Port(rawValue: sendPort)!
 
         connection = NWConnection(host: hostNW, port: portNW, using: .udp)
@@ -21,7 +21,7 @@ extension BSUdpClient {
             logger?.debug("newState \(String(describing: newState))")
             switch newState {
             case .ready:
-                logger?.debug("connected to \(self.host):\(self.sendPort)")
+                logger?.debug("connected to \(self.ipAddress):\(self.sendPort)")
                 self.startPinging()
             case .failed(let error):
                 logger?.error("Connection failed: \(error), retrying...")
