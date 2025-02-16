@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
+public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
     public nonisolated(unsafe) static let none = BSDiscoveredDevice(scanner: BSBleScanner.shared, id: "none", name: "BS Placeholder", deviceType: .leftInsole, rssi: -20)
 
     public let id: String

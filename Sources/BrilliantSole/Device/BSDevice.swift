@@ -11,17 +11,18 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public final class BSDevice: ObservableObject, BSConnectable, BSDeviceMetadata {
-    public nonisolated(unsafe) static let none = BSDevice(isNone: true)
-    private let isNone: Bool
+public final class BSDevice: ObservableObject, BSConnectable, BSMetaDevice {
+    public nonisolated(unsafe) static let mock = BSDevice(isMock: true)
+    private let isMock: Bool
 
     // MARK: - init
 
-    init(isNone: Bool = false) {
-        self.isNone = isNone
+    init(isMock: Bool = false) {
+        self.isMock = isMock
+        informationManager.initName("mock device")
         setupManagers()
 
-        if !isNone {
+        if !isMock {
             BSDeviceManager.onDeviceCreated(self)
         }
     }

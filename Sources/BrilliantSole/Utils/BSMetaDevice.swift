@@ -7,7 +7,7 @@
 
 import Combine
 
-public protocol BSDeviceMetadata {
+public protocol BSMetaDevice {
     var name: String { get }
     var namePublisher: AnyPublisher<String, Never> { get }
 
