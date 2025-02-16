@@ -9,8 +9,10 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
+    public var connectionType: BSConnectionType? { nil }
+
     override init() {
         super.init()
 
@@ -30,7 +32,10 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         isScanningAvailable = false
 
         discoveredDevicesMap.removeAll()
-        // devices.removeAll()
+        devices.removeAll()
+
+        discoveredDevices.removeAll()
+        discoveredDevicesSubject.value = discoveredDevices
 
         pendingMessages.removeAll()
 
@@ -79,8 +84,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
     // MARK: - connection
 
-    lazy var connectionStatusSubject: CurrentValueSubject<(BSClient, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
-    public var connectionStatusPublisher: AnyPublisher<(BSClient, BSConnectionStatus), Never> {
+    lazy var connectionStatusSubject: CurrentValueSubject<(any BSClient, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
+    public var connectionStatusPublisher: AnyPublisher<(any BSClient, BSConnectionStatus), Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
@@ -125,30 +130,30 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         }
     }
 
-    private let notConnectedSubject: PassthroughSubject<BSClient, Never> = .init()
-    public var notConnectedPublisher: AnyPublisher<BSClient, Never> {
+    private let notConnectedSubject: PassthroughSubject<any BSClient, Never> = .init()
+    public var notConnectedPublisher: AnyPublisher<any BSClient, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectedSubject: PassthroughSubject<BSClient, Never> = .init()
-    public var connectedPublisher: AnyPublisher<BSClient, Never> {
+    private let connectedSubject: PassthroughSubject<any BSClient, Never> = .init()
+    public var connectedPublisher: AnyPublisher<any BSClient, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectingSubject: PassthroughSubject<BSClient, Never> = .init()
-    public var connectingPublisher: AnyPublisher<BSClient, Never> {
+    private let connectingSubject: PassthroughSubject<any BSClient, Never> = .init()
+    public var connectingPublisher: AnyPublisher<any BSClient, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
-    private let disconnectingSubject: PassthroughSubject<BSClient, Never> = .init()
-    public var disconnectingPublisher: AnyPublisher<BSClient, Never> {
+    private let disconnectingSubject: PassthroughSubject<any BSClient, Never> = .init()
+    public var disconnectingPublisher: AnyPublisher<any BSClient, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isConnected
 
-    lazy var isConnectedSubject: CurrentValueSubject<(BSClient, Bool), Never> = .init((self, self.isConnected))
-    public var isConnectedPublisher: AnyPublisher<(BSClient, Bool), Never> {
+    lazy var isConnectedSubject: CurrentValueSubject<(any BSClient, Bool), Never> = .init((self, self.isConnected))
+    public var isConnectedPublisher: AnyPublisher<(any BSClient, Bool), Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
 

@@ -33,7 +33,7 @@ public extension BSFile {
 
         do {
             let fileData = try Data(contentsOf: fileURL)
-            print("loaded file with \(fileData.count) bytes")
+            logger?.debug("loaded file with \(fileData.count) bytes")
             self.fileData = fileData
             return fileData
         } catch {

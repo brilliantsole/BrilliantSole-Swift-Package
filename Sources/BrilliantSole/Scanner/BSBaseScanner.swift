@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSBaseScanner", disabled: true)
+private let logger = getLogger(category: "BSBaseScanner", disabled: false)
 
 public class BSBaseScanner: NSObject, BSScanner {
     public class var connectionType: BSConnectionType { fatalError("not implemented") }
@@ -137,13 +137,13 @@ public class BSBaseScanner: NSObject, BSScanner {
     public var discoveredDevicesMap: [String: BSDiscoveredDevice] = .init()
     var allDiscoveredDevices: [String: BSDiscoveredDevice] = .init()
 
-    private let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    let discoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
     public var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
         discoveredDeviceSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var discoveredDevices: [BSDiscoveredDevice] = .init()
-    private let discoveredDevicesSubject: CurrentValueSubject<[BSDiscoveredDevice], Never> = .init([])
+    public internal(set) var discoveredDevices: [BSDiscoveredDevice] = .init()
+    let discoveredDevicesSubject: CurrentValueSubject<[BSDiscoveredDevice], Never> = .init([])
     public var discoveredDevicesPublisher: AnyPublisher<[BSDiscoveredDevice], Never> {
         discoveredDevicesSubject.eraseToAnyPublisher()
     }
@@ -154,10 +154,11 @@ public class BSBaseScanner: NSObject, BSScanner {
     }
 
     func add(discoveredDevice: BSDiscoveredDevice) {
-        logger?.debug("adding discoveredDevice \(discoveredDevice.name)")
+        logger?.debug("adding discoveredDevice \(discoveredDevice.name) \(discoveredDevice.id)")
         if allDiscoveredDevices[discoveredDevice.id] !== discoveredDevice {
             allDiscoveredDevices[discoveredDevice.id] = discoveredDevice
         }
+        logger?.debug("already discovered? \(self.discoveredDevicesMap[discoveredDevice.id] != nil)")
         if discoveredDevicesMap[discoveredDevice.id] !== discoveredDevice {
             discoveredDevicesMap[discoveredDevice.id] = discoveredDevice
             discoveredDeviceSubject.send(discoveredDevice)
@@ -180,18 +181,21 @@ public class BSBaseScanner: NSObject, BSScanner {
         discoveredDevicesSubject.value = discoveredDevices
     }
 
+    @discardableResult
     public func connect(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.connect()
         return device
     }
 
+    @discardableResult
     public func disconnect(from discoveredDevice: BSDiscoveredDevice) -> BSDevice? {
         let device = getDevice(discoveredDevice: discoveredDevice)
         device?.disconnect()
         return device
     }
 
+    @discardableResult
     public func toggleConnection(to discoveredDevice: BSDiscoveredDevice) -> BSDevice {
         let device = getDevice(discoveredDevice: discoveredDevice, createIfNotFound: true)!
         device.toggleConnection()

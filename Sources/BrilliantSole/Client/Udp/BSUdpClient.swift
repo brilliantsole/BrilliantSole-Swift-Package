@@ -11,7 +11,9 @@ import OSLog
 import UkatonMacros
 
 public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
-    static let _logger = getLogger(category: "BSUdpClient", disabled: true)
+    public override var connectionType: BSConnectionType? { .udpClient }
+
+    static let _logger = getLogger(category: "BSUdpClient", disabled: false)
     override var logger: Logger? { Self._logger }
 
     override func reset() {
@@ -121,9 +123,8 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             stopPinging()
         }
 
-        DispatchQueue.main.async { [self] in
-            pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
-        }
+        pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
+        pingTimer?.tolerance = 0.1
         ping()
     }
 
@@ -160,10 +161,8 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             stopWaitingForPong()
         }
         logger?.debug("waiting for pong...")
-
-        DispatchQueue.main.async { [self] in
-            pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
-        }
+        pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
+        pongTimer?.tolerance = 0.1
     }
 
     func stopWaitingForPong() {

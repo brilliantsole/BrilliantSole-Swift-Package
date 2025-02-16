@@ -205,7 +205,9 @@ struct BSTests {
             }
         }.store(in: &cancellablesStore.cancellables)
         var device: BSDevice?
+
         udpClient.discoveredDevicePublisher.sink { discoveredDevice in
+            return
             guard device == nil else { return }
             print("connecting to discoveredDevice \(discoveredDevice.name)")
             device = discoveredDevice.connect()
@@ -213,6 +215,10 @@ struct BSTests {
                 udpClient.stopScan()
                 device?.setSensorRate(sensorType: .acceleration, sensorRate: ._100ms)
             }.store(in: &cancellablesStore.cancellables)
+        }.store(in: &cancellablesStore.cancellables)
+
+        udpClient.discoveredDevicesPublisher.sink { discoveredDevices in
+            print("discovered \(discoveredDevices.count) devices")
         }.store(in: &cancellablesStore.cancellables)
         udpClient.connect()
         try await Task.sleep(nanoseconds: 30 * 1_000_000_000)

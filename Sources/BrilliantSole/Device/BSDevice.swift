@@ -11,7 +11,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public final class BSDevice: ObservableObject {
+public final class BSDevice: ObservableObject, BSConnectable, BSDeviceMetadata {
     public nonisolated(unsafe) static let none = BSDevice(isNone: true)
     private let isNone: Bool
 

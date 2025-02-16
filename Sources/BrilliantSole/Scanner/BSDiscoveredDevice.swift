@@ -10,7 +10,7 @@ import OSLog
 import UkatonMacros
 
 @StaticLogger(disabled: true)
-public final class BSDiscoveredDevice {
+public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
     public nonisolated(unsafe) static let none = BSDiscoveredDevice(scanner: BSBleScanner.shared, id: "none", name: "BS Placeholder", deviceType: .leftInsole, rssi: -20)
 
     public let id: String
@@ -27,14 +27,14 @@ public final class BSDiscoveredDevice {
         }
     }
 
-    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType?), Never> = .init((self, self.deviceType))
-    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType?), Never> {
+    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType), Never> = .init((self, self.deviceType))
+    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType), Never> {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
-    public private(set) var deviceType: BSDeviceType? {
+    public private(set) var deviceType: BSDeviceType = .leftInsole {
         didSet {
-            logger?.debug("updated deviceType \(self.deviceType?.name ?? "nil")")
+            logger?.debug("updated deviceType \(self.deviceType.name)")
             deviceTypeSubject.send((self, deviceType))
         }
     }
@@ -130,9 +130,49 @@ public final class BSDiscoveredDevice {
 
     // MARK: - connection
 
-    public func connect() -> BSDevice { scanner.connect(to: self) }
-    public func disconnect() -> BSDevice? { scanner.disconnect(from: self) }
-    public func toggleConnection() -> BSDevice { scanner.toggleConnection(to: self) }
+    public var connectionType: BSConnectionType? { scanner.connectionType }
+
+    public func connect() { _ = scanner.connect(to: self) }
+    public func disconnect() { _ = scanner.disconnect(from: self) }
+    public func toggleConnection() { _ = scanner.toggleConnection(to: self) }
+
+    // MARK: - connectionStatus
+
+    public var connectionStatus: BSConnectionStatus { device?.connectionStatus ?? .notConnected }
+
+    lazy var connectionStatusSubject: CurrentValueSubject<(BSDiscoveredDevice, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
+    public var connectionStatusPublisher: AnyPublisher<(BSDiscoveredDevice, BSConnectionStatus), Never> {
+        connectionStatusSubject.eraseToAnyPublisher()
+    }
+
+    private let notConnectedSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    public var notConnectedPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        notConnectedSubject.eraseToAnyPublisher()
+    }
+
+    private let connectedSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    public var connectedPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        connectedSubject.eraseToAnyPublisher()
+    }
+
+    private let connectingSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    public var connectingPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        connectingSubject.eraseToAnyPublisher()
+    }
+
+    private let disconnectingSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    public var disconnectingPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        disconnectingSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - isConnected
+
+    lazy var isConnectedSubject: CurrentValueSubject<(BSDiscoveredDevice, Bool), Never> = .init((self, self.isConnected))
+    public var isConnectedPublisher: AnyPublisher<(BSDiscoveredDevice, Bool), Never> {
+        isConnectedSubject.eraseToAnyPublisher()
+    }
+
+    public var isConnected: Bool { device?.isConnected ?? false }
 
     // MARK: - device
 
@@ -141,8 +181,32 @@ public final class BSDiscoveredDevice {
         deviceSubject.eraseToAnyPublisher()
     }
 
+    private var deviceCancellables: Set<AnyCancellable> = []
+
     public var device: BSDevice? {
         didSet {
+            deviceCancellables.removeAll()
+
+            device?.connectionStatusPublisher.sink { [self] _, connectionStatus in
+                connectionStatusSubject.send((self, connectionStatus))
+            }.store(in: &deviceCancellables)
+            device?.isConnectedPublisher.sink { [self] _, isConnected in
+                isConnectedSubject.send((self, isConnected))
+            }.store(in: &deviceCancellables)
+
+            device?.connectedPublisher.sink { [self] _ in
+                connectedSubject.send(self)
+            }.store(in: &deviceCancellables)
+            device?.connectingPublisher.sink { [self] _ in
+                connectingSubject.send(self)
+            }.store(in: &deviceCancellables)
+            device?.disconnectingPublisher.sink { [self] _ in
+                disconnectingSubject.send(self)
+            }.store(in: &deviceCancellables)
+            device?.notConnectedPublisher.sink { [self] _ in
+                notConnectedSubject.send(self)
+            }.store(in: &deviceCancellables)
+
             deviceSubject.send((self, device))
         }
     }
