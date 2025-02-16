@@ -267,4 +267,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         logger?.debug("fully connected")
         connectionStatus = .connected
     }
+
+    deinit {
+        disconnect()
+    }
 }

@@ -11,7 +11,7 @@ import OSLog
 import UkatonMacros
 
 public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
-    public override var connectionType: BSConnectionType? { .udpClient }
+    override public var connectionType: BSConnectionType? { .udpClient }
 
     static let _logger = getLogger(category: "BSUdpClient", disabled: false)
     override var logger: Logger? { Self._logger }
@@ -123,8 +123,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             stopPinging()
         }
 
-        pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
-        pingTimer?.tolerance = 0.1
+        DispatchQueue.main.async { [self] in
+            pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
+            pingTimer?.tolerance = 0.1
+        }
         ping()
     }
 
@@ -141,6 +143,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     }
 
     @objc private func ping() {
+        print("PING")
         let message: BSUdpMessage
         if didSetReceivePort {
             logger?.debug("pinging")
@@ -161,8 +164,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             stopWaitingForPong()
         }
         logger?.debug("waiting for pong...")
-        pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: true)
-        pongTimer?.tolerance = 0.1
+        DispatchQueue.main.async { [self] in
+            pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: false)
+            pongTimer?.tolerance = 0.1
+        }
     }
 
     func stopWaitingForPong() {
@@ -172,6 +177,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     }
 
     @objc private func pongTimeout() {
+        print("PONG TIMEOUT")
         logger?.debug("pongTimeout")
         disconnectedUnintentionally = true
         disconnect()
@@ -224,5 +230,10 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             }
             logger?.debug("sent data")
         })
+    }
+
+    deinit {
+        stopPinging()
+        stopWaitingForPong()
     }
 }
