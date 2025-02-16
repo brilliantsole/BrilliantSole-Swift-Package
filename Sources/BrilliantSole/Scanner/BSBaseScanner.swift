@@ -208,7 +208,7 @@ public class BSBaseScanner: NSObject, BSScanner {
     @objc func checkExpiredDiscoveredDevices() {
         var deviceIdsToRemove: [String] = .init()
         for (id, discoveredDevice) in discoveredDevicesMap {
-            if let timeSinceLastUpdate = discoveredDevice.timeSinceLastUpdate, timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
+            if !discoveredDevice.isConnected, let timeSinceLastUpdate = discoveredDevice.timeSinceLastUpdate, timeSinceLastUpdate > Self.discoveredDeviceExpirationInterval {
                 logger?.debug("discoveredDevice \(discoveredDevice.name) expired")
                 deviceIdsToRemove.append(id)
             }

@@ -34,8 +34,8 @@ public class BSBleScanner: BSBaseScanner {
         centralManager.scanForPeripherals(withServices: [BSBleServiceUUID.main.uuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         isScanning = centralManager.isScanning
 
-//        let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [BSBleServiceUUID.main.uuid])
-//        peripherals.forEach { onPeripheral($0) }
+        let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [BSBleServiceUUID.main.uuid])
+        peripherals.forEach { onPeripheral($0) }
     }
 
     override public func stopScan(_continue: inout Bool) {

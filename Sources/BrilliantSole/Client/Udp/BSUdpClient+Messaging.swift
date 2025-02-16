@@ -18,13 +18,13 @@ extension BSUdpClient {
         connection = NWConnection(host: hostNW, port: portNW, using: .udp)
         connection?.stateUpdateHandler = { [weak self] newState in
             guard let self = self else { return }
-            logger?.debug("newState \(String(describing: newState))")
+            logger?.debug("newState \"\(String(describing: newState))\"")
             switch newState {
             case .ready:
                 logger?.debug("connected to \(self.ipAddress):\(self.sendPort)")
                 self.startPinging()
             case .failed(let error):
-                logger?.error("Connection failed: \(error), retrying...")
+                logger?.error("connection failed: \(error), retrying...")
                 self.scheduleReconnect(delay: 2.0, isListener: false)
             case .preparing:
                 break
@@ -56,9 +56,9 @@ extension BSUdpClient {
             }
 
             listener?.start(queue: .global())
-            logger?.debug("Listening on port \(self.receivePort)")
+            logger?.debug("listening on port \(self.receivePort)")
         } catch {
-            logger?.error("Failed to start UDP listener: \(error)")
+            logger?.error("failed to start UDP listener: \(error)")
             scheduleReconnect(delay: 2.0, isListener: true)
         }
     }
@@ -68,10 +68,10 @@ extension BSUdpClient {
         reconnectTask = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             if isListener {
-                logger?.debug("Restarting UDP listener...")
+                logger?.debug("restarting UDP listener...")
                 self.startReceiving()
             } else {
-                logger?.debug("Reconnecting UDP sender...")
+                logger?.debug("reconnecting UDP sender...")
                 self.startSending()
             }
         }
@@ -86,7 +86,7 @@ extension BSUdpClient {
                 onUdpData(data)
             }
             if let error {
-                logger?.error("Receive error: \(error)")
+                logger?.error("receive error: \(error)")
             }
             self.receiveMessage(connection)
         }
