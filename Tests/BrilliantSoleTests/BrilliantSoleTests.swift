@@ -104,10 +104,11 @@ struct BSTests {
             foundDevice = true
             BSBleScanner.shared.stopScan()
             print("connecting to discoveredDevice \(discoveredDevice)")
-            let device = discoveredDevice.connect()
-            device.connectedPublisher.sink { _ in
-                print("connected to device \"\(device.name)\"")
-                onConnectedDevice?(device)
+            discoveredDevice.connect()
+            let device = discoveredDevice.device
+            device?.connectedPublisher.sink { _ in
+                print("connected to device \"\(device!.name)\"")
+                onConnectedDevice?(device!)
             }.store(in: &cancellablesStore.cancellables)
         }.store(in: &cancellablesStore.cancellables)
     }
@@ -133,12 +134,12 @@ struct BSTests {
     @Test func deviceSensorDataTest() async throws {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.setSensorRate(sensorType: .orientation, sensorRate: ._100ms)
-            device.pressureDataPublisher.sink { _, pressureData, _ in
+            device.pressureDataPublisher.sink { pressureData, _ in
                 for (index, sensor) in pressureData.sensors.enumerated() {
                     print("#\(index): \(sensor.rawValue)")
                 }
             }.store(in: &cancellablesStore.cancellables)
-            device.orientationPublisher.sink { _, orientation, _ in
+            device.orientationPublisher.sink { orientation, _ in
                 print("orientation \(orientation.eulerAngles(order: .xyz))")
             }.store(in: &cancellablesStore.cancellables)
         })
@@ -165,14 +166,14 @@ struct BSTests {
         connectToDevice(withName: "Right 3", onConnectedDevice: { device in
             device.sendTfliteModel(&tfliteFile)
 
-            device.isTfliteReadyPublisher.sink { _, isTfliteReady in
+            device.isTfliteReadyPublisher.sink { isTfliteReady in
                 if isTfliteReady {
                     print("tflite is ready")
                     device.enableTfliteInferencing()
                 }
             }.store(in: &cancellablesStore.cancellables)
 
-            device.tfliteClassificationPublisher.sink { _, classification in
+            device.tfliteClassificationPublisher.sink {  classification in
                 print("detected \"\(classification.name)\" gesture")
             }.store(in: &cancellablesStore.cancellables)
         })
@@ -210,7 +211,8 @@ struct BSTests {
             return
             guard device == nil else { return }
             print("connecting to discoveredDevice \(discoveredDevice.name)")
-            device = discoveredDevice.connect()
+            discoveredDevice.connect()
+            device = discoveredDevice.device
             device?.connectedPublisher.sink { _ in
                 udpClient.stopScan()
                 device?.setSensorRate(sensorType: .acceleration, sensorRate: ._100ms)

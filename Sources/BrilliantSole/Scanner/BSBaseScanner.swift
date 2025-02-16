@@ -255,7 +255,7 @@ public class BSBaseScanner: NSObject, BSScanner {
         logger?.debug("creating device for \(discoveredDevice.name)")
         let device: BSDevice = .init(discoveredDevice: discoveredDevice)
         allDevices[discoveredDevice.id] = device
-        device.isConnectedPublisher.sink { [weak self] device, isConnected in
+        device.isConnectedPublisher.sink { [weak self] isConnected in
             if isConnected {
                 self?.devices[discoveredDevice.id] = device
             }

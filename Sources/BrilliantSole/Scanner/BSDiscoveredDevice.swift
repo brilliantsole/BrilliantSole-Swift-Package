@@ -15,39 +15,39 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
 
     public let id: String
 
-    private lazy var nameSubject: CurrentValueSubject<(BSDiscoveredDevice, String), Never> = .init((self, self.name))
-    public var namePublisher: AnyPublisher<(BSDiscoveredDevice, String), Never> {
+    private lazy var nameSubject: CurrentValueSubject<String, Never> = .init(self.name)
+    public var namePublisher: AnyPublisher<String, Never> {
         nameSubject.eraseToAnyPublisher()
     }
 
     public private(set) var name: String = "" {
         didSet {
             logger?.debug("updated name \(self.name)")
-            nameSubject.send((self, name))
+            nameSubject.send(name)
         }
     }
 
-    private lazy var deviceTypeSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDeviceType), Never> = .init((self, self.deviceType))
-    public var deviceTypePublisher: AnyPublisher<(BSDiscoveredDevice, BSDeviceType), Never> {
+    private lazy var deviceTypeSubject: CurrentValueSubject<BSDeviceType, Never> = .init(self.deviceType)
+    public var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> {
         deviceTypeSubject.eraseToAnyPublisher()
     }
 
     public private(set) var deviceType: BSDeviceType = .leftInsole {
         didSet {
             logger?.debug("updated deviceType \(self.deviceType.name)")
-            deviceTypeSubject.send((self, deviceType))
+            deviceTypeSubject.send(deviceType)
         }
     }
 
-    private lazy var rssiSubject: CurrentValueSubject<(BSDiscoveredDevice, Int?), Never> = .init((self, self.rssi))
-    public var rssiPublisher: AnyPublisher<(BSDiscoveredDevice, Int?), Never> {
+    private lazy var rssiSubject: CurrentValueSubject<Int?, Never> = .init(self.rssi)
+    public var rssiPublisher: AnyPublisher<Int?, Never> {
         rssiSubject.eraseToAnyPublisher()
     }
 
     public private(set) var rssi: Int? {
         didSet {
             logger?.debug("updated rssi \(self.rssi ?? 0)")
-            rssiSubject.send((self, rssi))
+            rssiSubject.send(rssi)
         }
     }
 
@@ -74,13 +74,13 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
 
     public private(set) var lastTimeUpdated: Date {
         didSet {
-            lastTimeUpdatedSubject.send((self, lastTimeUpdated))
+            lastTimeUpdatedSubject.send(lastTimeUpdated)
             timeSinceLastUpdate = lastTimeUpdated.timeIntervalSince(oldValue)
         }
     }
 
-    private lazy var lastTimeUpdatedSubject: CurrentValueSubject<(BSDiscoveredDevice, Date), Never> = .init((self, self.lastTimeUpdated))
-    public var lastTimeUpdatedPublisher: AnyPublisher<(BSDiscoveredDevice, Date), Never> {
+    private lazy var lastTimeUpdatedSubject: CurrentValueSubject<Date, Never> = .init(self.lastTimeUpdated)
+    public var lastTimeUpdatedPublisher: AnyPublisher<Date, Never> {
         lastTimeUpdatedSubject.eraseToAnyPublisher()
     }
 
@@ -88,7 +88,7 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
 
     public private(set) var timeSinceLastUpdate: BSTimeInterval? {
         didSet {
-            timeSinceLastUpdateSubject.send((self, timeSinceLastUpdate))
+            timeSinceLastUpdateSubject.send(timeSinceLastUpdate)
         }
     }
 
@@ -99,8 +99,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
         return timeIntervalString(interval: timeSinceLastUpdate)
     }
 
-    private lazy var timeSinceLastUpdateSubject: CurrentValueSubject<(BSDiscoveredDevice, BSTimeInterval?), Never> = .init((self, self.timeSinceLastUpdate))
-    public var timeSinceLastUpdatePublisher: AnyPublisher<(BSDiscoveredDevice, BSTimeInterval?), Never> {
+    private lazy var timeSinceLastUpdateSubject: CurrentValueSubject<BSTimeInterval?, Never> = .init(self.timeSinceLastUpdate)
+    public var timeSinceLastUpdatePublisher: AnyPublisher<BSTimeInterval?, Never> {
         timeSinceLastUpdateSubject.eraseToAnyPublisher()
     }
 
@@ -140,35 +140,35 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
 
     public var connectionStatus: BSConnectionStatus { device?.connectionStatus ?? .notConnected }
 
-    lazy var connectionStatusSubject: CurrentValueSubject<(BSDiscoveredDevice, BSConnectionStatus), Never> = .init((self, self.connectionStatus))
-    public var connectionStatusPublisher: AnyPublisher<(BSDiscoveredDevice, BSConnectionStatus), Never> {
+    lazy var connectionStatusSubject: CurrentValueSubject<BSConnectionStatus, Never> = .init(self.connectionStatus)
+    public var connectionStatusPublisher: AnyPublisher<BSConnectionStatus, Never> {
         connectionStatusSubject.eraseToAnyPublisher()
     }
 
-    private let notConnectedSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
-    public var notConnectedPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+    private let notConnectedSubject: PassthroughSubject<Void, Never> = .init()
+    public var notConnectedPublisher: AnyPublisher<Void, Never> {
         notConnectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectedSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
-    public var connectedPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+    private let connectedSubject: PassthroughSubject<Void, Never> = .init()
+    public var connectedPublisher: AnyPublisher<Void, Never> {
         connectedSubject.eraseToAnyPublisher()
     }
 
-    private let connectingSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
-    public var connectingPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+    private let connectingSubject: PassthroughSubject<Void, Never> = .init()
+    public var connectingPublisher: AnyPublisher<Void, Never> {
         connectingSubject.eraseToAnyPublisher()
     }
 
-    private let disconnectingSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
-    public var disconnectingPublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+    private let disconnectingSubject: PassthroughSubject<Void, Never> = .init()
+    public var disconnectingPublisher: AnyPublisher<Void, Never> {
         disconnectingSubject.eraseToAnyPublisher()
     }
 
     // MARK: - isConnected
 
-    lazy var isConnectedSubject: CurrentValueSubject<(BSDiscoveredDevice, Bool), Never> = .init((self, self.isConnected))
-    public var isConnectedPublisher: AnyPublisher<(BSDiscoveredDevice, Bool), Never> {
+    lazy var isConnectedSubject: CurrentValueSubject<Bool, Never> = .init(self.isConnected)
+    public var isConnectedPublisher: AnyPublisher<Bool, Never> {
         isConnectedSubject.eraseToAnyPublisher()
     }
 
@@ -176,8 +176,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
 
     // MARK: - device
 
-    private lazy var deviceSubject: CurrentValueSubject<(BSDiscoveredDevice, BSDevice?), Never> = .init((self, nil))
-    public var devicePublisher: AnyPublisher<(BSDiscoveredDevice, BSDevice?), Never> {
+    private lazy var deviceSubject: CurrentValueSubject<BSDevice?, Never> = .init(nil)
+    public var devicePublisher: AnyPublisher<BSDevice?, Never> {
         deviceSubject.eraseToAnyPublisher()
     }
 
@@ -187,27 +187,27 @@ public final class BSDiscoveredDevice: BSConnectable, BSDeviceMetadata {
         didSet {
             deviceCancellables.removeAll()
 
-            device?.connectionStatusPublisher.sink { [self] _, connectionStatus in
-                connectionStatusSubject.send((self, connectionStatus))
+            device?.connectionStatusPublisher.sink { [self] connectionStatus in
+                connectionStatusSubject.send(connectionStatus)
             }.store(in: &deviceCancellables)
-            device?.isConnectedPublisher.sink { [self] _, isConnected in
-                isConnectedSubject.send((self, isConnected))
+            device?.isConnectedPublisher.sink { [self] isConnected in
+                isConnectedSubject.send(isConnected)
             }.store(in: &deviceCancellables)
 
             device?.connectedPublisher.sink { [self] _ in
-                connectedSubject.send(self)
+                connectedSubject.send()
             }.store(in: &deviceCancellables)
             device?.connectingPublisher.sink { [self] _ in
-                connectingSubject.send(self)
+                connectingSubject.send()
             }.store(in: &deviceCancellables)
             device?.disconnectingPublisher.sink { [self] _ in
-                disconnectingSubject.send(self)
+                disconnectingSubject.send()
             }.store(in: &deviceCancellables)
             device?.notConnectedPublisher.sink { [self] _ in
-                notConnectedSubject.send(self)
+                notConnectedSubject.send()
             }.store(in: &deviceCancellables)
 
-            deviceSubject.send((self, device))
+            deviceSubject.send(device)
         }
     }
 }

@@ -7,24 +7,24 @@
 
 public extension BSDevicePair {
     internal func addDeviceTfliteListeners(device: BSDevice) {
-        device.isTfliteReadyPublisher.sink { [self] device, isTfliteReady in
+        device.isTfliteReadyPublisher.sink { [self] isTfliteReady in
             guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceIsTfliteReadySubject.send((self, insoleSide, device, isTfliteReady))
+            self.deviceIsTfliteReadySubject.send(( insoleSide, device, isTfliteReady))
         }.store(in: &deviceCancellables[device]!)
 
-        device.tfliteInferencingEnabledPublisher.sink { [self] device, tfliteInferencingEnabled in
+        device.tfliteInferencingEnabledPublisher.sink { [self] tfliteInferencingEnabled in
             guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteInferencingEnabledSubject.send((self, insoleSide, device, tfliteInferencingEnabled))
+            self.deviceTfliteInferencingEnabledSubject.send(( insoleSide, device, tfliteInferencingEnabled))
         }.store(in: &deviceCancellables[device]!)
 
-        device.tfliteInferencePublisher.sink { [self] device, tfliteInference in
+        device.tfliteInferencePublisher.sink { [self] tfliteInference in
             guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteInferenceSubject.send((self, insoleSide, device, tfliteInference))
+            self.deviceTfliteInferenceSubject.send(( insoleSide, device, tfliteInference))
         }.store(in: &deviceCancellables[device]!)
 
-        device.tfliteClassificationPublisher.sink { [self] device, tfliteClassification in
+        device.tfliteClassificationPublisher.sink { [self] tfliteClassification in
             guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteClassificationSubject.send((self, insoleSide, device, tfliteClassification))
+            self.deviceTfliteClassificationSubject.send(( insoleSide, device, tfliteClassification))
         }.store(in: &deviceCancellables[device]!)
     }
 

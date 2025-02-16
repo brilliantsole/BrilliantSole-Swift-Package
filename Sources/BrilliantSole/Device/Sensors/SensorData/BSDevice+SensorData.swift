@@ -18,7 +18,7 @@ public extension BSDevice {
 
     private func setupPressureData() {
         sensorDataManager.pressureSensorDataManager.pressureDataPublisher.sink { pressureData, timestamp in
-            self.pressureDataSubject.send((self, pressureData, timestamp))
+            self.pressureDataSubject.send((pressureData, timestamp))
         }.store(in: &managerCancellables)
     }
 
@@ -26,51 +26,51 @@ public extension BSDevice {
 
     private func setupMotionData() {
         sensorDataManager.motionSensorDataManager.accelerationPublisher.sink { acceleration, timestamp in
-            self.accelerationSubject.send((self, acceleration, timestamp))
+            self.accelerationSubject.send((acceleration, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.linearAccelerationPublisher.sink { acceleration, timestamp in
-            self.linearAccelerationSubject.send((self, acceleration, timestamp))
+            self.linearAccelerationSubject.send((acceleration, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.gravityPublisher.sink { gravity, timestamp in
-            self.gravitySubject.send((self, gravity, timestamp))
+            self.gravitySubject.send((gravity, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.gyroscopePublisher.sink { gyroscope, timestamp in
-            self.gyroscopeSubject.send((self, gyroscope, timestamp))
+            self.gyroscopeSubject.send((gyroscope, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.magnetometerPublisher.sink { magnetometer, timestamp in
-            self.magnetometerSubject.send((self, magnetometer, timestamp))
+            self.magnetometerSubject.send((magnetometer, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.gameRotationPublisher.sink { rotation, timestamp in
-            self.gameRotationSubject.send((self, rotation, timestamp))
+            self.gameRotationSubject.send((rotation, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.rotationPublisher.sink { rotation, timestamp in
-            self.rotationSubject.send((self, rotation, timestamp))
+            self.rotationSubject.send((rotation, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.orientationPublisher.sink { orientation, timestamp in
-            self.orientationSubject.send((self, orientation, timestamp))
+            self.orientationSubject.send((orientation, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.stepCountPublisher.sink { stepCount, timestamp in
-            self.stepCountSubject.send((self, stepCount, timestamp))
+            self.stepCountSubject.send((stepCount, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.stepDetectionPublisher.sink { timestamp in
-            self.stepDetectionSubject.send((self, timestamp))
+            self.stepDetectionSubject.send(timestamp)
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.activityPublisher.sink { activity, timestamp in
-            self.activitySubject.send((self, activity, timestamp))
+            self.activitySubject.send((activity, timestamp))
         }.store(in: &managerCancellables)
 
         sensorDataManager.motionSensorDataManager.deviceOrientationPublisher.sink { orientation, timestamp in
-            self.deviceOrientationSubject.send((self, orientation, timestamp))
+            self.deviceOrientationSubject.send((orientation, timestamp))
         }.store(in: &managerCancellables)
     }
 
@@ -78,7 +78,7 @@ public extension BSDevice {
 
     private func setupBarometerData() {
         sensorDataManager.barometerSensorDataManager.barometerPublisher.sink { barometerData, timestamp in
-            self.barometerSubject.send((self, barometerData, timestamp))
+            self.barometerSubject.send((barometerData, timestamp))
         }.store(in: &managerCancellables)
     }
 }

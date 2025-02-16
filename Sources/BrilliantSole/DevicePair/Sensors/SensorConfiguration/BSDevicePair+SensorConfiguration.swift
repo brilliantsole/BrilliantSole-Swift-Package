@@ -10,9 +10,9 @@ public extension BSDevicePair
     internal func addDeviceSensorConfigurationListeners(device: BSDevice)
     {
         device.sensorConfigurationPublisher.sink
-        { device, sensorConfiguration in
+        { sensorConfiguration in
             guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceSensorConfigurationSubject.send((self, insoleSide, device, sensorConfiguration))
+            self.deviceSensorConfigurationSubject.send((insoleSide, device, sensorConfiguration))
         }.store(in: &deviceCancellables[device]!)
     }
 

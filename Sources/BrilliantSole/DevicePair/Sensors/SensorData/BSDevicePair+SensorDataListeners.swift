@@ -15,9 +15,9 @@ public extension BSDevicePair {
     // MARK: - pressure
 
     private func addDevicePressureSensorDataListeners(device: BSDevice) {
-        device.pressureDataPublisher.sink { [self] device, pressureData, timestamp in
+        device.pressureDataPublisher.sink { [self] pressureData, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            devicePressureDataSubject.send((self, insoleSide, device, pressureData, timestamp))
+            devicePressureDataSubject.send((insoleSide, device, pressureData, timestamp))
             sensorDataManager.pressureSensorDataManager.onDevicePressureData(insoleSide: insoleSide, pressureData: pressureData, timestamp: timestamp)
         }.store(in: &deviceCancellables[device]!)
     }
@@ -25,78 +25,78 @@ public extension BSDevicePair {
     // MARK: - motion
 
     private func addDeviceMotionSensorDataListeners(device: BSDevice) {
-        device.accelerationPublisher.sink { [self] device, acceleration, timestamp in
+        device.accelerationPublisher.sink { [self] acceleration, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceAccelerationSubject.send((self, insoleSide, device, acceleration, timestamp))
+            deviceAccelerationSubject.send((insoleSide, device, acceleration, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.gravityPublisher.sink { [self] device, gravity, timestamp in
+        device.gravityPublisher.sink { [self] gravity, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceGravitySubject.send((self, insoleSide, device, gravity, timestamp))
+            deviceGravitySubject.send((insoleSide, device, gravity, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.linearAccelerationPublisher.sink { [self] device, linearAcceleration, timestamp in
+        device.linearAccelerationPublisher.sink { [self] linearAcceleration, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceLinearAccelerationSubject.send((self, insoleSide, device, linearAcceleration, timestamp))
+            deviceLinearAccelerationSubject.send((insoleSide, device, linearAcceleration, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.gyroscopePublisher.sink { [self] device, gyroscope, timestamp in
+        device.gyroscopePublisher.sink { [self] gyroscope, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceGyroscopeSubject.send((self, insoleSide, device, gyroscope, timestamp))
+            deviceGyroscopeSubject.send((insoleSide, device, gyroscope, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.magnetometerPublisher.sink { [self] device, magnetometer, timestamp in
+        device.magnetometerPublisher.sink { [self] magnetometer, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceMagnetometerSubject.send((self, insoleSide, device, magnetometer, timestamp))
+            deviceMagnetometerSubject.send((insoleSide, device, magnetometer, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.gameRotationPublisher.sink { [self] device, gameRotation, timestamp in
+        device.gameRotationPublisher.sink { [self] gameRotation, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceGameRotationSubject.send((self, insoleSide, device, gameRotation, timestamp))
+            deviceGameRotationSubject.send((insoleSide, device, gameRotation, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.rotationPublisher.sink { [self] device, rotation, timestamp in
+        device.rotationPublisher.sink { [self] rotation, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceRotationSubject.send((self, insoleSide, device, rotation, timestamp))
+            deviceRotationSubject.send((insoleSide, device, rotation, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.orientationPublisher.sink { [self] device, orientation, timestamp in
+        device.orientationPublisher.sink { [self] orientation, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceOrientationSubject.send((self, insoleSide, device, orientation, timestamp))
+            deviceOrientationSubject.send((insoleSide, device, orientation, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.stepCountPublisher.sink { [self] device, stepCount, timestamp in
+        device.stepCountPublisher.sink { [self] stepCount, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceStepCountSubject.send((self, insoleSide, device, stepCount, timestamp))
+            deviceStepCountSubject.send((insoleSide, device, stepCount, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.stepDetectionPublisher.sink { [self] device, timestamp in
+        device.stepDetectionPublisher.sink { [self] timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceStepDetectionSubject.send((self, insoleSide, device, timestamp))
+            deviceStepDetectionSubject.send((insoleSide, device, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.activityPublisher.sink { [self] device, activity, timestamp in
+        device.activityPublisher.sink { [self] activity, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceActivitySubject.send((self, insoleSide, device, activity, timestamp))
+            deviceActivitySubject.send((insoleSide, device, activity, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.deviceOrientationPublisher.sink { [self] device, deviceOrientation, timestamp in
+        device.deviceOrientationPublisher.sink { [self] deviceOrientation, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceDeviceOrientationSubject.send((self, insoleSide, device, deviceOrientation, timestamp))
+            deviceDeviceOrientationSubject.send((insoleSide, device, deviceOrientation, timestamp))
         }.store(in: &deviceCancellables[device]!)
 
-        device.barometerPublisher.sink { [self] device, barometer, timestamp in
+        device.barometerPublisher.sink { [self] barometer, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceBarometerSubject.send((self, insoleSide, device, barometer, timestamp))
+            deviceBarometerSubject.send((insoleSide, device, barometer, timestamp))
         }.store(in: &deviceCancellables[device]!)
     }
 
     // MARK: - barometer
 
     private func addDeviceBarometerSensorDataListeners(device: BSDevice) {
-        device.barometerPublisher.sink { [self] device, barometer, timestamp in
+        device.barometerPublisher.sink { [self] barometer, timestamp in
             guard let insoleSide = getDeviceInsoleSide(device) else { return }
-            deviceBarometerSubject.send((self, insoleSide, device, barometer, timestamp))
+            deviceBarometerSubject.send((insoleSide, device, barometer, timestamp))
         }.store(in: &deviceCancellables[device]!)
     }
 }

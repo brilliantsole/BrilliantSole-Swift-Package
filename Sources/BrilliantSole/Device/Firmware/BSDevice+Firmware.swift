@@ -11,22 +11,22 @@ import Foundation
 public extension BSDevice {
     internal func setupFirmwareManager() {
         firmwareManager.firmwareUpgradeDidStartPublisher.sink { _ in
-            self.firmwareUpgradeDidStartSubject.send(self)
+            self.firmwareUpgradeDidStartSubject.send()
         }.store(in: &managerCancellables)
         firmwareManager.firmwareUpgradeDidFailPublisher.sink { state, error in
-            self.firmwareUpgradeDidFailSubject.send((self, state, error))
+            self.firmwareUpgradeDidFailSubject.send((state, error))
         }.store(in: &managerCancellables)
         firmwareManager.firmwareUpgradeDidCancelPublisher.sink { state in
-            self.firmwareUpgradeDidCancelSubject.send((self, state))
+            self.firmwareUpgradeDidCancelSubject.send(state)
         }.store(in: &managerCancellables)
         firmwareManager.firmwareUpgradeDidCompletePublisher.sink { _ in
-            self.firmwareUpgradeDidCompleteSubject.send(self)
+            self.firmwareUpgradeDidCompleteSubject.send()
         }.store(in: &managerCancellables)
         firmwareManager.firmwareUpgradeStateDidChangePublisher.sink { previousState, newState in
-            self.firmwareUpgradeStateDidChangeSubject.send((self, previousState, newState))
+            self.firmwareUpgradeStateDidChangeSubject.send((previousState, newState))
         }.store(in: &managerCancellables)
         firmwareManager.firmwareUploadProgressDidChangePublisher.sink { bytesSent, imageSize, progress, timestamp in
-            self.firmwareUploadProgressDidChangeSubject.send((self, bytesSent, imageSize, progress, timestamp))
+            self.firmwareUploadProgressDidChangeSubject.send((bytesSent, imageSize, progress, timestamp))
         }.store(in: &managerCancellables)
     }
 

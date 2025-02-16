@@ -11,40 +11,40 @@ public extension BSDevice {
     // MARK: - setup
 
     internal func setupFileTransfer() {
-        mtuPublisher.sink { _, mtu in
+        mtuPublisher.sink { mtu in
             self.fileTransferManager.mtu = mtu
         }.store(in: &managerCancellables)
 
         fileTransferManager.maxFileLengthPublisher.sink { maxFileLength in
-            self.maxFileLengthSubject.send((self, maxFileLength))
+            self.maxFileLengthSubject.send(maxFileLength)
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileTypePublisher.sink { fileType in
-            self.fileTypeSubject.send((self, fileType))
+            self.fileTypeSubject.send(fileType)
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileLengthPublisher.sink { fileLength in
-            self.fileLengthSubject.send((self, fileLength))
+            self.fileLengthSubject.send(fileLength)
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileChecksumPublisher.sink { [self] fileChecksum in
-            fileChecksumSubject.send((self, fileChecksum))
+            fileChecksumSubject.send(fileChecksum)
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileTransferStatusPublisher.sink { [self] fileTransferStatus in
-            fileTransferStatusSubject.send((self, fileTransferStatus))
+            fileTransferStatusSubject.send(fileTransferStatus)
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileTransferProgressPublisher.sink { [self] fileType, direction, progress in
-            fileTransferProgressSubject.send((self, fileType, direction, progress))
+            fileTransferProgressSubject.send((fileType, direction, progress))
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileTransferCompletePublisher.sink { [self] fileType, direction in
-            fileTransferCompleteSubject.send((self, fileType, direction))
+            fileTransferCompleteSubject.send((fileType, direction))
         }.store(in: &managerCancellables)
 
         fileTransferManager.fileReceivedPublisher.sink { [self] fileType, data in
-            fileReceivedSubject.send((self, fileType, data))
+            fileReceivedSubject.send((fileType, data))
         }.store(in: &managerCancellables)
     }
 

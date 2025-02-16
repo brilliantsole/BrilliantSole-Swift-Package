@@ -17,12 +17,11 @@ public protocol BSConnectable {
     func disconnect()
     func toggleConnection()
 
-    associatedtype ConnectableType
-    var connectionStatusPublisher: AnyPublisher<(ConnectableType, BSConnectionStatus), Never> { get }
-    var isConnectedPublisher: AnyPublisher<(ConnectableType, Bool), Never> { get }
+    var connectionStatusPublisher: AnyPublisher<BSConnectionStatus, Never> { get }
+    var isConnectedPublisher: AnyPublisher<Bool, Never> { get }
 
-    var notConnectedPublisher: AnyPublisher<ConnectableType, Never> { get }
-    var connectedPublisher: AnyPublisher<ConnectableType, Never> { get }
-    var connectingPublisher: AnyPublisher<ConnectableType, Never> { get }
-    var disconnectingPublisher: AnyPublisher<ConnectableType, Never> { get }
+    var notConnectedPublisher: AnyPublisher<Void, Never> { get }
+    var connectedPublisher: AnyPublisher<Void, Never> { get }
+    var connectingPublisher: AnyPublisher<Void, Never> { get }
+    var disconnectingPublisher: AnyPublisher<Void, Never> { get }
 }

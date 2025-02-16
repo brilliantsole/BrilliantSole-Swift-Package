@@ -10,19 +10,19 @@ import Combine
 public extension BSDevice {
     internal func setupInformationManager() {
         informationManager.idPublisher.sink { id in
-            self.idSubject.send((self, id))
+            self.idSubject.send(id)
         }.store(in: &managerCancellables)
 
         informationManager.mtuPublisher.sink { mtu in
-            self.mtuSubject.send((self, mtu))
+            self.mtuSubject.send(mtu)
         }.store(in: &managerCancellables)
 
         informationManager.deviceTypePublisher.sink { deviceType in
-            self.deviceTypeSubject.send((self, deviceType))
+            self.deviceTypeSubject.send(deviceType)
         }.store(in: &managerCancellables)
 
         informationManager.namePublisher.sink { name in
-            self.nameSubject.send((self, name))
+            self.nameSubject.send(name)
         }.store(in: &managerCancellables)
     }
 

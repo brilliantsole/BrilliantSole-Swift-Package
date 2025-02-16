@@ -8,7 +8,7 @@
 extension BSDevicePair {
     func setupSensorDataManager() {
         sensorDataManager.pressureSensorDataManager.pressureDataPublisher.sink { pressureData, timestamp in
-            self.pressureDataSubject.send((self, pressureData, timestamp))
+            self.pressureDataSubject.send((pressureData, timestamp))
         }.store(in: &cancellables)
     }
 }

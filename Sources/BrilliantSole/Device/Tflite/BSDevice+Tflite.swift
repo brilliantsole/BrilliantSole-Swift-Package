@@ -12,19 +12,19 @@ public extension BSDevice {
 
     internal func setupTfliteManager() {
         tfliteManager.tfliteNamePublisher.sink { tfliteName in
-            self.tfliteNameSubject.send((self, tfliteName))
+            self.tfliteNameSubject.send(( tfliteName))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteTaskPublisher.sink { tfliteTask in
-            self.tfliteTaskSubject.send((self, tfliteTask))
+            self.tfliteTaskSubject.send(( tfliteTask))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteSensorRatePublisher.sink { tfliteSensorRate in
-            self.tfliteSensorRateSubject.send((self, tfliteSensorRate))
+            self.tfliteSensorRateSubject.send(( tfliteSensorRate))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteSensorTypesPublisher.sink { tfliteSensorTypes in
-            self.tfliteSensorTypesSubject.send((self, tfliteSensorTypes))
+            self.tfliteSensorTypesSubject.send(( tfliteSensorTypes))
         }.store(in: &managerCancellables)
 
         tfliteManager.isTfliteReadyPublisher.sink { _ in
@@ -32,23 +32,23 @@ public extension BSDevice {
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteThresholdPublisher.sink { tfliteThreshold in
-            self.tfliteThresholdSubject.send((self, tfliteThreshold))
+            self.tfliteThresholdSubject.send(( tfliteThreshold))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteCaptureDelayPublisher.sink { tfliteCaptureDelay in
-            self.tfliteCaptureDelaySubject.send((self, tfliteCaptureDelay))
+            self.tfliteCaptureDelaySubject.send(( tfliteCaptureDelay))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteInferencingEnabledPublisher.sink { tfliteInferencingEnabled in
-            self.tfliteInferencingEnabledSubject.send((self, tfliteInferencingEnabled))
+            self.tfliteInferencingEnabledSubject.send(( tfliteInferencingEnabled))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteInferencePublisher.sink { inference in
-            self.tfliteInferenceSubject.send((self, inference))
+            self.tfliteInferenceSubject.send(( inference))
         }.store(in: &managerCancellables)
 
         tfliteManager.tfliteClassificationPublisher.sink { classification in
-            self.tfliteClassificationSubject.send((self, classification))
+            self.tfliteClassificationSubject.send(( classification))
         }.store(in: &managerCancellables)
     }
 
