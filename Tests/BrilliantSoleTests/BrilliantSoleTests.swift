@@ -173,7 +173,7 @@ struct BSTests {
                 }
             }.store(in: &cancellablesStore.cancellables)
 
-            device.tfliteClassificationPublisher.sink {  classification in
+            device.tfliteClassificationPublisher.sink { classification in
                 print("detected \"\(classification.name)\" gesture")
             }.store(in: &cancellablesStore.cancellables)
         })
@@ -238,7 +238,7 @@ struct BSTests {
                     print("already upgraded firmware")
                     return
                 }
-                device.firmwareUpgradeDidCompleteSubject.sink { _ in
+                device.firmwareUpgradeDidCompletePublisher.sink { _ in
                     print("firmware updated successfully")
                     didUpgradeFirmware = true
                 }.store(in: &cancellablesStore.cancellables)

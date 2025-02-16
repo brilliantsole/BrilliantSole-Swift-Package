@@ -11,62 +11,30 @@ public extension BSDevice {
     // MARK: - setup
 
     internal func setupTfliteManager() {
-        tfliteManager.tfliteNamePublisher.sink { tfliteName in
-            self.tfliteNameSubject.send(( tfliteName))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteTaskPublisher.sink { tfliteTask in
-            self.tfliteTaskSubject.send(( tfliteTask))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteSensorRatePublisher.sink { tfliteSensorRate in
-            self.tfliteSensorRateSubject.send(( tfliteSensorRate))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteSensorTypesPublisher.sink { tfliteSensorTypes in
-            self.tfliteSensorTypesSubject.send(( tfliteSensorTypes))
-        }.store(in: &managerCancellables)
-
         tfliteManager.isTfliteReadyPublisher.sink { _ in
             self.checkIsTfliteReady()
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteThresholdPublisher.sink { tfliteThreshold in
-            self.tfliteThresholdSubject.send(( tfliteThreshold))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteCaptureDelayPublisher.sink { tfliteCaptureDelay in
-            self.tfliteCaptureDelaySubject.send(( tfliteCaptureDelay))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteInferencingEnabledPublisher.sink { tfliteInferencingEnabled in
-            self.tfliteInferencingEnabledSubject.send(( tfliteInferencingEnabled))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteInferencePublisher.sink { inference in
-            self.tfliteInferenceSubject.send(( inference))
-        }.store(in: &managerCancellables)
-
-        tfliteManager.tfliteClassificationPublisher.sink { classification in
-            self.tfliteClassificationSubject.send(( classification))
         }.store(in: &managerCancellables)
     }
 
     // MARK: - tfliteName
 
     var tfliteName: String { tfliteManager.tfliteName }
+    var tfliteNamePublisher: AnyPublisher<String, Never> { tfliteManager.tfliteNamePublisher }
 
     // MARK: - tfliteTask
 
     var tfliteTask: BSTfliteTask { tfliteManager.tfliteTask }
+    var tfliteTaskPublisher: AnyPublisher<BSTfliteTask, Never> { tfliteManager.tfliteTaskPublisher }
 
     // MARK: - tfliteSensorRate
 
     var tfliteSensorRate: BSSensorRate { tfliteManager.tfliteSensorRate }
+    var tfliteSensorRatePublisher: AnyPublisher<BSSensorRate, Never> { tfliteManager.tfliteSensorRatePublisher }
 
     // MARK: - tfliteSensorTypes
 
     var tfliteSensorTypes: BSTfliteSensorTypes { tfliteManager.tfliteSensorTypes }
+    var tfliteSensorTypesPublisher: AnyPublisher<BSTfliteSensorTypes, Never> { tfliteManager.tfliteSensorTypesPublisher }
 
     // MARK: - isTfliteReady
 
@@ -77,14 +45,17 @@ public extension BSDevice {
     // MARK: - tfliteCaptureDelay
 
     var tfliteCaptureDelay: BSTfliteCaptureDelay { tfliteManager.tfliteCaptureDelay }
+    var tfliteCaptureDelayPublisher: AnyPublisher<BSTfliteCaptureDelay, Never> { tfliteManager.tfliteCaptureDelayPublisher }
 
     // MARK: - tfliteThreshold
 
     var tfliteThreshold: BSTfliteThreshold { tfliteManager.tfliteThreshold }
+    var tfliteThresholdPublisher: AnyPublisher<BSTfliteThreshold, Never> { tfliteManager.tfliteThresholdPublisher }
 
     // MARK: - tfliteInferencingEnabled
 
     var tfliteInferencingEnabled: Bool { tfliteManager.tfliteInferencingEnabled }
+    var tfliteInferencingEnabledPublisher: AnyPublisher<Bool, Never> { tfliteManager.tfliteInferencingEnabledPublisher }
 
     func setTfliteInferencingEnabled(_ newTfliteInferencingEnabled: Bool, sendImmediately: Bool = true) {
         tfliteManager.setTfliteInferencingEnabled(newTfliteInferencingEnabled, sendImmediately: sendImmediately)
@@ -117,4 +88,9 @@ public extension BSDevice {
             checkIsTfliteReady()
         }
     }
+
+    // MARK: - inferencing
+
+    var tfliteInferencePublisher: AnyPublisher<BSTfliteInference, Never> { tfliteManager.tfliteInferencePublisher }
+    var tfliteClassificationPublisher: AnyPublisher<BSTfliteClassification, Never> { tfliteManager.tfliteClassificationPublisher }
 }

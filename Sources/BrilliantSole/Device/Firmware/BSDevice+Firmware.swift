@@ -5,30 +5,13 @@
 //  Created by Zack Qattan on 2/8/25.
 //
 
+import Combine
 import CoreBluetooth
 import Foundation
+import iOSMcuManagerLibrary
 
 public extension BSDevice {
-    internal func setupFirmwareManager() {
-        firmwareManager.firmwareUpgradeDidStartPublisher.sink { _ in
-            self.firmwareUpgradeDidStartSubject.send()
-        }.store(in: &managerCancellables)
-        firmwareManager.firmwareUpgradeDidFailPublisher.sink { state, error in
-            self.firmwareUpgradeDidFailSubject.send((state, error))
-        }.store(in: &managerCancellables)
-        firmwareManager.firmwareUpgradeDidCancelPublisher.sink { state in
-            self.firmwareUpgradeDidCancelSubject.send(state)
-        }.store(in: &managerCancellables)
-        firmwareManager.firmwareUpgradeDidCompletePublisher.sink { _ in
-            self.firmwareUpgradeDidCompleteSubject.send()
-        }.store(in: &managerCancellables)
-        firmwareManager.firmwareUpgradeStateDidChangePublisher.sink { previousState, newState in
-            self.firmwareUpgradeStateDidChangeSubject.send((previousState, newState))
-        }.store(in: &managerCancellables)
-        firmwareManager.firmwareUploadProgressDidChangePublisher.sink { bytesSent, imageSize, progress, timestamp in
-            self.firmwareUploadProgressDidChangeSubject.send((bytesSent, imageSize, progress, timestamp))
-        }.store(in: &managerCancellables)
-    }
+    internal func setupFirmwareManager() {}
 
     // MARK: - canUpgradeFirmware
 
@@ -98,5 +81,31 @@ public extension BSDevice {
 
     func pauseFirmwareUpgrade() {
         firmwareManager.pause()
+    }
+
+    // MARK: - publishers
+
+    var firmwareUpgradeDidStartPublisher: AnyPublisher<Void, Never> {
+        firmwareManager.firmwareUpgradeDidStartPublisher
+    }
+
+    var firmwareUpgradeStateDidChangePublisher: AnyPublisher<(FirmwareUpgradeState, FirmwareUpgradeState), Never> {
+        firmwareManager.firmwareUpgradeStateDidChangePublisher
+    }
+
+    var firmwareUpgradeDidCompletePublisher: AnyPublisher<Void, Never> {
+        firmwareManager.firmwareUpgradeDidCompletePublisher
+    }
+
+    var firmwareUpgradeDidFailPublisher: AnyPublisher<(FirmwareUpgradeState, any Error), Never> {
+        firmwareManager.firmwareUpgradeDidFailPublisher
+    }
+
+    var firmwareUpgradeDidCancelPublisher: AnyPublisher<FirmwareUpgradeState, Never> {
+        firmwareManager.firmwareUpgradeDidCancelPublisher
+    }
+
+    var firmwareUploadProgressDidChangePublisher: AnyPublisher<(Int, Int, Float, Date), Never> {
+        firmwareManager.firmwareUploadProgressDidChangePublisher
     }
 }

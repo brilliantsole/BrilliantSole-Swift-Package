@@ -140,29 +140,9 @@ public final class BSDevice: ObservableObject, BSConnectable, BSDeviceMetadata {
 
     // MARK: - batteryManager
 
-    // MARK: - batteryCurrent
-
-    lazy var batteryCurrentSubject: CurrentValueSubject<Float, Never> = .init(self.batteryCurrent)
-    public var batteryCurrentPublisher: AnyPublisher<Float, Never> {
-        batteryCurrentSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - isBatteryCharging
-
-    lazy var isBatteryChargingSubject: CurrentValueSubject<Bool, Never> = .init(self.isBatteryCharging)
-    public var isBatteryChargingPublisher: AnyPublisher<Bool, Never> {
-        isBatteryChargingSubject.eraseToAnyPublisher()
-    }
-
     // MARK: - deviceInformation
 
-    lazy var deviceInformationSubject: CurrentValueSubject<BSDeviceInformation, Never> = .init(self.deviceInformation)
-    public var deviceInformationPublisher: AnyPublisher<BSDeviceInformation, Never> {
-        deviceInformationSubject.eraseToAnyPublisher()
-    }
-
     let deviceInformationManager: BSDeviceInformationManager = .init()
-    public var deviceInformation: BSDeviceInformation { deviceInformationManager.deviceInformation }
 
     // MARK: - managers
 
@@ -188,208 +168,7 @@ public final class BSDevice: ObservableObject, BSConnectable, BSDeviceMetadata {
 
     var receivedTxRxMessages: Set<BSTxMessageType> = .init()
 
-    // MARK: - informationManager
-
-    // MARK: - id
-
-    lazy var idSubject: CurrentValueSubject<String, Never> = .init(self.id)
-    public var idPublisher: AnyPublisher<String, Never> {
-        idSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - mtu
-
-    lazy var mtuSubject: CurrentValueSubject<BSMtu, Never> = .init(self.mtu)
-    public var mtuPublisher: AnyPublisher<BSMtu, Never> {
-        mtuSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - deviceType
-
-    lazy var deviceTypeSubject: CurrentValueSubject<BSDeviceType, Never> = .init(self.deviceType)
-    public var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> {
-        deviceTypeSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - name
-
-    lazy var nameSubject: CurrentValueSubject<String, Never> = .init(self.name)
-    public var namePublisher: AnyPublisher<String, Never> {
-        nameSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - sensorConfigurationManager
-
-    lazy var sensorConfigurationSubject: CurrentValueSubject<BSSensorConfiguration, Never> = .init(self.sensorConfiguration)
-    public var sensorConfigurationPublisher: AnyPublisher<BSSensorConfiguration, Never> {
-        sensorConfigurationSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - sensorDataManager
-
-    // MARK: - pressure
-
-    let pressureDataSubject: PassthroughSubject<(BSPressureData, BSTimestamp), Never> = .init()
-    public var pressureDataPublisher: AnyPublisher<(BSPressureData, BSTimestamp), Never> {
-        pressureDataSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - motion
-
-    let accelerationSubject: PassthroughSubject<(BSVector3D, BSTimestamp), Never> = .init()
-    public var accelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        accelerationSubject.eraseToAnyPublisher()
-    }
-
-    let linearAccelerationSubject: PassthroughSubject<(BSVector3D, BSTimestamp), Never> = .init()
-    public var linearAccelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        linearAccelerationSubject.eraseToAnyPublisher()
-    }
-
-    let gravitySubject: PassthroughSubject<(BSVector3D, BSTimestamp), Never> = .init()
-    public var gravityPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        gravitySubject.eraseToAnyPublisher()
-    }
-
-    let gyroscopeSubject: PassthroughSubject<(BSVector3D, BSTimestamp), Never> = .init()
-    public var gyroscopePublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        gyroscopeSubject.eraseToAnyPublisher()
-    }
-
-    let magnetometerSubject: PassthroughSubject<(BSVector3D, BSTimestamp), Never> = .init()
-    public var magnetometerPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        magnetometerSubject.eraseToAnyPublisher()
-    }
-
-    let gameRotationSubject: PassthroughSubject<(BSQuaternion, BSTimestamp), Never> = .init()
-    public var gameRotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
-        gameRotationSubject.eraseToAnyPublisher()
-    }
-
-    let rotationSubject: PassthroughSubject<(BSQuaternion, BSTimestamp), Never> = .init()
-    public var rotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
-        rotationSubject.eraseToAnyPublisher()
-    }
-
-    let orientationSubject: PassthroughSubject<(BSRotation3D, BSTimestamp), Never> = .init()
-    public var orientationPublisher: AnyPublisher<(BSRotation3D, BSTimestamp), Never> {
-        orientationSubject.eraseToAnyPublisher()
-    }
-
-    let stepCountSubject: PassthroughSubject<(BSStepCount, BSTimestamp), Never> = .init()
-    public var stepCountPublisher: AnyPublisher<(BSStepCount, BSTimestamp), Never> {
-        stepCountSubject.eraseToAnyPublisher()
-    }
-
-    let stepDetectionSubject: PassthroughSubject<BSTimestamp, Never> = .init()
-    public var stepDetectionPublisher: AnyPublisher<BSTimestamp, Never> {
-        stepDetectionSubject.eraseToAnyPublisher()
-    }
-
-    let activitySubject: PassthroughSubject<(BSActivityFlags, BSTimestamp), Never> = .init()
-    public var activityPublisher: AnyPublisher<(BSActivityFlags, BSTimestamp), Never> {
-        activitySubject.eraseToAnyPublisher()
-    }
-
-    let deviceOrientationSubject: PassthroughSubject<(BSDeviceOrientation, BSTimestamp), Never> = .init()
-    public var deviceOrientationPublisher: AnyPublisher<(BSDeviceOrientation, BSTimestamp), Never> {
-        deviceOrientationSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - barometer
-
-    let barometerSubject: PassthroughSubject<(BSBarometer, BSTimestamp), Never> = .init()
-    public var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
-        barometerSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileTransferManager
-
-    // MARK: - maxFileLength
-
-    lazy var maxFileLengthSubject: CurrentValueSubject<BSFileLength, Never> = .init(self.maxFileLength)
-    public var maxFileLengthPublisher: AnyPublisher<BSFileLength, Never> {
-        maxFileLengthSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileType
-
-    lazy var fileTypeSubject: CurrentValueSubject<BSFileType, Never> = .init(self.fileType)
-    public var fileTypePublisher: AnyPublisher<BSFileType, Never> {
-        fileTypeSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileLength
-
-    lazy var fileLengthSubject: CurrentValueSubject<BSFileLength, Never> = .init(self.fileLength)
-    public var fileLengthPublisher: AnyPublisher<BSFileLength, Never> {
-        fileLengthSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileChecksum
-
-    lazy var fileChecksumSubject: CurrentValueSubject<BSFileChecksum, Never> = .init(self.fileChecksum)
-    public var fileChecksumPublisher: AnyPublisher<BSFileChecksum, Never> {
-        fileChecksumSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileTransferStatus
-
-    lazy var fileTransferStatusSubject: CurrentValueSubject<BSFileTransferStatus, Never> = .init(self.fileTransferStatus)
-    public var fileTransferStatusPublisher: AnyPublisher<BSFileTransferStatus, Never> {
-        fileTransferStatusSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileTransferProgress
-
-    let fileTransferProgressSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection, Float), Never> = .init()
-    public var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
-        fileTransferProgressSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileTransferComplete
-
-    let fileReceivedSubject: PassthroughSubject<(BSFileType, Data), Never> = .init()
-    public var fileReceivedPublisher: AnyPublisher<(BSFileType, Data), Never> {
-        fileReceivedSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - fileReceived
-
-    let fileTransferCompleteSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection), Never> = .init()
-    public var fileTransferCompletePublisher: AnyPublisher<(BSFileType, BSFileTransferDirection), Never> {
-        fileTransferCompleteSubject.eraseToAnyPublisher()
-    }
-
     // MARK: - tfliteManager
-
-    // MARK: - tfliteName
-
-    lazy var tfliteNameSubject: CurrentValueSubject<String, Never> = .init(self.tfliteName)
-    public var tfliteNamePublisher: AnyPublisher<String, Never> {
-        tfliteNameSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteTask
-
-    lazy var tfliteTaskSubject: CurrentValueSubject<BSTfliteTask, Never> = .init(self.tfliteTask)
-    public var tfliteTaskPublisher: AnyPublisher<BSTfliteTask, Never> {
-        tfliteTaskSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteSensorRate
-
-    lazy var tfliteSensorRateSubject: CurrentValueSubject<BSSensorRate, Never> = .init(self.tfliteSensorRate)
-    public var tfliteSensorRatePublisher: AnyPublisher<BSSensorRate, Never> {
-        tfliteSensorRateSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteSensorTypes
-
-    lazy var tfliteSensorTypesSubject: CurrentValueSubject<BSTfliteSensorTypes, Never> = .init(self.tfliteSensorTypes)
-    public var tfliteSensorTypesPublisher: AnyPublisher<BSTfliteSensorTypes, Never> {
-        tfliteSensorTypesSubject.eraseToAnyPublisher()
-    }
 
     // MARK: - isTfliteReady
 
@@ -405,75 +184,20 @@ public final class BSDevice: ObservableObject, BSConnectable, BSDeviceMetadata {
         }
     }
 
-    // MARK: - tfliteThreshold
-
-    lazy var tfliteThresholdSubject: CurrentValueSubject<BSTfliteThreshold, Never> = .init(self.tfliteThreshold)
-    public var tfliteThresholdPublisher: AnyPublisher<BSTfliteThreshold, Never> {
-        tfliteThresholdSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteCaptureDelay
-
-    lazy var tfliteCaptureDelaySubject: CurrentValueSubject<BSTfliteCaptureDelay, Never> = .init(self.tfliteCaptureDelay)
-    public var tfliteCaptureDelayPublisher: AnyPublisher<BSTfliteCaptureDelay, Never> {
-        tfliteCaptureDelaySubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteInferencingEnabled
-
-    lazy var tfliteInferencingEnabledSubject: CurrentValueSubject<Bool, Never> = .init(self.tfliteInferencingEnabled)
-    public var tfliteInferencingEnabledPublisher: AnyPublisher<Bool, Never> {
-        tfliteInferencingEnabledSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteInference
-
-    let tfliteInferenceSubject: PassthroughSubject<BSTfliteInference, Never> = .init()
-    public var tfliteInferencePublisher: AnyPublisher<BSTfliteInference, Never> {
-        tfliteInferenceSubject.eraseToAnyPublisher()
-    }
-
-    // MARK: - tfliteClassification
-
-    let tfliteClassificationSubject: PassthroughSubject<BSTfliteClassification, Never> = .init()
-    public var tfliteClassificationPublisher: AnyPublisher<BSTfliteClassification, Never> {
-        tfliteClassificationSubject.eraseToAnyPublisher()
-    }
-
     // MARK: - firmware
 
     let firmwareManager: BSFirmwareManager = .init()
 
-    public internal(set) var canUpgradeFirmware: Bool = false
-
-    let firmwareUpgradeDidStartSubject: PassthroughSubject<Void, Never> = .init()
-    public var firmwareUpgradeDidStartPublisher: AnyPublisher<Void, Never> {
-        firmwareUpgradeDidStartSubject.eraseToAnyPublisher()
+    let canUpgradeFirmwareSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    public var canUpgradeFirmwarePublisher: AnyPublisher<Bool, Never> {
+        canUpgradeFirmwareSubject.eraseToAnyPublisher()
     }
 
-    let firmwareUpgradeStateDidChangeSubject: PassthroughSubject<(FirmwareUpgradeState, FirmwareUpgradeState), Never> = .init()
-    public var firmwareUpgradeStateDidChangePublisher: AnyPublisher<(FirmwareUpgradeState, FirmwareUpgradeState), Never> {
-        firmwareUpgradeStateDidChangeSubject.eraseToAnyPublisher()
-    }
-
-    let firmwareUpgradeDidCompleteSubject: PassthroughSubject<Void, Never> = .init()
-    public var firmwareUpgradeDidCompletePublisher: AnyPublisher<Void, Never> {
-        firmwareUpgradeDidCompleteSubject.eraseToAnyPublisher()
-    }
-
-    let firmwareUpgradeDidFailSubject: PassthroughSubject<(FirmwareUpgradeState, any Error), Never> = .init()
-    public var firmwareUpgradeDidFailPublisher: AnyPublisher<(FirmwareUpgradeState, any Error), Never> {
-        firmwareUpgradeDidFailSubject.eraseToAnyPublisher()
-    }
-
-    let firmwareUpgradeDidCancelSubject: PassthroughSubject<FirmwareUpgradeState, Never> = .init()
-    public var firmwareUpgradeDidCancelPublisher: AnyPublisher<FirmwareUpgradeState, Never> {
-        firmwareUpgradeDidCancelSubject.eraseToAnyPublisher()
-    }
-
-    let firmwareUploadProgressDidChangeSubject: PassthroughSubject<(Int, Int, Float, Date), Never> = .init()
-    public var firmwareUploadProgressDidChangePublisher: AnyPublisher<(Int, Int, Float, Date), Never> {
-        firmwareUploadProgressDidChangeSubject.eraseToAnyPublisher()
+    public internal(set) var canUpgradeFirmware: Bool = false {
+        didSet {
+            guard canUpgradeFirmware != oldValue else { return }
+            canUpgradeFirmwareSubject.send(canUpgradeFirmware)
+        }
     }
 }
 

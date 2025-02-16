@@ -6,67 +6,37 @@
 //
 
 import Combine
+import Foundation
 
 public extension BSDevice {
     // MARK: - setup
 
-    internal func setupFileTransfer() {
-        mtuPublisher.sink { mtu in
-            self.fileTransferManager.mtu = mtu
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.maxFileLengthPublisher.sink { maxFileLength in
-            self.maxFileLengthSubject.send(maxFileLength)
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileTypePublisher.sink { fileType in
-            self.fileTypeSubject.send(fileType)
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileLengthPublisher.sink { fileLength in
-            self.fileLengthSubject.send(fileLength)
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileChecksumPublisher.sink { [self] fileChecksum in
-            fileChecksumSubject.send(fileChecksum)
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileTransferStatusPublisher.sink { [self] fileTransferStatus in
-            fileTransferStatusSubject.send(fileTransferStatus)
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileTransferProgressPublisher.sink { [self] fileType, direction, progress in
-            fileTransferProgressSubject.send((fileType, direction, progress))
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileTransferCompletePublisher.sink { [self] fileType, direction in
-            fileTransferCompleteSubject.send((fileType, direction))
-        }.store(in: &managerCancellables)
-
-        fileTransferManager.fileReceivedPublisher.sink { [self] fileType, data in
-            fileReceivedSubject.send((fileType, data))
-        }.store(in: &managerCancellables)
-    }
+    internal func setupFileTransfer() {}
 
     // MARK: - maxFileLength
 
     var maxFileLength: BSFileLength { fileTransferManager.maxFileLength }
+    var maxFileLengthPublisher: AnyPublisher<BSFileLength, Never> { fileTransferManager.maxFileLengthPublisher }
 
     // MARK: - fileType
 
     var fileType: BSFileType { fileTransferManager.fileType }
+    var fileTypePublisher: AnyPublisher<BSFileType, Never> { fileTransferManager.fileTypePublisher }
 
     // MARK: - fileLength
 
     var fileLength: BSFileLength { fileTransferManager.fileLength }
+    var fileLengthPublisher: AnyPublisher<BSFileLength, Never> { fileTransferManager.fileLengthPublisher }
 
     // MARK: - fileChecksum
 
     var fileChecksum: BSFileChecksum { fileTransferManager.fileChecksum }
+    var fileChecksumPublisher: AnyPublisher<BSFileChecksum, Never> { fileTransferManager.fileChecksumPublisher }
 
     // MARK: - fileTransferStatus
 
     var fileTransferStatus: BSFileTransferStatus { fileTransferManager.fileTransferStatus }
+    var fileTransferStatusPublisher: AnyPublisher<BSFileTransferStatus, Never> { fileTransferManager.fileTransferStatusPublisher }
 
     // MARK: - transfer commands
 
@@ -80,5 +50,19 @@ public extension BSDevice {
 
     func cancelFileTransfer(sendImmediately: Bool = true) {
         fileTransferManager.cancelFileTransfer(sendImmediately: sendImmediately)
+    }
+
+    // MARK: - publishers
+
+    var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
+        fileTransferManager.fileTransferProgressPublisher
+    }
+
+    var fileReceivedPublisher: AnyPublisher<(BSFileType, Data), Never> {
+        fileTransferManager.fileReceivedPublisher
+    }
+
+    var fileTransferCompletePublisher: AnyPublisher<(BSFileType, BSFileTransferDirection), Never> {
+        fileTransferManager.fileTransferCompletePublisher
     }
 }

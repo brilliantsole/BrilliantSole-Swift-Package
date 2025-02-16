@@ -5,10 +5,12 @@
 //  Created by Zack Qattan on 2/3/25.
 //
 
+import Combine
+
 extension BSDevicePair {
-    func setupSensorDataManager() {
-        sensorDataManager.pressureSensorDataManager.pressureDataPublisher.sink { pressureData, timestamp in
-            self.pressureDataSubject.send((pressureData, timestamp))
-        }.store(in: &cancellables)
+    func setupSensorDataManager() {}
+
+    public var pressureDataPublisher: AnyPublisher<(BSDevicePairPressureData, BSTimestamp), Never> {
+        sensorDataManager.pressureSensorDataManager.pressureDataPublisher
     }
 }

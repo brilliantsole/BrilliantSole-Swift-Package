@@ -174,13 +174,6 @@ public final class BSDevicePair {
         deviceBarometerSubject.eraseToAnyPublisher()
     }
 
-    // MARK: - pressureSensorData
-
-    let pressureDataSubject: PassthroughSubject<(BSDevicePairPressureData, BSTimestamp), Never> = .init()
-    public var pressureDataPublisher: AnyPublisher<(BSDevicePairPressureData, BSTimestamp), Never> {
-        pressureDataSubject.eraseToAnyPublisher()
-    }
-
     // MARK: - tflite
 
     let deviceIsTfliteReadySubject: PassthroughSubject<(BSInsoleSide, BSDevice, Bool), Never> = .init()
