@@ -26,4 +26,13 @@ extension BSBaseClient {
         }
         self.isScanning = isScanning
     }
+
+    var asScanner: BSScanner {
+        if let udpClient = self as? BSUdpClient {
+            return udpClient
+        }
+        else {
+            fatalError("failed to cast self as scanner")
+        }
+    }
 }

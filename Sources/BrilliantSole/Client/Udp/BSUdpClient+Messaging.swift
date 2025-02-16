@@ -96,7 +96,9 @@ extension BSUdpClient {
         logger?.debug("received udpData (\(data.count) bytes)")
         stopWaitingForPong()
         parseMessages(data) { udpMessageType, udpMessageData in
-            self.onUdpMessage(type: udpMessageType, data: udpMessageData)
+            DispatchQueue.main.async { [self] in
+                self.onUdpMessage(type: udpMessageType, data: udpMessageData)
+            }
         }
         sendPendingMessages()
         sendPendingUdpMessages()

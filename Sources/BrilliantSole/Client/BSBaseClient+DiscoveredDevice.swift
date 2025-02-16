@@ -23,7 +23,7 @@ extension BSBaseClient {
                 logger?.debug("discoveredDeviceJson has no deviceType - waiting until it does")
                 return
             }
-            discoveredDevice = BSDiscoveredDevice(scanner: self, discoveredDeviceJson: discoveredDeviceJson)
+            discoveredDevice = BSDiscoveredDevice(scanner: self.asScanner, discoveredDeviceJson: discoveredDeviceJson)
         }
         add(discoveredDevice: discoveredDevice!)
     }

@@ -18,7 +18,7 @@ public class BSBleScanner: BSBaseScanner {
 
     public nonisolated(unsafe) static let shared = BSBleScanner()
 
-    override public static var connectionType: BSConnectionType { .ble }
+    override public class var ConnectionType: BSConnectionType { .ble }
 
     // MARK: - CBCentralManager
 

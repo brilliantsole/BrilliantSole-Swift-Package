@@ -11,7 +11,7 @@ import OSLog
 import UkatonMacros
 
 public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
-    override public var connectionType: BSConnectionType? { .udpClient }
+    override public class var ConnectionType: BSConnectionType { .udpClient }
 
     static let _logger = getLogger(category: "BSUdpClient", disabled: false)
     override var logger: Logger? { Self._logger }

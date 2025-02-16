@@ -11,7 +11,7 @@ import Foundation
 private let logger = getLogger(category: "BSBaseScanner", disabled: false)
 
 public class BSBaseScanner: NSObject, BSScanner {
-    public class var connectionType: BSConnectionType { fatalError("not implemented") }
+    public class var ConnectionType: BSConnectionType { fatalError("not implemented") }
 
     // MARK: - isScanningAvailable
 

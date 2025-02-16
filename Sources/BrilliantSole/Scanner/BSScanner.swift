@@ -10,7 +10,7 @@ import Combine
 private let logger = getLogger(category: "BSScanner", disabled: true)
 
 public protocol BSScanner {
-    static var connectionType: BSConnectionType { get }
+    static var ConnectionType: BSConnectionType { get }
     var connectionType: BSConnectionType { get }
 
     // MARK: - isScanningAvailable
@@ -64,5 +64,5 @@ public extension BSScanner {
 
     func toggleScan() { toggleScan(scanWhenAvailable: true) }
 
-    var connectionType: BSConnectionType { Self.connectionType }
+    var connectionType: BSConnectionType { Self.ConnectionType }
 }
