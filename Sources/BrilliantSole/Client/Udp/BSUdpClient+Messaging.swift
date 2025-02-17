@@ -29,7 +29,7 @@ extension BSUdpClient {
             case .preparing:
                 break
             default:
-                logger?.debug("uncaught newState \(String(describing: newState))")
+                logger?.debug("uncaught newState \"\(String(describing: newState))\"")
             }
         }
         connection?.start(queue: .global())

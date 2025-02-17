@@ -9,7 +9,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 public class BSBleScanner: BSBaseScanner {
     override private init() {
         super.init()

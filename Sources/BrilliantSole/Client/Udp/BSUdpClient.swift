@@ -118,12 +118,11 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     private var pingTimer: Timer?
     static let pingInterval: TimeInterval = 2.0
     func startPinging() {
-        logger?.debug("startPinging")
-        if pingTimer?.isValid == true {
-            stopPinging()
-        }
-
         DispatchQueue.main.async { [self] in
+            logger?.debug("startPinging")
+            if pingTimer?.isValid == true {
+                stopPinging()
+            }
             pingTimer = .scheduledTimer(timeInterval: Self.pingInterval, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
             pingTimer?.tolerance = 0.1
         }
@@ -143,7 +142,6 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     }
 
     @objc private func ping() {
-        print("PING")
         let message: BSUdpMessage
         if didSetReceivePort {
             logger?.debug("pinging")
@@ -160,24 +158,27 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     private var pongTimer: Timer?
     static let pongInterval: TimeInterval = 3.0
     func waitForPong() {
-        if pongTimer?.isValid == true {
-            stopWaitingForPong()
-        }
-        logger?.debug("waiting for pong...")
         DispatchQueue.main.async { [self] in
+            if pongTimer?.isValid == true {
+                stopWaitingForPong()
+            }
             pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: false)
             pongTimer?.tolerance = 0.1
+            logger?.debug("waiting for pong (\(self.pongTimer!.fireDate.timeIntervalSinceNow) seconds")
         }
     }
 
     func stopWaitingForPong() {
-        logger?.debug("stopWaitingForPong")
-        pongTimer?.invalidate()
-        pongTimer = nil
+        guard let pongTimer else {
+            logger?.debug("no pongTimer to stop")
+            return
+        }
+        logger?.debug("stopWaitingForPong (\(pongTimer.fireDate.timeIntervalSinceNow) seconds left)")
+        pongTimer.invalidate()
+        self.pongTimer = nil
     }
 
     @objc private func pongTimeout() {
-        print("PONG TIMEOUT")
         logger?.debug("pongTimeout")
         disconnectedUnintentionally = true
         disconnect()
