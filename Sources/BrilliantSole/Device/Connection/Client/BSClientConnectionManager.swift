@@ -7,7 +7,7 @@
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 class BSClientConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .udpClient }
 

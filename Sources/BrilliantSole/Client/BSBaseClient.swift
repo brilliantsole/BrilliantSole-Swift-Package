@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     public var connectionType: BSConnectionType? { nil }
 
@@ -46,6 +46,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
                 logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
+            // FILL
             connectionManager.isConnected = false
         }
     }

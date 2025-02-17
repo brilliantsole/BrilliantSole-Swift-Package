@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-private let logger = getLogger(category: "BSBaseScanner", disabled: false)
+private let logger = getLogger(category: "BSBaseScanner", disabled: true)
 
 public class BSBaseScanner: NSObject, BSScanner {
     public class var ConnectionType: BSConnectionType { fatalError("not implemented") }

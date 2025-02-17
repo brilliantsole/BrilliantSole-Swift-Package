@@ -13,13 +13,21 @@ import UkatonMacros
 public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
     override public class var ConnectionType: BSConnectionType { .udpClient }
 
-    static let _logger = getLogger(category: "BSUdpClient", disabled: false)
+    static let _logger = getLogger(category: "BSUdpClient", disabled: true)
     override var logger: Logger? { Self._logger }
 
     override func reset() {
         super.reset()
         didSetReceivePort = false
         pendingUdpMessages.removeAll()
+
+        connection?.cancel()
+        connection = nil
+        listener?.cancel()
+        listener = nil
+        stopPinging()
+        reconnectTask?.cancel()
+        reconnectTask = nil
     }
 
     public static let shared = BSUdpClient()
@@ -102,14 +110,6 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
         super.disconnect(_continue: &_continue)
         guard _continue else { return }
 
-        connection?.cancel()
-        connection = nil
-        listener?.cancel()
-        listener = nil
-        stopPinging()
-        reconnectTask?.cancel()
-        reconnectTask = nil
-
         connectionStatus = .notConnected
     }
 
@@ -164,7 +164,7 @@ public final class BSUdpClient: BSBaseClient, @unchecked Sendable {
             }
             pongTimer = .scheduledTimer(timeInterval: Self.pongInterval, target: self, selector: #selector(pongTimeout), userInfo: nil, repeats: false)
             pongTimer?.tolerance = 0.1
-            logger?.debug("waiting for pong (\(self.pongTimer!.fireDate.timeIntervalSinceNow) seconds")
+            logger?.debug("waiting for pong (\(self.pongTimer?.fireDate.timeIntervalSinceNow ?? 0) seconds")
         }
     }
 

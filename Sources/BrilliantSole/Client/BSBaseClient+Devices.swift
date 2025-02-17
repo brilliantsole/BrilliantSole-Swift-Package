@@ -19,9 +19,10 @@ extension BSBaseClient {
             let discoveredDevice = discoveredDevicesMap[id] ?? .init(scanner: self.asScanner, id: id)
             let device = createDevice(discoveredDevice: discoveredDevice)
             guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
-                logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
+                logger?.error("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
+            device.connectionStatus = .connecting
             connectionManager.isConnected = true
         }
     }

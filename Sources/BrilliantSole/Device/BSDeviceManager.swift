@@ -13,9 +13,9 @@ import UkatonMacros
 public final class BSDeviceManager {
     // MARK: - availableDevices
 
-    public private(set) nonisolated(unsafe) static var availableDevices: Set<BSDevice> = .init()
-    private static let availableDevicesSubject: PassthroughSubject<Set<BSDevice>, Never> = .init()
-    public static var availableDevicesPublisher: AnyPublisher<Set<BSDevice>, Never> {
+    public private(set) nonisolated(unsafe) static var availableDevices: [BSDevice] = .init()
+    private static let availableDevicesSubject: PassthroughSubject<[BSDevice], Never> = .init()
+    public static var availableDevicesPublisher: AnyPublisher<[BSDevice], Never> {
         availableDevicesSubject.eraseToAnyPublisher()
     }
 
@@ -26,9 +26,9 @@ public final class BSDeviceManager {
 
     // MARK: - connectedDevices
 
-    public private(set) nonisolated(unsafe) static var connectedDevices: Set<BSDevice> = .init()
-    private static let connectedDevicesSubject: PassthroughSubject<Set<BSDevice>, Never> = .init()
-    public static var connectedDevicesPublisher: AnyPublisher<Set<BSDevice>, Never> {
+    public private(set) nonisolated(unsafe) static var connectedDevices: [BSDevice] = .init()
+    private static let connectedDevicesSubject: PassthroughSubject<[BSDevice], Never> = .init()
+    public static var connectedDevicesPublisher: AnyPublisher<[BSDevice], Never> {
         connectedDevicesSubject.eraseToAnyPublisher()
     }
 
@@ -62,11 +62,11 @@ public final class BSDeviceManager {
     static func onDeviceIsConnected(_ device: BSDevice) {
         if device.isConnected {
             logger?.debug("adding \(device.name) to connectedDevices")
-            connectedDevices.insert(device)
+            connectedDevices.append(device)
             deviceConnectedSubject.send(device)
             if !availableDevices.contains(device) {
                 logger?.debug("adding \(device.name) to availableDevices")
-                availableDevices.insert(device)
+                availableDevices.append(device)
                 availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
                 BSDevicePair.shared.add(device: device)
@@ -74,7 +74,7 @@ public final class BSDeviceManager {
         }
         else if connectedDevices.contains(device) {
             logger?.debug("removing \(device.name) from connectedDevices")
-            connectedDevices.remove(device)
+            connectedDevices.removeAll(where: { $0 == device })
             deviceDisconnectedSubject.send(device)
         }
         if availableDevices.contains(device) {
