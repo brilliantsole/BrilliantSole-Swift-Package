@@ -66,14 +66,22 @@ public final class BSDeviceManager {
         var updatedAvailableDevices = false
 
         if device.isConnected {
-            if !connectedDevices.contains(device) || connectedDevices.first(where: { $0 === device }) == nil {
+            if let similarConnectedDevice = connectedDevices.first(where: { $0 == device && $0 !== device }) {
+                logger?.debug("removing similarConnectedDevice")
+                connectedDevices.removeAll(where: { $0 === similarConnectedDevice })
+            }
+            if !connectedDevices.contains(device) {
                 logger?.debug("adding \(device.name) to connectedDevices")
                 connectedDevices.append(device)
                 updatedConnectedDevices = true
             }
             connectedDeviceSubject.send(device)
 
-            if !availableDevices.contains(device) || availableDevices.first(where: { $0 === device }) == nil {
+            if let similarAvailableDevice = availableDevices.first(where: { $0 == device && $0 !== device }) {
+                logger?.debug("removing similarAvailableDevice")
+                availableDevices.removeAll(where: { $0 === similarAvailableDevice })
+            }
+            if !availableDevices.contains(device) {
                 logger?.debug("adding \(device.name) to availableDevices")
                 availableDevices.append(device)
                 availableDevicesSubject.send(availableDevices)
