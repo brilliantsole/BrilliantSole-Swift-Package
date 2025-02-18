@@ -8,7 +8,7 @@
 import UkatonMacros
 
 @EnumName(accessLevel: "public")
-public enum BSDeviceInformationType: BSNamedEnum, CaseIterable, Sendable {
+public enum BSDeviceInformationType: BSNamedEnum, CaseIterable, Sendable, Comparable {
     case manufacturerNameString
     case modelNumberString
     case softwareRevisionString

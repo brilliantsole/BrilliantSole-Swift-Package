@@ -12,9 +12,18 @@ import UkatonMacros
 public typealias BSDeviceInformationValue = String
 public typealias BSDeviceInformation = [BSDeviceInformationType: BSDeviceInformationValue]
 
+let mockDeviceInformation: BSDeviceInformation = [
+    .modelNumberString: "BrilliantSole",
+    .firmwareRevisionString: "v0.0.0",
+    .hardwareRevisionString: "1",
+    .softwareRevisionString: "1",
+    .manufacturerNameString: "Brilliant Sole, Inc.",
+    .serialNumberString: "0"
+]
+
 @StaticLogger(disabled: true)
 class BSDeviceInformationManager {
-    private(set) var deviceInformation: BSDeviceInformation = .init()
+    internal(set) var deviceInformation: BSDeviceInformation = .init()
 
     private let deviceInformationSubject: PassthroughSubject<BSDeviceInformation, Never> = .init()
     var deviceInformationPublisher: AnyPublisher<BSDeviceInformation, Never> {

@@ -13,7 +13,7 @@ import UkatonMacros
 @StaticLogger(disabled: false)
 public final class BSDevice: BSConnectable, BSMetaDevice {
     public nonisolated(unsafe) static let mock = BSDevice(isMock: true)
-    private let isMock: Bool
+    public let isMock: Bool
 
     // MARK: - init
 
@@ -21,6 +21,7 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
         self.isMock = isMock
         if self.isMock {
             informationManager.initName("mock device")
+            deviceInformationManager.deviceInformation = mockDeviceInformation
         }
         setupManagers()
 
