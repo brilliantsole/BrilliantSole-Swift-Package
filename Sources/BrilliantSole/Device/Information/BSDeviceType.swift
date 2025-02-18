@@ -13,7 +13,7 @@ public enum BSDeviceType: UInt8, BSEnum {
     case leftInsole
     case rightInsole
 
-    var isInsole: Bool {
+    public var isInsole: Bool {
         switch self {
         case .leftInsole, .rightInsole:
             true
@@ -22,7 +22,7 @@ public enum BSDeviceType: UInt8, BSEnum {
         }
     }
 
-    var insoleSide: BSInsoleSide? {
+    public var insoleSide: BSInsoleSide? {
         switch self {
         case .leftInsole:
             .left
