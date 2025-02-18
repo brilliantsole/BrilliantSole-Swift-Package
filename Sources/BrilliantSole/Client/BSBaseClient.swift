@@ -78,6 +78,10 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
     // MARK: - devices
 
     override func createDevice(discoveredDevice: BSDiscoveredDevice) -> BSDevice {
+        let existingDevice = allDevices[discoveredDevice.id]
+        if let existingDevice {
+            return existingDevice
+        }
         let device = super.createDevice(discoveredDevice: discoveredDevice)
         let connectionManager: BSClientConnectionManager = .init(discoveredDevice: discoveredDevice, client: self)
         device.connectionManager = connectionManager
