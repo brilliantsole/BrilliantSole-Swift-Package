@@ -99,6 +99,7 @@ public extension BSDevicePair {
             logger?.error("device.insoleSide not found")
             return
         }
+        checkIsFullyConnected()
         deviceIsConnectedSubject.send((insoleSide, device, isConnected))
     }
 }
