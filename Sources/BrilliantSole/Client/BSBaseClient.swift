@@ -46,6 +46,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
                 logger?.error("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
+            device.connectionStatus = .notConnected
             connectionManager.isConnected = false
             BSDeviceManager.onDeviceIsConnected(device)
         }
