@@ -104,4 +104,8 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         logger?.debug("fully connected")
         connectionStatus = .connected
     }
+
+    // MARK: - isAvailable
+
+    override var isAvailable: Bool { peripheral != nil }
 }

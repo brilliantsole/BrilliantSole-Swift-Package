@@ -159,4 +159,8 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     func sendTxData(_ data: Data) {
         logger?.debug("sending \(data.count) bytes \(data.bytes)")
     }
+
+    // MARK: - isAvailable
+
+    var isAvailable: Bool { false }
 }

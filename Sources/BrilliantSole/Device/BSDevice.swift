@@ -202,6 +202,10 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
             canUpgradeFirmwareSubject.send(canUpgradeFirmware)
         }
     }
+
+    // MARK: - availability
+
+    var isAvailable: Bool { connectionManager?.isAvailable ?? false }
 }
 
 extension BSDevice: Identifiable {}

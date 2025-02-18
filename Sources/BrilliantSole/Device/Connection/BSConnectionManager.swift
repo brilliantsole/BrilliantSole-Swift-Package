@@ -41,6 +41,10 @@ protocol BSConnectionManager: Identifiable & Hashable {
 
     func sendTxData(_ data: Data)
     var sendTxDataPublisher: AnyPublisher<Void, Never> { get }
+
+    // MARK: - isAvailable
+
+    var isAvailable: Bool { get }
 }
 
 extension BSConnectionManager {
@@ -55,4 +59,6 @@ extension BSConnectionManager {
             connect()
         }
     }
+
+    var isAvailable: Bool { false }
 }

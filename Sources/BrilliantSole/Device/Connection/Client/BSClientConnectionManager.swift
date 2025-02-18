@@ -116,4 +116,8 @@ class BSClientConnectionManager: BSBaseConnectionManager {
         logger?.debug("requesting deviceInformation")
         client.sendDeviceMessages(Self.requiredDeviceInformationMessages, id: id)
     }
+
+    // MARK: - isAvailable
+
+    override var isAvailable: Bool { client.isConnected }
 }

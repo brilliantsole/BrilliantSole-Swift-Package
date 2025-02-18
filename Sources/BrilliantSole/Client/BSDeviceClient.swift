@@ -9,7 +9,7 @@ import Foundation
 
 private let logger = getLogger(category: "BSClient", disabled: true)
 
-protocol BSDeviceClient {
+protocol BSDeviceClient: BSConnectable {
     func sendConnectToDeviceMessage(id: String, sendImmediately: Bool)
     func sendDisconnectFromDeviceMessage(id: String, sendImmediately: Bool)
     func sendDeviceMessages(_ messages: [BSConnectionMessage], id: String, sendImmediately: Bool)

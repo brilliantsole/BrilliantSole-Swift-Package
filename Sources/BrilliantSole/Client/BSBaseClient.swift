@@ -32,7 +32,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
         isScanningAvailable = false
 
         discoveredDevicesMap.removeAll()
-        devices.removeAll()
+        // devices.removeAll()
 
         discoveredDevices.removeAll()
         discoveredDevicesSubject.value = discoveredDevices
@@ -46,7 +46,6 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
                 logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
-            // FILL
             connectionManager.isConnected = false
         }
     }
@@ -122,8 +121,8 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
                 reset()
                 if disconnectedUnintentionally && reconnectOnDisconnection {
                     logger?.debug("attempting reconnection")
-                    connect()
                     disconnectedUnintentionally = false
+                    connect()
                 }
             default:
                 break
