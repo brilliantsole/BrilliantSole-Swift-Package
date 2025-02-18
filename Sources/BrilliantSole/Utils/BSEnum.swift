@@ -14,7 +14,8 @@ public protocol BSNamedEnum: Identifiable {
 }
 
 public extension BSNamedEnum {
-    var id: String { name }
+    // var id: String { name }
+    var id: Self { self }
 }
 
 extension BSNamedEnum where Self: CaseIterable {

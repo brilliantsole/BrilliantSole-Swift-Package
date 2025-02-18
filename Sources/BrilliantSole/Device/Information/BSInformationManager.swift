@@ -124,6 +124,15 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
         name = newName
     }
 
+    func setName(_ newName: String, sendImmediately: Bool = true) {
+        guard newName != name else {
+            logger?.debug("redundant name assignment \(newName)")
+            return
+        }
+        logger?.debug("setting name \(newName)")
+        createAndSendMessage(.setName, data: BSStringUtils.toBytes(newName, includeLength: true), sendImmediately: sendImmediately)
+    }
+
     // MARK: - deviceType
 
     private let deviceTypeSubject = CurrentValueSubject<BSDeviceType, Never>(.leftInsole)
@@ -155,6 +164,15 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     func initDeviceType(_ newDeviceType: BSDeviceType) {
         logger?.debug("initializing deviceType to \(newDeviceType.name)")
         deviceType = newDeviceType
+    }
+
+    func setDeviceType(_ newDeviceType: BSDeviceType, sendImmediately: Bool = true) {
+        guard newDeviceType != deviceType else {
+            logger?.debug("redundant deviceType assignment \(newDeviceType.name)")
+            return
+        }
+        logger?.debug("setting deviceType \(newDeviceType.name)")
+        createAndSendMessage(.setDeviceType, data: newDeviceType.data, sendImmediately: sendImmediately)
     }
 
     // MARK: - currentTime

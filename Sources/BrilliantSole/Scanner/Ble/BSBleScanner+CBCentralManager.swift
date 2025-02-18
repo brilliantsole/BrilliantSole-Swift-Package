@@ -26,7 +26,7 @@ extension BSBleScanner: CBCentralManagerDelegate {
         case .poweredOn:
             logger?.debug("centralManager state \"poweredOn\"")
         @unknown default:
-            logger?.debug("centralManager state \"unknoen\"")
+            logger?.debug("centralManager state \"unknown\"")
         }
         isScanningAvailable = centralManager.state == .poweredOn
     }

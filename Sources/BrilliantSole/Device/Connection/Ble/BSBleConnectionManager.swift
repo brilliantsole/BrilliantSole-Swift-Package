@@ -107,5 +107,5 @@ class BSBleConnectionManager: BSBaseConnectionManager {
 
     // MARK: - isAvailable
 
-    override var isAvailable: Bool { peripheral != nil }
+    override var isAvailable: Bool { centralManager.state == .poweredOn && peripheral != nil }
 }

@@ -15,4 +15,8 @@ public extension BSDevice {
 
     var isBatteryCharging: Bool { batteryManager.isBatteryCharging }
     var isBatteryChargingPublisher: AnyPublisher<Bool, Never> { batteryManager.isBatteryChargingPublisher }
+
+    func getBatteryCurrent(sendImmediately: Bool = true) {
+        batteryManager.getBatteryCurrent(sendImmediately: sendImmediately)
+    }
 }

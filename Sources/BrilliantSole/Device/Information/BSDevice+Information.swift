@@ -25,6 +25,10 @@ public extension BSDevice {
     var deviceType: BSDeviceType { informationManager.deviceType }
     var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> { informationManager.deviceTypePublisher }
 
+    func setDeviceType(_ newDeviceType: BSDeviceType, sendImmediately: Bool = true) {
+        informationManager.setDeviceType(newDeviceType, sendImmediately: sendImmediately)
+    }
+
     var isInsole: Bool { deviceType.isInsole }
     var insoleSide: BSInsoleSide? { deviceType.insoleSide }
 
@@ -32,4 +36,8 @@ public extension BSDevice {
 
     var name: String { informationManager.name }
     var namePublisher: AnyPublisher<String, Never> { informationManager.namePublisher }
+
+    func setName(_ newName: String, sendImmediately: Bool = true) {
+        informationManager.setName(newName, sendImmediately: sendImmediately)
+    }
 }
