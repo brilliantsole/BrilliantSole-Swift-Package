@@ -41,12 +41,13 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         receivedMessageTypes.removeAll()
 
-        for (_, device) in devices {
+        for (_, device) in allDevices {
             guard let connectionManager = device.connectionManager as? BSClientConnectionManager else {
-                logger?.debug("failed to cast connectionManager to BSClientConnectionManager")
+                logger?.error("failed to cast connectionManager to BSClientConnectionManager")
                 continue
             }
             connectionManager.isConnected = false
+            BSDeviceManager.onDeviceIsConnected(device)
         }
     }
 

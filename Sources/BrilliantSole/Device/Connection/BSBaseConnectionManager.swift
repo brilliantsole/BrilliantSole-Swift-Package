@@ -95,6 +95,11 @@ class BSBaseConnectionManager: NSObject, BSConnectionManager {
     }
 
     func connect(_continue: inout Bool) {
+        guard isAvailable else {
+            logger?.error("device not available")
+            _continue = false
+            return
+        }
         guard !isConnected else {
             logger?.debug("already connected")
             _continue = false

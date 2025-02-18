@@ -106,7 +106,7 @@ public class BSBaseScanner: NSObject, BSScanner {
             return
         }
         discoveredDevicesMap.removeAll()
-        devices.removeAll()
+        // devices.removeAll()
 
         discoveredDevices.removeAll()
         discoveredDevicesSubject.value = discoveredDevices

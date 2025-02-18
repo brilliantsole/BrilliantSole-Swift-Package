@@ -205,7 +205,7 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
 
     // MARK: - availability
 
-    var isAvailable: Bool { connectionManager?.isAvailable ?? false }
+    public var isAvailable: Bool { connectionManager?.isAvailable ?? false }
 }
 
 extension BSDevice: Identifiable {}

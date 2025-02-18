@@ -6,3 +6,4 @@
 //
 
 typealias BSUdpMessage = BSMessage<BSUdpMessageType>
+

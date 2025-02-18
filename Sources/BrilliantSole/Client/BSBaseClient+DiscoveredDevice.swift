@@ -25,6 +25,10 @@ extension BSBaseClient {
             }
             discoveredDevice = BSDiscoveredDevice(scanner: self.asScanner, discoveredDeviceJson: discoveredDeviceJson)
         }
+        if let discoveredDevice, let device = allDevices[discoveredDevice.id], discoveredDevice.device != device {
+            logger?.debug("assigning existing device to discoveredDevice")
+            discoveredDevice.device = device
+        }
         add(discoveredDevice: discoveredDevice!)
     }
 
