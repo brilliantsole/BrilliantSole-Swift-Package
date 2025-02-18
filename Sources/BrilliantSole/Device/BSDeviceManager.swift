@@ -66,14 +66,14 @@ public final class BSDeviceManager {
         var updatedAvailableDevices = false
 
         if device.isConnected {
-            if !connectedDevices.contains(device) {
+            if !connectedDevices.contains(device) || connectedDevices.first(where: { $0 === device }) == nil {
                 logger?.debug("adding \(device.name) to connectedDevices")
                 connectedDevices.append(device)
                 updatedConnectedDevices = true
             }
             connectedDeviceSubject.send(device)
 
-            if !availableDevices.contains(device) {
+            if !availableDevices.contains(device) || availableDevices.first(where: { $0 === device }) == nil {
                 logger?.debug("adding \(device.name) to availableDevices")
                 availableDevices.append(device)
                 availableDevicesSubject.send(availableDevices)
@@ -87,13 +87,13 @@ public final class BSDeviceManager {
 
             if availableDevices.contains(device), !device.isAvailable {
                 logger?.debug("removing \(device.name) from availableDevices")
-                availableDevices.removeAll(where: { $0 == device })
+                availableDevices.removeAll(where: { $0 === device })
                 updatedAvailableDevices = true
             }
 
             if connectedDevices.contains(device) {
                 logger?.debug("removing \(device.name) from connectedDevices")
-                connectedDevices.removeAll(where: { $0 == device })
+                connectedDevices.removeAll(where: { $0 === device })
                 updatedConnectedDevices = true
             }
         }
