@@ -122,8 +122,8 @@ public final class BSDevicePair {
         deviceGravitySubject.eraseToAnyPublisher()
     }
 
-    let deviceGyroscopeSubject: PassthroughSubject<(BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> = .init()
-    public var deviceGyroscopePublisher: AnyPublisher<(BSInsoleSide, BSDevice, BSVector3D, BSTimestamp), Never> {
+    let deviceGyroscopeSubject: PassthroughSubject<(BSInsoleSide, BSDevice, BSRotation3D, BSTimestamp), Never> = .init()
+    public var deviceGyroscopePublisher: AnyPublisher<(BSInsoleSide, BSDevice, BSRotation3D, BSTimestamp), Never> {
         deviceGyroscopeSubject.eraseToAnyPublisher()
     }
 

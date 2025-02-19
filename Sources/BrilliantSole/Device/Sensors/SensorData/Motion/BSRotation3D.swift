@@ -62,6 +62,7 @@ extension BSRotation3D {
         let roll: Angle2D = .init(radians: z)
 
         let rotation: Self = .init(eulerAngles: .init(x: pitch, y: yaw, z: roll, order: .xyz))
+        // FIX
 
         logger?.debug("parsed rotation: \(rotation)")
 

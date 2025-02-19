@@ -130,7 +130,7 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
             return
         }
         logger?.debug("setting name \(newName)")
-        createAndSendMessage(.setName, data: BSStringUtils.toBytes(newName, includeLength: true), sendImmediately: sendImmediately)
+        createAndSendMessage(.setName, data: BSStringUtils.toBytes(newName, includeLength: false), sendImmediately: sendImmediately)
     }
 
     // MARK: - deviceType

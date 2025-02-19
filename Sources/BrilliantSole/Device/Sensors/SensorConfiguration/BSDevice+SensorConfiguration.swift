@@ -19,6 +19,7 @@ public extension BSDevice {
     func setSensorConfiguration(_ newSensorConfiguration: BSSensorConfiguration, clearRest: Bool = false, sendImmediately: Bool = true) {
         sensorConfigurationManager.setSensorConfiguration(newSensorConfiguration, clearRest: clearRest, sendImmediately: sendImmediately)
     }
+    
 
     func setSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool = true) {
         sensorConfigurationManager.setSensorRate(sensorType: sensorType, sensorRate: sensorRate, sendImmediately: sendImmediately)

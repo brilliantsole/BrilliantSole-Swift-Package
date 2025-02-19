@@ -68,7 +68,7 @@ final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMes
         }
         var _newSensorConfiguration = newSensorConfiguration
         if clearRest {
-            sensorConfiguration.sensorTypes.filter { _newSensorConfiguration.contains($0) }.forEach { _newSensorConfiguration[$0] = ._0ms }
+            sensorConfiguration.sensorTypes.filter { !_newSensorConfiguration.contains($0) }.forEach { _newSensorConfiguration[$0] = ._0ms }
         }
         logger?.debug("sending setSensorConfiguration: \(_newSensorConfiguration)")
         createAndSendMessage(.setSensorConfiguration, data: _newSensorConfiguration.getData(), sendImmediately: sendImmediately)

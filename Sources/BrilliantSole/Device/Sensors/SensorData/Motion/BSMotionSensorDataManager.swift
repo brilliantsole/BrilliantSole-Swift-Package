@@ -12,6 +12,18 @@ import UkatonMacros
 
 public typealias BSStepCount = UInt32
 
+public typealias BSVector3DData = (vector: BSVector3D, timestamp: BSTimestamp)
+typealias BSVector3DSubject = PassthroughSubject<BSVector3DData, Never>
+public typealias BSVector3DPublisher = AnyPublisher<BSVector3DData, Never>
+
+public typealias BSRotation3DData = (rotation: BSRotation3D, timestamp: BSTimestamp)
+typealias BSRotation3DSubject = PassthroughSubject<BSRotation3DData, Never>
+public typealias BSRotation3DPublisher = AnyPublisher<BSRotation3DData, Never>
+
+public typealias BSQuaternionData = (quaternion: BSQuaternion, timestamp: BSTimestamp)
+typealias BSQuaternionSubject = PassthroughSubject<BSQuaternionData, Never>
+public typealias BSQuaternionPublisher = AnyPublisher<BSQuaternionData, Never>
+
 @StaticLogger(disabled: true)
 final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [
@@ -38,7 +50,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         case .gameRotation, .rotation:
             parseQuaternion(sensorType: sensorType, data: data, timestamp: timestamp, scalar: scalar)
         case .orientation:
-            parseOrientation(sensorType: sensorType, data: data, timestamp: timestamp, scalar: scalar)
+            parseRotation(sensorType: sensorType, data: data, timestamp: timestamp, scalar: scalar)
         case .activity:
             parseActivity(data: data, timestamp: timestamp)
         case .stepCount:
@@ -54,29 +66,23 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - vector
 
-    typealias BSVector3DSubject = PassthroughSubject<(BSVector3D, BSTimestamp), Never>
     private let accelerationSubject: BSVector3DSubject = .init()
-    var accelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var accelerationPublisher: BSVector3DPublisher {
         accelerationSubject.eraseToAnyPublisher()
     }
 
     private let gravitySubject: BSVector3DSubject = .init()
-    var gravityPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var gravityPublisher: BSVector3DPublisher {
         gravitySubject.eraseToAnyPublisher()
     }
 
     private let linearAccelerationSubject: BSVector3DSubject = .init()
-    var linearAccelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var linearAccelerationPublisher: BSVector3DPublisher {
         linearAccelerationSubject.eraseToAnyPublisher()
     }
 
-    private let gyroscopeSubject: BSVector3DSubject = .init()
-    var gyroscopePublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
-        gyroscopeSubject.eraseToAnyPublisher()
-    }
-
     private let magnetometerSubject: BSVector3DSubject = .init()
-    var magnetometerPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var magnetometerPublisher: BSVector3DPublisher {
         magnetometerSubject.eraseToAnyPublisher()
     }
 
@@ -88,8 +94,6 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
             gravitySubject
         case .linearAcceleration:
             linearAccelerationSubject
-        case .gyroscope:
-            gyroscopeSubject
         case .magnetometer:
             magnetometerSubject
         default:
@@ -108,14 +112,13 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - quaternion
 
-    typealias BSQuaternionSubject = PassthroughSubject<(BSQuaternion, BSTimestamp), Never>
     private let gameRotationSubject: BSQuaternionSubject = .init()
-    var gameRotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+    var gameRotationPublisher: BSQuaternionPublisher {
         gameRotationSubject.eraseToAnyPublisher()
     }
 
     private let rotationSubject: BSQuaternionSubject = .init()
-    var rotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+    var rotationPublisher: BSQuaternionPublisher {
         rotationSubject.eraseToAnyPublisher()
     }
 
@@ -139,17 +142,36 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         quaternionSubject.send((quaternion, timestamp))
     }
 
-    // MARK: - orientation
+    // MARK: - rotation
 
-    private let orientationSubject = PassthroughSubject<(BSRotation3D, BSTimestamp), Never>()
-    var orientationPublisher: AnyPublisher<(BSRotation3D, BSTimestamp), Never> {
+    private let orientationSubject: BSRotation3DSubject = .init()
+    var orientationPublisher: BSRotation3DPublisher {
         orientationSubject.eraseToAnyPublisher()
     }
 
-    func parseOrientation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
-        guard let orientation = BSRotation3D.parse(data, scalar: scalar) else { return }
-        logger?.debug("parsed orientation: \(orientation) (\(timestamp)ms")
-        orientationSubject.send((orientation, timestamp))
+    private let gyroscopeSubject: BSRotation3DSubject = .init()
+    var gyroscopePublisher: BSRotation3DPublisher {
+        gyroscopeSubject.eraseToAnyPublisher()
+    }
+
+    private func getRotationSubject(for sensorType: BSSensorType) -> BSRotation3DSubject? {
+        switch sensorType {
+        case .orientation:
+            orientationSubject
+        case .gyroscope:
+            gyroscopeSubject
+        default:
+            nil
+        }
+    }
+
+    func parseRotation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
+        guard let rotation = BSRotation3D.parse(data, scalar: scalar) else { return }
+        logger?.debug("parsed rotation: \(rotation) (\(timestamp)ms")
+        guard let rotationSubject = getRotationSubject(for: sensorType) else {
+            fatalError("no rotationSubject defined for sensorType \(sensorType.name)")
+        }
+        rotationSubject.send((rotation, timestamp))
     }
 
     // MARK: - activity

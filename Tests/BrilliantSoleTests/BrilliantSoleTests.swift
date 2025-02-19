@@ -125,15 +125,17 @@ struct BSTests {
 
     @Test func deviceManagerTest() async throws {
         connectToDevice()
-        BSDeviceManager.deviceConnectedPublisher.sink { device in
+        BSDeviceManager.connectedDevicePublisher.sink { device in
             print("connectedDevice \(device.name) added")
         }.store(in: &cancellablesStore.cancellables)
         try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
     }
 
     @Test func deviceSensorDataTest() async throws {
-        connectToDevice(withName: "Right 3", onConnectedDevice: { device in
-            device.setSensorRate(sensorType: .orientation, sensorRate: ._100ms)
+        connectToDevice(withName: "Right", onConnectedDevice: { device in
+            // device.setSensorRate(sensorType: .orientation, sensorRate: ._100ms)
+            var sensorConfiguration: BSSensorConfiguration = [.deviceOrientation: ._100ms, .pressure: ._100ms]
+            device.setSensorConfiguration(sensorConfiguration)
             device.pressureDataPublisher.sink { pressureData, _ in
                 for (index, sensor) in pressureData.sensors.enumerated() {
                     print("#\(index): \(sensor.rawValue)")

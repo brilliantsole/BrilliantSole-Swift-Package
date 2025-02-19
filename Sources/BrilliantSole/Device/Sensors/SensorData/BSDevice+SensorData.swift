@@ -24,35 +24,35 @@ public extension BSDevice {
 
     private func setupMotionData() {}
 
-    var accelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var accelerationPublisher: BSVector3DPublisher {
         sensorDataManager.motionSensorDataManager.accelerationPublisher
     }
 
-    var linearAccelerationPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var linearAccelerationPublisher: BSVector3DPublisher {
         sensorDataManager.motionSensorDataManager.linearAccelerationPublisher
     }
 
-    var gravityPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var gravityPublisher: BSVector3DPublisher {
         sensorDataManager.motionSensorDataManager.gravityPublisher
     }
 
-    var gyroscopePublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var gyroscopePublisher: BSRotation3DPublisher {
         sensorDataManager.motionSensorDataManager.gyroscopePublisher
     }
 
-    var magnetometerPublisher: AnyPublisher<(BSVector3D, BSTimestamp), Never> {
+    var magnetometerPublisher: BSVector3DPublisher {
         sensorDataManager.motionSensorDataManager.magnetometerPublisher
     }
 
-    var gameRotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+    var gameRotationPublisher: BSQuaternionPublisher {
         sensorDataManager.motionSensorDataManager.gameRotationPublisher
     }
 
-    var rotationPublisher: AnyPublisher<(BSQuaternion, BSTimestamp), Never> {
+    var rotationPublisher: BSQuaternionPublisher {
         sensorDataManager.motionSensorDataManager.rotationPublisher
     }
 
-    var orientationPublisher: AnyPublisher<(BSRotation3D, BSTimestamp), Never> {
+    var orientationPublisher: BSRotation3DPublisher {
         sensorDataManager.motionSensorDataManager.orientationPublisher
     }
 
