@@ -36,7 +36,7 @@ public extension BSDevice {
         sensorDataManager.motionSensorDataManager.gravityPublisher
     }
 
-    var gyroscopePublisher: BSRotation3DPublisher {
+    var gyroscopePublisher: BSVector3DPublisher {
         sensorDataManager.motionSensorDataManager.gyroscopePublisher
     }
 

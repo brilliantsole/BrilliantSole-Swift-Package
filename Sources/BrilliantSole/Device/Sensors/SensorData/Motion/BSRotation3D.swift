@@ -46,7 +46,7 @@ public extension BSRotation3D {
 }
 
 extension BSRotation3D {
-    static func parse(_ data: Data, scalar: Float) -> Self? {
+    static func parse(_ data: Data, scalar: Float, sensorType: BSSensorType) -> Self? {
         let rawX = Int16.parse(data, at: 0)
         let rawY = Int16.parse(data, at: 2)
         let rawZ = Int16.parse(data, at: 4)
@@ -57,12 +57,26 @@ extension BSRotation3D {
         let y = Double(rawY) * Double(scalar)
         let z = Double(rawZ) * Double(scalar)
 
-        let yaw: Angle2D = .init(radians: x)
-        let pitch: Angle2D = .init(radians: y)
-        let roll: Angle2D = .init(radians: z)
+        let pitchDegrees: Double
+        let yawDegrees: Double
+        let rollDegrees = z
 
-        let rotation: Self = .init(eulerAngles: .init(x: pitch, y: yaw, z: roll, order: .xyz))
-        // FIX
+        switch sensorType {
+        case .orientation:
+            pitchDegrees = -y
+            yawDegrees = -x
+//        case .gyroscope:
+//            pitchDegrees = x
+//            yawDegrees = y
+        default:
+            fatalError("uncaught sensorType \(sensorType.name)")
+        }
+
+        let pitch: Angle2D = .init(degrees: pitchDegrees)
+        let yaw: Angle2D = .init(degrees: yawDegrees)
+        let roll: Angle2D = .init(degrees: rollDegrees)
+
+        let rotation: Self = .init(eulerAngles: .init(x: pitch, y: yaw, z: roll, order: .zxy))
 
         logger?.debug("parsed rotation: \(rotation)")
 

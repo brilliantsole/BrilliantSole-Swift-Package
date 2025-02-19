@@ -81,6 +81,11 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         linearAccelerationSubject.eraseToAnyPublisher()
     }
 
+    private let gyroscopeSubject: BSVector3DSubject = .init()
+    var gyroscopePublisher: BSVector3DPublisher {
+        gyroscopeSubject.eraseToAnyPublisher()
+    }
+
     private let magnetometerSubject: BSVector3DSubject = .init()
     var magnetometerPublisher: BSVector3DPublisher {
         magnetometerSubject.eraseToAnyPublisher()
@@ -94,6 +99,8 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
             gravitySubject
         case .linearAcceleration:
             linearAccelerationSubject
+        case .gyroscope:
+            gyroscopeSubject
         case .magnetometer:
             magnetometerSubject
         default:
@@ -149,24 +156,24 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         orientationSubject.eraseToAnyPublisher()
     }
 
-    private let gyroscopeSubject: BSRotation3DSubject = .init()
-    var gyroscopePublisher: BSRotation3DPublisher {
-        gyroscopeSubject.eraseToAnyPublisher()
-    }
+//    private let gyroscopeSubject: BSRotation3DSubject = .init()
+//    var gyroscopePublisher: BSRotation3DPublisher {
+//        gyroscopeSubject.eraseToAnyPublisher()
+//    }
 
     private func getRotationSubject(for sensorType: BSSensorType) -> BSRotation3DSubject? {
         switch sensorType {
         case .orientation:
             orientationSubject
-        case .gyroscope:
-            gyroscopeSubject
+//        case .gyroscope:
+//            gyroscopeSubject
         default:
             nil
         }
     }
 
     func parseRotation(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
-        guard let rotation = BSRotation3D.parse(data, scalar: scalar) else { return }
+        guard let rotation = BSRotation3D.parse(data, scalar: scalar, sensorType: sensorType) else { return }
         logger?.debug("parsed rotation: \(rotation) (\(timestamp)ms")
         guard let rotationSubject = getRotationSubject(for: sensorType) else {
             fatalError("no rotationSubject defined for sensorType \(sensorType.name)")
