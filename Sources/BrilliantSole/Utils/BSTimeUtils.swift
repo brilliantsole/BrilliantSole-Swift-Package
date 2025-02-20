@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSTimeUtils", disabled: true)
+private let logger = getLogger(category: "BSTimeUtils", disabled: false)
 
 public typealias BSTimestamp = UInt64
 
@@ -37,8 +37,13 @@ func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> BSTimestamp? {
     logger?.debug("timestampDifference: \(timestampDifference)ms")
     if timestampDifference > timestampThreshold {
         logger?.debug("correcting timestamp overflow")
-        let timestampCorrection = Int(UInt16.max) * (Int(currentTime) - Int(timestamp)).signum()
-        timestamp = BSTimestamp(clamping: Int(timestamp) + timestampCorrection)
+        let timestampCorrection = BSTimestamp(UInt16.max) + 1
+        if currentTime > timestamp {
+            timestamp &+= timestampCorrection
+        }
+        else {
+            timestamp &-= timestampCorrection
+        }
     }
 
     logger?.debug("timestamp: \(timestamp)ms")

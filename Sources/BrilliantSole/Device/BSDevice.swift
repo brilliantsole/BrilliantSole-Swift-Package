@@ -10,7 +10,7 @@ import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 public final class BSDevice: BSConnectable, BSMetaDevice {
     public nonisolated(unsafe) static let mock = BSDevice(isMock: true)
     public let isMock: Bool
