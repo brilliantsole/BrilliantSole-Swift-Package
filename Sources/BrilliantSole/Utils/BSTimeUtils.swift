@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSTimeUtils", disabled: false)
+private let logger = getLogger(category: "BSTimeUtils", disabled: true)
 
 public typealias BSTimestamp = UInt64
 
