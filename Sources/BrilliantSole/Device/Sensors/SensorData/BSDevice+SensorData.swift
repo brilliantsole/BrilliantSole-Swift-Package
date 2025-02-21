@@ -18,7 +18,17 @@ public extension BSDevice {
 
     private func setupPressureData() {}
 
-    var pressureDataPublisher: AnyPublisher<BSPressureDataTuple, Never> { sensorDataManager.pressureSensorDataManager.pressureDataPublisher }
+    var pressureDataPublisher: BSPressureDataPublisher {
+        sensorDataManager.pressureSensorDataManager.pressureDataPublisher
+    }
+
+    var centerOfPressurePublisher: BSCenterOfPressurePublisher {
+        sensorDataManager.pressureSensorDataManager.centerOfPressurePublisher
+    }
+
+    func resetPressure() {
+        sensorDataManager.pressureSensorDataManager.reset()
+    }
 
     // MARK: - motion
 
@@ -80,3 +90,5 @@ public extension BSDevice {
         sensorDataManager.barometerSensorDataManager.barometerPublisher
     }
 }
+
+extension BSDevice: BSCenterOfPressureProvider {}

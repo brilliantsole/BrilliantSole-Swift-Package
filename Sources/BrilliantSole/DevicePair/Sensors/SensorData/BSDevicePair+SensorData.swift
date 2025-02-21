@@ -7,10 +7,20 @@
 
 import Combine
 
-extension BSDevicePair {
-    func setupSensorDataManager() {}
+public extension BSDevicePair {
+    internal func setupSensorDataManager() {}
 
-    public var pressureDataPublisher: BSDevicePairPressurePublisher {
+    var pressureDataPublisher: BSDevicePairPressurePublisher {
         sensorDataManager.pressureSensorDataManager.pressureDataPublisher
     }
+
+    var centerOfPressurePublisher: BSCenterOfPressurePublisher {
+        sensorDataManager.pressureSensorDataManager.centerOfPressurePublisher
+    }
+
+    func resetPressure() {
+        sensorDataManager.pressureSensorDataManager.reset()
+    }
 }
+
+extension BSDevicePair: BSCenterOfPressureProvider {}

@@ -24,6 +24,11 @@ class BSDevicePairPressureSensorDataManager {
         pressureDataSubject.eraseToAnyPublisher()
     }
 
+    private let centerOfPressureSubject: BSCenterOfPressureSubject = .init()
+    var centerOfPressurePublisher: BSCenterOfPressurePublisher {
+        centerOfPressureSubject.eraseToAnyPublisher()
+    }
+
     func onDevicePressureData(insoleSide: BSInsoleSide, pressureData: BSPressureData, timestamp: BSTimestamp) {
         logger?.debug("assigning \(insoleSide.name) pressure data")
         devicePressureData[insoleSide] = pressureData
@@ -69,6 +74,10 @@ class BSDevicePairPressureSensorDataManager {
             centerOfPressure: centerOfPressure,
             normalizedCenterOfPressure: normalizedCenterOfPressure)
         pressureDataSubject.send((pressureData, timestamp))
+
+        if let centerOfPressure, let normalizedCenterOfPressure {
+            centerOfPressureSubject.send((centerOfPressure, normalizedCenterOfPressure, timestamp))
+        }
     }
 
     func reset() {

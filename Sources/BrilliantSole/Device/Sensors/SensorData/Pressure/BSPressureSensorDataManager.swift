@@ -11,8 +11,8 @@ import OSLog
 import UkatonMacros
 
 public typealias BSPressureDataTuple = (pressure: BSPressureData, timestamp: BSTimestamp)
-typealias BSPressureSubject = PassthroughSubject<BSPressureDataTuple, Never>
-public typealias BSPressurePublisher = AnyPublisher<BSPressureDataTuple, Never>
+typealias BSPressureDataSubject = PassthroughSubject<BSPressureDataTuple, Never>
+public typealias BSPressureDataPublisher = AnyPublisher<BSPressureDataTuple, Never>
 
 @StaticLogger(disabled: true)
 final class BSPressureSensorDataManager: BSBaseSensorDataManager {
@@ -38,9 +38,14 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - pressureData
 
-    private let pressureDataSubject = PassthroughSubject<BSPressureDataTuple, Never>()
-    var pressureDataPublisher: AnyPublisher<BSPressureDataTuple, Never> {
+    private let pressureDataSubject = BSPressureDataSubject()
+    var pressureDataPublisher: BSPressureDataPublisher {
         pressureDataSubject.eraseToAnyPublisher()
+    }
+
+    private let centerOfPressureSubject = BSCenterOfPressureSubject()
+    var centerOfPressurePublisher: BSCenterOfPressurePublisher {
+        centerOfPressureSubject.eraseToAnyPublisher()
     }
 
     func parsePressureData(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
@@ -50,6 +55,10 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
         }
         logger?.debug("pressureData: \(String(describing: pressureData)) (\(timestamp)ms")
         pressureDataSubject.send((pressureData, timestamp))
+
+        if let centerOfPressure = pressureData.centerOfPressure, let normalizedCenterOfPressure = pressureData.normalizedCenterOfPressure {
+            centerOfPressureSubject.send((centerOfPressure, normalizedCenterOfPressure, timestamp))
+        }
     }
 
     // MARK: - ranges

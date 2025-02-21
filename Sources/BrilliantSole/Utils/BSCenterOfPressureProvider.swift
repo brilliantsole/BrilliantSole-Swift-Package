@@ -7,8 +7,11 @@
 
 import Combine
 
-public typealias BSCenterOfPressureDataTuple = (pressure: any BSCenterOfPressureData, timestamp: BSTimestamp)
+public typealias BSCenterOfPressureTuple = (centerOfPressure: BSCenterOfPressure, normalizedCenterOfPressure: BSCenterOfPressure, timestamp: BSTimestamp)
+typealias BSCenterOfPressureSubject = PassthroughSubject<BSCenterOfPressureTuple, Never>
+public typealias BSCenterOfPressurePublisher = AnyPublisher<BSCenterOfPressureTuple, Never>
 
-public protocol BSCenterOfPressureDataProvider {
-    var pressureDataPublisher: AnyPublisher<BSCenterOfPressureDataTuple, Never> { get }
+public protocol BSCenterOfPressureProvider {
+    var centerOfPressurePublisher: BSCenterOfPressurePublisher { get }
+    func resetPressure()
 }
