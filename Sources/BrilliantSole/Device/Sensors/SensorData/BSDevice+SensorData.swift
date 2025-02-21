@@ -18,7 +18,7 @@ public extension BSDevice {
 
     private func setupPressureData() {}
 
-    var pressureDataPublisher: AnyPublisher<(BSPressureData, BSTimestamp), Never> { sensorDataManager.pressureSensorDataManager.pressureDataPublisher }
+    var pressureDataPublisher: AnyPublisher<BSPressureDataTuple, Never> { sensorDataManager.pressureSensorDataManager.pressureDataPublisher }
 
     // MARK: - motion
 

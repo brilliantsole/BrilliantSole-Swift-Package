@@ -9,14 +9,18 @@ import Combine
 import OSLog
 import UkatonMacros
 
+public typealias BSDevicePairPressureDataTuple = (pressure: BSDevicePairPressureData, timestamp: BSTimestamp)
+typealias BSDevicePairPressureSubject = PassthroughSubject<BSDevicePairPressureDataTuple, Never>
+public typealias BSDevicePairPressurePublisher = AnyPublisher<BSDevicePairPressureDataTuple, Never>
+
 @StaticLogger(disabled: true)
 class BSDevicePairPressureSensorDataManager {
     private var devicePressureData: [BSInsoleSide: BSPressureData] = .init()
     private var hasAllData: Bool { devicePressureData.count == 2 }
     private var centerOfPressureRange: BSCenterOfPressureRange = .init()
 
-    private let pressureDataSubject: PassthroughSubject<(BSDevicePairPressureData, BSTimestamp), Never> = .init()
-    var pressureDataPublisher: AnyPublisher<(BSDevicePairPressureData, BSTimestamp), Never> {
+    private let pressureDataSubject: BSDevicePairPressureSubject = .init()
+    var pressureDataPublisher: BSDevicePairPressurePublisher {
         pressureDataSubject.eraseToAnyPublisher()
     }
 

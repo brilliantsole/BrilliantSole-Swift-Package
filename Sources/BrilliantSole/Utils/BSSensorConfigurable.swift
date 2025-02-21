@@ -37,4 +37,18 @@ public extension BSSensorConfigurable {
     func clearSensorConfiguration() {
         clearSensorConfiguration(sendImmediately: true)
     }
+
+    var isDevice: Bool {
+        guard let _ = self as? BSDevice else {
+            return false
+        }
+        return true
+    }
+
+    var isDevicePair: Bool {
+        guard let _ = self as? BSDevicePair else {
+            return false
+        }
+        return true
+    }
 }

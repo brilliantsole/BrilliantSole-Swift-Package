@@ -10,6 +10,10 @@ import Foundation
 import OSLog
 import UkatonMacros
 
+public typealias BSPressureDataTuple = (pressure: BSPressureData, timestamp: BSTimestamp)
+typealias BSPressureSubject = PassthroughSubject<BSPressureDataTuple, Never>
+public typealias BSPressurePublisher = AnyPublisher<BSPressureDataTuple, Never>
+
 @StaticLogger(disabled: true)
 final class BSPressureSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [.pressure] }
@@ -34,8 +38,8 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - pressureData
 
-    private let pressureDataSubject = PassthroughSubject<(BSPressureData, BSTimestamp), Never>()
-    var pressureDataPublisher: AnyPublisher<(BSPressureData, BSTimestamp), Never> {
+    private let pressureDataSubject = PassthroughSubject<BSPressureDataTuple, Never>()
+    var pressureDataPublisher: AnyPublisher<BSPressureDataTuple, Never> {
         pressureDataSubject.eraseToAnyPublisher()
     }
 

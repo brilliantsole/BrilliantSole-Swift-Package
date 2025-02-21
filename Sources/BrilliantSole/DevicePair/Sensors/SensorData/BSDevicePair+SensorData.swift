@@ -10,7 +10,7 @@ import Combine
 extension BSDevicePair {
     func setupSensorDataManager() {}
 
-    public var pressureDataPublisher: AnyPublisher<(BSDevicePairPressureData, BSTimestamp), Never> {
+    public var pressureDataPublisher: BSDevicePairPressurePublisher {
         sensorDataManager.pressureSensorDataManager.pressureDataPublisher
     }
 }

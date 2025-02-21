@@ -84,7 +84,6 @@ public final class BSDeviceManager {
             if !availableDevices.contains(device) {
                 logger?.debug("adding \(device.name) to availableDevices")
                 availableDevices.append(device)
-                availableDevicesSubject.send(availableDevices)
                 availableDeviceSubject.send(device)
                 BSDevicePair.shared.add(device: device)
                 updatedAvailableDevices = true
