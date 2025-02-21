@@ -14,3 +14,5 @@ public extension BSDevice {
         vibrationManager.triggerVibration(vibrationConfigurations, sendImmediately: sendImmediately)
     }
 }
+
+extension BSDevice: BSVibratable {}

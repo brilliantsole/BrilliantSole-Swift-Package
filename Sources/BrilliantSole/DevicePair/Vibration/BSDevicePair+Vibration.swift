@@ -6,7 +6,9 @@
 //
 
 public extension BSDevicePair {
-    func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations) {
-        devices.forEach { $0.value.triggerVibration(vibrationConfigurations) }
+    func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool = true) {
+        devices.forEach { $0.value.triggerVibration(vibrationConfigurations, sendImmediately: sendImmediately) }
     }
 }
+
+extension BSDevicePair: BSVibratable {}
