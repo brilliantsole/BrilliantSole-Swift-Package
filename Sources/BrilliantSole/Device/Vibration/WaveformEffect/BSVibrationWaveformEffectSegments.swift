@@ -57,5 +57,6 @@ public extension Array where Element == BSVibrationWaveformEffectSegment {
         return data
     }
 
-    static var maxWaveformEffectSegmentsLoopCount: UInt8 { 6 }
+    static var MaxLoopCount: UInt8 { 6 }
+    var maxLoopCount: UInt8 { Self.MaxLoopCount }
 }

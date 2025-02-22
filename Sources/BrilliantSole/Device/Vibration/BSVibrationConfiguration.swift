@@ -24,7 +24,7 @@ public struct BSVibrationConfiguration {
     /// only applicable to "waveformEffect" type
     public var loopCount: UInt8 = 0 {
         didSet {
-            loopCount = min(loopCount, BSVibrationWaveformEffectSegments.maxWaveformEffectSegmentsLoopCount)
+            loopCount = min(loopCount, BSVibrationWaveformEffectSegments.MaxLoopCount)
         }
     }
 

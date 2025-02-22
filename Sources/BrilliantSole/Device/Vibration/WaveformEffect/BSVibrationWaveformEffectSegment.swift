@@ -9,42 +9,50 @@ import Foundation
 import OSLog
 import UkatonMacros
 
+public typealias BSVibrationWaveformEffectDelay = UInt16
+
 @StaticLogger(disabled: true)
 public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
     public static var type: BSVibrationType { .waveformEffect }
 
-    var segmentType: BSVibrationWaveformEffectSegmentType
-    var effect: BSVibrationWaveformEffect
-    var delay: UInt16 {
+    public var segmentType: BSVibrationWaveformEffectSegmentType
+    public var effect: BSVibrationWaveformEffect
+    public var delay: BSVibrationWaveformEffectDelay {
         didSet {
-            delay = min(delay, Self.maxDelay)
-            delay -= delay % 10
+            delay = min(delay, maxDelay)
+            delay -= delay % Self.DelayStep
         }
     }
 
-    var loopCount: UInt8 {
+    public var loopCount: UInt8 {
         didSet {
-            loopCount = min(loopCount, Self.maxLoopCount)
+            loopCount = min(loopCount, maxLoopCount)
         }
     }
 
-    static let maxDelay: UInt16 = 1270
-    static let maxLoopCount: UInt8 = 3
+    public static let MaxDelay: BSVibrationWaveformEffectDelay = 1270
+    public var maxDelay: UInt16 { Self.MaxDelay }
 
-    init(effect: BSVibrationWaveformEffect, loopCount: UInt8 = 0) {
+    public static let DelayStep: UInt16 = 10
+    public var delayStep: UInt16 { Self.DelayStep }
+
+    public static let MaxLoopCount: UInt8 = 3
+    public var maxLoopCount: UInt8 { Self.MaxLoopCount }
+
+    public init(effect: BSVibrationWaveformEffect, loopCount: UInt8 = 0) {
         self.segmentType = .effect
         self.effect = effect
         self.delay = 0
-        self.loopCount = min(loopCount, Self.maxLoopCount)
+        self.loopCount = min(loopCount, Self.MaxLoopCount)
     }
 
-    init(delay: UInt16, loopCount: UInt8 = 0) {
+    public init(delay: UInt16, loopCount: UInt8 = 0) {
         self.segmentType = .delay
         self.effect = .none
-        self.delay = min(delay, Self.maxDelay)
-        self.loopCount = min(loopCount, Self.maxLoopCount)
+        self.delay = min(delay, Self.MaxDelay)
+        self.loopCount = min(loopCount, Self.MaxLoopCount)
 
-        self.delay -= self.delay % 10
+        self.delay -= self.delay % Self.DelayStep
     }
 
     var bytes: [UInt8] {
@@ -54,7 +62,7 @@ public struct BSVibrationWaveformEffectSegment: BSVibrationSegment {
             return [effect.rawValue]
         case .delay:
             logger?.debug("Creating delay segment with delay: \(delay)ms")
-            return [UInt8(1 << 7 | (delay / 10))]
+            return [UInt8(1 << 7 | (delay / Self.DelayStep))]
         }
     }
 
