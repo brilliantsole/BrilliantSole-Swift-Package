@@ -33,14 +33,14 @@ public struct BSVibrationConfiguration {
         }
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8 = 0) {
+    public init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8 = 0) {
         self.locations = locations
         self.waveformEffectSegments = waveformEffectSegments
         self.type = .waveformEffect
         self.loopCount = loopCount
     }
 
-    init(locations: [BSVibrationLocationFlag], waveformSegments: BSVibrationWaveformSegments) {
+    public init(locations: [BSVibrationLocationFlag], waveformSegments: BSVibrationWaveformSegments) {
         self.locations = locations
         self.waveformSegments = waveformSegments
         self.type = .waveform
