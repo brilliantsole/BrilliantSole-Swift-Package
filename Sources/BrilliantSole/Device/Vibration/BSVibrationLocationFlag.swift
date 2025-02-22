@@ -8,7 +8,20 @@
 import Foundation
 import UkatonMacros
 
-public struct BSVibrationLocationFlag: OptionSet, Sendable, CaseIterable {
+public struct BSVibrationLocationFlag: Identifiable, OptionSet, Sendable, CaseIterable {
+    public var name: String {
+        switch self {
+        case .front:
+            "front"
+        case .rear:
+            "rear"
+        default:
+            "unknown"
+        }
+    }
+
+    public var id: UInt8 { rawValue }
+
     public static let allCases: [BSVibrationLocationFlag] = [.front, .rear]
 
     public let rawValue: UInt8
@@ -21,5 +34,3 @@ public struct BSVibrationLocationFlag: OptionSet, Sendable, CaseIterable {
     public static let front = BSVibrationLocationFlag(rawValue: 1 << 0)
     public static let rear = BSVibrationLocationFlag(rawValue: 1 << 1)
 }
-
-
