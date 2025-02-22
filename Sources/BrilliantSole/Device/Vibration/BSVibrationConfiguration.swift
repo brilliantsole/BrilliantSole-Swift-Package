@@ -34,6 +34,15 @@ public struct BSVibrationConfiguration {
         }
     }
 
+    public var segments: BSVibrationSegments {
+        switch type {
+        case .waveform:
+            return waveformSegments
+        case .waveformEffect:
+            return waveformEffectSegments
+        }
+    }
+
     public init(locations: [BSVibrationLocationFlag], waveformEffectSegments: BSVibrationWaveformEffectSegments, loopCount: UInt8 = 0) {
         self.locations = locations
         self.waveformEffectSegments = waveformEffectSegments
