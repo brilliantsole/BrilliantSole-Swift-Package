@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSTfliteInference = ([Float], [String: Float]?, BSTimestamp)
 public typealias BSTfliteClassification = (name: String, value: Float, timestamp: BSTimestamp)
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
         [

@@ -22,6 +22,7 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
         if self.isMock {
             informationManager.initName("mock device")
             deviceInformationManager.deviceInformation = mockDeviceInformation
+            _ = BSTxRxMessageUtils.enumStrings
         }
         setupManagers()
 
