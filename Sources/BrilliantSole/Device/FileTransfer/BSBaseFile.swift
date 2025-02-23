@@ -15,13 +15,29 @@ public class BSBaseFile: BSFile {
         fatalError("Subclasses must implement `fileType`")
     }
 
-    public let fileName: String
-    public let bundle: Bundle
+    public var fileURL: URL? {
+        didSet {
+            if fileURL != oldValue {
+                logger?.log("clearing fileData due to new fileURL \(self.fileURL?.absoluteString ?? "nil")")
+                fileData = nil
+            }
+        }
+    }
 
     public var fileData: Data?
 
-    public init(fileName: String, bundle: Bundle = .main) {
-        self.fileName = fileName
-        self.bundle = bundle
+    init() {}
+
+    init(fileURL: URL) {
+        self.fileURL = fileURL
+    }
+
+    init(fileName: String, bundle: Bundle = .main) {
+        guard let fileURL = bundle.url(forResource: fileName, withExtension: Self.fileType.fileExtension) else {
+            let errorString = "file \(fileName).\(Self.fileType.fileExtension) not found"
+            Self.logger?.error("\(errorString)")
+            return
+        }
+        self.fileURL = fileURL
     }
 }

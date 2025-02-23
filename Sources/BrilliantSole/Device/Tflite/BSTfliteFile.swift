@@ -13,7 +13,7 @@ public typealias BSTfliteThreshold = Float
 public class BSTfliteFile: BSBaseFile {
     override public class var fileType: BSFileType { .tflite }
 
-    public let tfliteName: String
+    public let modelName: String
     public let sensorTypes: BSTfliteSensorTypes
     public func getSensorTypes() -> [BSSensorType] {
         .init(sensorTypes.map { $0.sensorType })
@@ -38,8 +38,32 @@ public class BSTfliteFile: BSBaseFile {
 
     public let classes: [String]?
 
+    public init(modelName: String = "", sensorTypes: BSTfliteSensorTypes = [.gyroscope, .linearAcceleration], task: BSTfliteTask = .classification, sensorRate: BSSensorRate = ._20ms, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]? = nil) {
+        self.modelName = modelName
+        self.sensorTypes = sensorTypes
+        self.task = task
+        self.sensorRate = sensorRate
+        self.captureDelay = captureDelay
+        self.threshold = threshold
+        self.classes = classes
+
+        super.init()
+    }
+
+    public init(fileURL: URL, modelName: String, sensorTypes: BSTfliteSensorTypes, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]? = nil) {
+        self.modelName = modelName
+        self.sensorTypes = sensorTypes
+        self.task = task
+        self.sensorRate = sensorRate
+        self.captureDelay = captureDelay
+        self.threshold = threshold
+        self.classes = classes
+
+        super.init(fileURL: fileURL)
+    }
+
     public init(fileName: String, bundle: Bundle = .main, modelName: String, sensorTypes: BSTfliteSensorTypes, task: BSTfliteTask, sensorRate: BSSensorRate, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]?) {
-        self.tfliteName = modelName
+        self.modelName = modelName
         self.sensorTypes = sensorTypes
         self.task = task
         self.sensorRate = sensorRate

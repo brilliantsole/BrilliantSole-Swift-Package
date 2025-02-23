@@ -8,7 +8,12 @@
 import Combine
 
 public extension BSDevice {
-    internal func setupInformationManager() {}
+    internal func setupInformationManager() {
+        informationManager.mtuPublisher.sink { mtu in
+            self.fileTransferManager.mtu = mtu
+            self.firmwareManager.mtu = mtu
+        }.store(in: &managerCancellables)
+    }
 
     // MARK: - id
 

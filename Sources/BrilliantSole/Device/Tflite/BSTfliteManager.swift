@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSTfliteInference = ([Float], [String: Float]?, BSTimestamp)
 public typealias BSTfliteClassification = (name: String, value: Float, timestamp: BSTimestamp)
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
         [
@@ -70,7 +70,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     private(set) var tfliteFile: BSTfliteFile?
     func sendTfliteFile(_ newTfliteFile: BSTfliteFile, sendImmediately: Bool = true) {
         guard newTfliteFile !== tfliteFile else {
-            logger?.debug("redundant tfliteFile assignent \(newTfliteFile.tfliteName)")
+            logger?.debug("redundant tfliteFile assignent \(newTfliteFile.modelName)")
             return
         }
 
@@ -79,7 +79,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             logger?.error("nil tfliteFile")
             return
         }
-        setTfliteName(tfliteFile.tfliteName, sendImmediately: false)
+        setTfliteName(tfliteFile.modelName, sendImmediately: false)
         setTfliteTask(tfliteFile.task, sendImmediately: false)
         setTfliteCaptureDelay(tfliteFile.captureDelay, sendImmediately: false)
         setTfliteSensorRate(tfliteFile.sensorRate, sendImmediately: false)

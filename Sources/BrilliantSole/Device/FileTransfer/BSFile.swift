@@ -13,9 +13,8 @@ private let logger = getLogger(category: "BSFile", disabled: true)
 public protocol BSFile {
     static var fileType: BSFileType { get }
     var fileType: BSFileType { get }
-    var fileName: String { get }
     var fileData: Data? { get set }
-    var bundle: Bundle { get }
+    var fileURL: URL? { get }
     mutating func getFileData() -> Data?
 }
 
@@ -25,9 +24,8 @@ public extension BSFile {
             return fileData
         }
 
-        guard let fileURL = bundle.url(forResource: fileName, withExtension: Self.fileType.fileExtension) else {
-            let errorString = "file \(fileName).\(Self.fileType.fileExtension) not found"
-            logger?.error("\(errorString)")
+        guard let fileURL else {
+            logger?.error("no fileURL defined")
             return nil
         }
 

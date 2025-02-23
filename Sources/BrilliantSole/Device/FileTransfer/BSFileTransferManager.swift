@@ -11,7 +11,21 @@ import UkatonMacros
 
 public typealias BSFileLength = UInt32
 
-@StaticLogger(disabled: true)
+public typealias BSFileTransferData = ()
+
+public typealias BSFileTransferProgressData = (fileType: BSFileType, fileTransferDirection: BSFileTransferDirection, progress: Float)
+typealias BSFileTransferProgressSubject = PassthroughSubject<BSFileTransferProgressData, Never>
+public typealias BSFileTransferProgressPublisher = AnyPublisher<BSFileTransferProgressData, Never>
+
+public typealias BSFileTransferCompleteData = (fileType: BSFileType, fileTransferDirection: BSFileTransferDirection)
+typealias BSFileTransferCompleteSubject = PassthroughSubject<BSFileTransferCompleteData, Never>
+public typealias BSFileTransferCompletePublisher = AnyPublisher<BSFileTransferCompleteData, Never>
+
+public typealias BSFileReceivedData = (fileType: BSFileType, data: Data)
+typealias BSFileReceivedSubject = PassthroughSubject<BSFileReceivedData, Never>
+public typealias BSFileReceivedPublisher = AnyPublisher<BSFileReceivedData, Never>
+
+@StaticLogger(disabled: false)
 final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
         [.getMaxFileLength,
@@ -305,18 +319,18 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     // MARK: - fileTransfer
 
-    private let fileTransferProgressSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection, Float), Never> = .init()
-    var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
+    private let fileTransferProgressSubject: BSFileTransferProgressSubject = .init()
+    var fileTransferProgressPublisher: BSFileTransferProgressPublisher {
         fileTransferProgressSubject.eraseToAnyPublisher()
     }
 
-    private let fileTransferCompleteSubject: PassthroughSubject<(BSFileType, BSFileTransferDirection), Never> = .init()
-    var fileTransferCompletePublisher: AnyPublisher<(BSFileType, BSFileTransferDirection), Never> {
+    private let fileTransferCompleteSubject: BSFileTransferCompleteSubject = .init()
+    var fileTransferCompletePublisher: BSFileTransferCompletePublisher {
         fileTransferCompleteSubject.eraseToAnyPublisher()
     }
 
-    private let fileReceivedSubject: PassthroughSubject<(BSFileType, Data), Never> = .init()
-    var fileReceivedPublisher: AnyPublisher<(BSFileType, Data), Never> {
+    private let fileReceivedSubject: BSFileReceivedSubject = .init()
+    var fileReceivedPublisher: BSFileReceivedPublisher {
         fileReceivedSubject.eraseToAnyPublisher()
     }
 
@@ -362,7 +376,7 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
         return true
     }
 
-    var mtu: UInt16 = 0
+    var mtu: BSMtu = 0
     private var maxMessageLength: UInt16 { .init(mtu - 3 - 3) }
 
     private func sendFileBlock(sendImmediately: Bool = true) {

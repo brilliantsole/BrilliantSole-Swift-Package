@@ -46,6 +46,7 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
                 logger?.error("file \(fileName).\(fileExtension) not found")
                 return
             }
+            try firmwareUpgradeManager?.setUploadMtu(mtu: .init(mtu))
             let package = try McuMgrPackage(from: packageURL)
             let configuration: FirmwareUpgradeConfiguration = .init(estimatedSwapTime: 10.0, pipelineDepth: 2, upgradeMode: .confirmOnly)
             try firmwareUpgradeManager?.start(package: package, using: configuration)
@@ -165,4 +166,8 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     func minLogLevel() -> iOSMcuManagerLibrary.McuMgrLogLevel {
         logger != nil ? .debug : .error
     }
+
+    // MARK: - mtu
+
+    var mtu: BSMtu = 0
 }

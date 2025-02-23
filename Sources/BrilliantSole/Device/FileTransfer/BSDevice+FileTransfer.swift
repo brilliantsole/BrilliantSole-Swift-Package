@@ -54,15 +54,15 @@ public extension BSDevice {
 
     // MARK: - publishers
 
-    var fileTransferProgressPublisher: AnyPublisher<(BSFileType, BSFileTransferDirection, Float), Never> {
+    var fileTransferProgressPublisher: BSFileTransferProgressPublisher {
         fileTransferManager.fileTransferProgressPublisher
     }
 
-    var fileReceivedPublisher: AnyPublisher<(BSFileType, Data), Never> {
+    var fileReceivedPublisher: BSFileReceivedPublisher {
         fileTransferManager.fileReceivedPublisher
     }
 
-    var fileTransferCompletePublisher: AnyPublisher<(BSFileType, BSFileTransferDirection), Never> {
+    var fileTransferCompletePublisher: BSFileTransferCompletePublisher {
         fileTransferManager.fileTransferCompletePublisher
     }
 }
