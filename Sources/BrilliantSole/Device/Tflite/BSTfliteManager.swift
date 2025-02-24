@@ -17,7 +17,7 @@ public typealias BSTfliteClassification = (name: String, value: Float, timestamp
 typealias BSTfliteClassificationSubject = PassthroughSubject<BSTfliteClassification, Never>
 public typealias BSTfliteClassificationPublisher = AnyPublisher<BSTfliteClassification, Never>
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
         [
@@ -417,29 +417,29 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
         let numberOfInferences = inferenceData.count / inferenceSize
 
-        var inferenceMap: [String: Float]?
+        var valueMap: [String: Float]?
         if let tfliteClasses = tfliteFile.classes {
             if tfliteClasses.count == numberOfInferences {
-                inferenceMap = .init()
+                valueMap = .init()
             }
             else {
                 logger?.error("numberOfInferences doesn't match tfliteFile (expected \(tfliteClasses.count), got \(numberOfInferences)")
             }
         }
 
-        var inference: [Float] = []
+        var values: [Float] = []
         var maxValue: Float = -Float.infinity
         var maxIndex: Int = -1
         var maxClassName: String?
         for offset in stride(from: 0, to: inferenceData.count, by: inferenceSize) {
-            let index = inference.count
+            let index = values.count
             guard let value = Float.parse(inferenceData, at: offset) else { return }
             logger?.debug("class #\(index) value: \(value)")
-            inference.append(value)
+            values.append(value)
 
-            if var inferenceMap, let tfliteClasses = tfliteFile.classes {
+            if valueMap != nil, let tfliteClasses = tfliteFile.classes {
                 let className = tfliteClasses[index]
-                inferenceMap[className] = value
+                valueMap![className] = value
                 logger?.debug("#\(index) \(className): \(value)")
                 if tfliteTask == .classification {
                     if value > maxValue {
@@ -450,9 +450,9 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
                 }
             }
         }
-        logger?.debug("parsed inference with \(inference.count) classes at \(timestamp)ms")
+        logger?.debug("parsed inference with \(values.count) classes at \(timestamp)ms")
 
-        tfliteInferenceSubject.send((inference, inferenceMap, timestamp))
+        tfliteInferenceSubject.send((values, valueMap, timestamp))
         if tfliteTask == .classification, let maxClassName {
             logger?.debug("maxClass \(maxClassName) (#\(maxIndex) with \(maxValue))")
             tfliteClassificationSubject.send((maxClassName, maxValue, timestamp))
