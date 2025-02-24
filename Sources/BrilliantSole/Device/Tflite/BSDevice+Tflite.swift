@@ -47,10 +47,18 @@ public extension BSDevice {
     var tfliteCaptureDelay: BSTfliteCaptureDelay { tfliteManager.tfliteCaptureDelay }
     var tfliteCaptureDelayPublisher: AnyPublisher<BSTfliteCaptureDelay, Never> { tfliteManager.tfliteCaptureDelayPublisher }
 
+    func setTfliteCaptureDelay(_ newCaptureDelay: BSTfliteCaptureDelay) {
+        tfliteManager.setTfliteCaptureDelay(newCaptureDelay)
+    }
+
     // MARK: - tfliteThreshold
 
     var tfliteThreshold: BSTfliteThreshold { tfliteManager.tfliteThreshold }
     var tfliteThresholdPublisher: AnyPublisher<BSTfliteThreshold, Never> { tfliteManager.tfliteThresholdPublisher }
+
+    func setTfliteThreshold(_ newThreshold: BSTfliteThreshold) {
+        tfliteManager.setTfliteThreshold(newThreshold)
+    }
 
     // MARK: - tfliteInferencingEnabled
 
@@ -91,6 +99,6 @@ public extension BSDevice {
 
     // MARK: - inferencing
 
-    var tfliteInferencePublisher: AnyPublisher<BSTfliteInference, Never> { tfliteManager.tfliteInferencePublisher }
-    var tfliteClassificationPublisher: AnyPublisher<BSTfliteClassification, Never> { tfliteManager.tfliteClassificationPublisher }
+    var tfliteInferencePublisher: BSTfliteInferencePublisher { tfliteManager.tfliteInferencePublisher }
+    var tfliteClassificationPublisher: BSTfliteClassificationPublisher { tfliteManager.tfliteClassificationPublisher }
 }

@@ -9,8 +9,13 @@ import Combine
 import OSLog
 import UkatonMacros
 
-public typealias BSTfliteInference = ([Float], [String: Float]?, BSTimestamp)
+public typealias BSTfliteInference = (values: [Float], valueMap: [String: Float]?, timestamp: BSTimestamp)
+typealias BSTfliteInferenceSubject = PassthroughSubject<BSTfliteInference, Never>
+public typealias BSTfliteInferencePublisher = AnyPublisher<BSTfliteInference, Never>
+
 public typealias BSTfliteClassification = (name: String, value: Float, timestamp: BSTimestamp)
+typealias BSTfliteClassificationSubject = PassthroughSubject<BSTfliteClassification, Never>
+public typealias BSTfliteClassificationPublisher = AnyPublisher<BSTfliteClassification, Never>
 
 @StaticLogger(disabled: true)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
@@ -382,13 +387,13 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
 
     // MARK: - tfliteInference
 
-    private let tfliteInferenceSubject: PassthroughSubject<BSTfliteInference, Never> = .init()
-    var tfliteInferencePublisher: AnyPublisher<BSTfliteInference, Never> {
+    private let tfliteInferenceSubject: BSTfliteInferenceSubject = .init()
+    var tfliteInferencePublisher: BSTfliteInferencePublisher {
         tfliteInferenceSubject.eraseToAnyPublisher()
     }
 
-    private let tfliteClassificationSubject: PassthroughSubject<BSTfliteClassification, Never> = .init()
-    var tfliteClassificationPublisher: AnyPublisher<BSTfliteClassification, Never> {
+    private let tfliteClassificationSubject: BSTfliteClassificationSubject = .init()
+    var tfliteClassificationPublisher: BSTfliteClassificationPublisher {
         tfliteClassificationSubject.eraseToAnyPublisher()
     }
 

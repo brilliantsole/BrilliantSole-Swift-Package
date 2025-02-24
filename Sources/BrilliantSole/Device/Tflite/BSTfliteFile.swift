@@ -13,14 +13,14 @@ public typealias BSTfliteThreshold = Float
 public class BSTfliteFile: BSBaseFile {
     override public class var fileType: BSFileType { .tflite }
 
-    public let modelName: String
-    public let sensorTypes: BSTfliteSensorTypes
+    public var modelName: String
+    public var sensorTypes: BSTfliteSensorTypes
     public func getSensorTypes() -> [BSSensorType] {
         .init(sensorTypes.map { $0.sensorType })
     }
 
-    public let task: BSTfliteTask
-    public let sensorRate: BSSensorRate
+    public var task: BSTfliteTask
+    public var sensorRate: BSSensorRate
 
     public static let maxCaptureDelay: BSTfliteCaptureDelay = 5000
     public var captureDelay: BSTfliteCaptureDelay {
@@ -36,7 +36,7 @@ public class BSTfliteFile: BSBaseFile {
         }
     }
 
-    public let classes: [String]?
+    public var classes: [String]?
 
     public init(modelName: String = "", sensorTypes: BSTfliteSensorTypes = [.gyroscope, .linearAcceleration], task: BSTfliteTask = .classification, sensorRate: BSSensorRate = ._20ms, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]? = nil) {
         self.modelName = modelName

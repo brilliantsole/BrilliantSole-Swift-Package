@@ -10,8 +10,9 @@ import UkatonMacros
 
 private let logger = getLogger(category: "BSSensorRate", disabled: true)
 
-@EnumName(accessLevel: "public")
-public enum BSSensorRate: UInt16, CaseIterable, Sendable {
+public enum BSSensorRate: UInt16, CaseIterable, Sendable, Identifiable {
+    public var id: Self { self }
+
     case _0ms = 0
     case _5ms = 5
     case _10ms = 10
@@ -19,6 +20,25 @@ public enum BSSensorRate: UInt16, CaseIterable, Sendable {
     case _40ms = 40
     case _80ms = 80
     case _100ms = 100
+
+    public var name: String {
+        switch self {
+        case ._0ms:
+            "0ms"
+        case ._5ms:
+            "5ms"
+        case ._10ms:
+            "10ms"
+        case ._20ms:
+            "20ms"
+        case ._40ms:
+            "40ms"
+        case ._80ms:
+            "80ms"
+        case ._100ms:
+            "100ms"
+        }
+    }
 }
 
 extension BSSensorRate {

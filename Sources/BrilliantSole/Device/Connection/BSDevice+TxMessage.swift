@@ -25,6 +25,10 @@ extension BSDevice {
         sendPendingTxMessages()
     }
     
+    public func flushMessages() {
+        sendPendingTxMessages()
+    }
+    
     func sendPendingTxMessages() {
         guard !isSendingTxData else {
             logger?.debug("already sending txData - will wait")

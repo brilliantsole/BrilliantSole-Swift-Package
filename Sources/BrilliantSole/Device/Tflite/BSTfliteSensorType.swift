@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UkatonMacros
 
 extension BSSensorType {
     static let tfliteSensorTypes: [BSSensorType] = [.pressure, .linearAcceleration, .gyroscope, .magnetometer]
@@ -15,7 +16,10 @@ extension BSSensorType {
     }
 }
 
-public enum BSTfliteSensorType: CaseIterable {
+@EnumName(accessLevel: "public")
+public enum BSTfliteSensorType: CaseIterable, Identifiable {
+    public var id: Self { self }
+
     case pressure
     case linearAcceleration
     case gyroscope
