@@ -22,20 +22,22 @@ public class BSTfliteFile: BSBaseFile {
     public var task: BSTfliteTask
     public var sensorRate: BSSensorRate
 
-    public static let maxCaptureDelay: BSTfliteCaptureDelay = 5000
+    public static let MaxCaptureDelay: BSTfliteCaptureDelay = 5000
+    public var maxCaptureDelay: BSTfliteCaptureDelay { Self.MaxCaptureDelay }
     public var captureDelay: BSTfliteCaptureDelay {
         didSet {
-            captureDelay = min(captureDelay, Self.maxCaptureDelay)
+            captureDelay = min(captureDelay, Self.MaxCaptureDelay)
         }
     }
 
-    public static let maxThreshold: BSTfliteThreshold = 1.0
+    public static let MaxThreshold: BSTfliteThreshold = 1.0
+    public var maxThreshold: BSTfliteThreshold { Self.MaxThreshold }
     public var threshold: BSTfliteThreshold {
         didSet {
-            threshold = min(threshold, Self.maxThreshold)
+            threshold = min(threshold, Self.MaxThreshold)
         }
     }
-
+    
     public var classes: [String]?
 
     public init(modelName: String = "", sensorTypes: BSTfliteSensorTypes = [.gyroscope, .linearAcceleration], task: BSTfliteTask = .classification, sensorRate: BSSensorRate = ._20ms, captureDelay: BSTfliteCaptureDelay = 0, threshold: BSTfliteThreshold = 0.0, classes: [String]? = nil) {
