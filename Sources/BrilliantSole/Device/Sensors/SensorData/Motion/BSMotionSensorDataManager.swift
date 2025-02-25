@@ -92,7 +92,12 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     private func getVectorSubject(for sensorType: BSSensorType) -> BSVector3DSubject? {
-        switch sensorType {
+        guard sensorType.dataType == BSVector3D.self else {
+            logger?.error("sensorType \(sensorType.name) does not have BSVector3D data type")
+            return nil
+        }
+
+        return switch sensorType {
         case .acceleration:
             accelerationSubject
         case .gravity:
@@ -106,6 +111,10 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         default:
             nil
         }
+    }
+
+    func getVectorPublisher(for sensorType: BSSensorType) -> BSVector3DPublisher? {
+        getVectorSubject(for: sensorType)?.eraseToAnyPublisher()
     }
 
     private func parseVector(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
@@ -130,7 +139,12 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     }
 
     private func getQuaternionSubject(for sensorType: BSSensorType) -> BSQuaternionSubject? {
-        switch sensorType {
+        guard sensorType.dataType == BSQuaternion.self else {
+            logger?.error("sensorType \(sensorType.name) does not have BSQuaternion data type")
+            return nil
+        }
+
+        return switch sensorType {
         case .gameRotation:
             gameRotationSubject
         case .rotation:
@@ -138,6 +152,10 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         default:
             nil
         }
+    }
+
+    func getQuaternionPublisher(for sensorType: BSSensorType) -> BSQuaternionPublisher? {
+        return getQuaternionSubject(for: sensorType)?.eraseToAnyPublisher()
     }
 
     private func parseQuaternion(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
@@ -162,7 +180,12 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 //    }
 
     private func getRotationSubject(for sensorType: BSSensorType) -> BSRotation3DSubject? {
-        switch sensorType {
+        guard sensorType.dataType == BSRotation3D.self else {
+            logger?.error("sensorType \(sensorType.name) does not have BSRotation3D data type")
+            return nil
+        }
+
+        return switch sensorType {
         case .orientation:
             orientationSubject
 //        case .gyroscope:

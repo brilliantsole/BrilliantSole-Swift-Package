@@ -30,11 +30,15 @@ extension BSNamedEnum where Self: CaseIterable {
     }
 }
 
-protocol BSEnum: BSMessageType, BSNamedEnum, RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == UInt8 {}
+protocol BSEnum: BSMessageType, BSNamedEnum, RawRepresentable, CaseIterable, Sendable, Comparable, Hashable where RawValue == UInt8 {}
 
 extension BSEnum {
     var data: Data {
         rawValue.data
+    }
+
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawValue < rhs.rawValue
     }
 
     static func parse(_ data: Data, at offset: Data.Index = .zero) -> Self? {

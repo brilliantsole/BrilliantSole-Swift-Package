@@ -17,7 +17,7 @@ extension BSSensorType {
 }
 
 @EnumName(accessLevel: "public")
-public enum BSTfliteSensorType: CaseIterable, Identifiable {
+public enum BSTfliteSensorType: CaseIterable, Identifiable, Comparable {
     public var id: Self { self }
 
     case pressure
@@ -25,7 +25,7 @@ public enum BSTfliteSensorType: CaseIterable, Identifiable {
     case gyroscope
     case magnetometer
 
-    var sensorType: BSSensorType {
+    public var sensorType: BSSensorType {
         switch self {
         case .pressure:
             return .pressure
@@ -36,6 +36,10 @@ public enum BSTfliteSensorType: CaseIterable, Identifiable {
         case .magnetometer:
             return .magnetometer
         }
+    }
+
+    public var rawValue: BSSensorType.RawValue {
+        sensorType.rawValue
     }
 
     init?(sensorType: BSSensorType) {

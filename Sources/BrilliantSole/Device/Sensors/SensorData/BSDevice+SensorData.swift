@@ -89,6 +89,18 @@ public extension BSDevice {
     var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
         sensorDataManager.barometerSensorDataManager.barometerPublisher
     }
+
+    // MARK: - Vector publisher
+
+    func getVectorPublisher(for sensorType: BSSensorType) -> BSVector3DPublisher? {
+        return sensorDataManager.motionSensorDataManager.getVectorPublisher(for: sensorType)
+    }
+
+    // MARK: - Quaternion publisher
+
+    func getQuaternionPublisher(for sensorType: BSSensorType) -> BSQuaternionPublisher? {
+        return sensorDataManager.motionSensorDataManager.getQuaternionPublisher(for: sensorType)
+    }
 }
 
 extension BSDevice: BSCenterOfPressureProvider {}
