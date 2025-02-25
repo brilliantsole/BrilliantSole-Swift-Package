@@ -94,6 +94,7 @@ public extension BSDevice {
         let isSendingFile = fileTransferManager.sendFile(&file, sendImmediately: true)
         if !isSendingFile {
             checkIsTfliteReady()
+            flushMessages()
         }
     }
 
