@@ -10,6 +10,10 @@ import Foundation
 import OSLog
 import UkatonMacros
 
+public typealias BSBarometerData = (barometer: BSBarometer, timestamp: BSTimestamp)
+typealias BSBarometerSubject = PassthroughSubject<BSBarometerData, Never>
+public typealias BSBarometerPublisher = AnyPublisher<BSBarometerData, Never>
+
 @StaticLogger(disabled: true)
 final class BSBarometerSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [.barometer] }
@@ -26,8 +30,8 @@ final class BSBarometerSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - barometer
 
-    private let barometerSubject = PassthroughSubject<(BSBarometer, BSTimestamp), Never>()
-    var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
+    private let barometerSubject: BSBarometerSubject = .init()
+    var barometerPublisher: BSBarometerPublisher {
         barometerSubject.eraseToAnyPublisher()
     }
 

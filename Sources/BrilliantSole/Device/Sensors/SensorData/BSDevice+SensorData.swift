@@ -86,7 +86,7 @@ public extension BSDevice {
 
     private func setupBarometerData() {}
 
-    var barometerPublisher: AnyPublisher<(BSBarometer, BSTimestamp), Never> {
+    var barometerPublisher: BSBarometerPublisher {
         sensorDataManager.barometerSensorDataManager.barometerPublisher
     }
 

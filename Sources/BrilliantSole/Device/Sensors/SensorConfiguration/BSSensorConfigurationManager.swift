@@ -30,7 +30,7 @@ final class BSSensorConfigurationManager: BSBaseManager<BSSensorConfigurationMes
 
     // MARK: sensorConfiguration
 
-    private let sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.zero)
+    private let sensorConfigurationSubject = CurrentValueSubject<BSSensorConfiguration, Never>(.init())
     var sensorConfigurationPublisher: AnyPublisher<BSSensorConfiguration, Never> {
         sensorConfigurationSubject.eraseToAnyPublisher()
     }
