@@ -17,7 +17,7 @@ public typealias BSTfliteClassification = (name: String, value: Float, timestamp
 typealias BSTfliteClassificationSubject = PassthroughSubject<BSTfliteClassification, Never>
 public typealias BSTfliteClassificationPublisher = AnyPublisher<BSTfliteClassification, Never>
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
         [

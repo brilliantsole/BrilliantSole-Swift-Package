@@ -10,7 +10,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
 
@@ -70,6 +70,7 @@ class BSBleConnectionManager: BSBaseConnectionManager {
             characteristics.removeAll()
             connectionStatus = .notConnected
         case .connecting:
+            // FILL - resetting
             logger?.debug("peripheral state \"connecting\"")
         case .disconnecting:
             logger?.debug("peripheral state \"disconnecting\"")

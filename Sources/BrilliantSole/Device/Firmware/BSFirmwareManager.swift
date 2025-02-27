@@ -39,6 +39,7 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
         didSet {
             isInProgress = firmwareUpgradeManager?.isInProgress() ?? false
             isPaused = firmwareUpgradeManager?.isPaused() ?? false
+            firmwareUpgradeStateSubject.send(firmwareUpgradeState)
         }
     }
 
@@ -130,6 +131,11 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
         firmwareUpgradeStateDidChangeSubject.eraseToAnyPublisher()
     }
 
+    private let firmwareUpgradeStateSubject: PassthroughSubject<BSFirmwareUpgradeState, Never> = .init()
+    var firmwareUpgradeStatePublisher: AnyPublisher<BSFirmwareUpgradeState, Never> {
+        firmwareUpgradeStateSubject.eraseToAnyPublisher()
+    }
+
     private let firmwareUpgradeDidCompleteSubject: PassthroughSubject<Void, Never> = .init()
     var firmwareUpgradeDidCompletePublisher: AnyPublisher<Void, Never> {
         firmwareUpgradeDidCompleteSubject.eraseToAnyPublisher()
@@ -171,6 +177,7 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     public func upgradeDidFail(inState state: FirmwareUpgradeState, with error: any Error) {
         logger?.debug("firmware upgradeDidFail inState \(String(describing: state)): \(error.localizedDescription)")
         firmwareUpgradeDidFailSubject.send((state, error))
+        firmwareUpgradeState = .none
     }
 
     public func upgradeDidCancel(state: FirmwareUpgradeState) {

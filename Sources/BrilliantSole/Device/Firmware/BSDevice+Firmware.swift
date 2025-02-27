@@ -112,6 +112,10 @@ public extension BSDevice {
     var firmwareUpgradeStateDidChangePublisher: BSFirmwareUpgradeStateDidChangePublisher {
         firmwareManager.firmwareUpgradeStateDidChangePublisher
     }
+    
+    var firmwareUpgradeStatePublisher: AnyPublisher<BSFirmwareUpgradeState, Never> {
+        firmwareManager.firmwareUpgradeStatePublisher
+    }
 
     var firmwareUpgradeDidCompletePublisher: AnyPublisher<Void, Never> {
         firmwareManager.firmwareUpgradeDidCompletePublisher

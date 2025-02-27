@@ -8,7 +8,7 @@
 import OSLog
 import UkatonMacros
 
-private let logger = getLogger(category: "BSFile", disabled: true)
+private let logger = getLogger(category: "BSFile", disabled: false)
 
 public protocol BSFile {
     static var fileType: BSFileType { get }
