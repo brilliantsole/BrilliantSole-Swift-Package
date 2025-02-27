@@ -59,6 +59,10 @@ public extension BSDevice {
         firmwareManager.isPaused
     }
 
+    var isFirmwareResetting: Bool {
+        firmwareManager.isFirmwareResetting
+    }
+
     // MARK: - commands
 
     func upgradeFirmware(fileName: String = "firmware", fileExtension: String = "bin", bundle: Bundle = .main) {
@@ -79,7 +83,6 @@ public extension BSDevice {
             logger?.error("failed to cast connectionManager as BSBleConnectionManager")
             return
         }
-
         firmwareManager.upgradeFirmware(url: url, peripheral: bleConnectionManager.peripheral)
     }
 
@@ -101,6 +104,10 @@ public extension BSDevice {
         firmwareManager.isFirmwareInProgressPublisher
     }
 
+    var isFirmwareResettingPublisher: AnyPublisher<Bool, Never> {
+        firmwareManager.isFirmwareResettingPublisher
+    }
+
     var isFirmwarePausedPublisher: AnyPublisher<Bool, Never> {
         firmwareManager.isFirmwarePausedPublisher
     }
@@ -112,7 +119,7 @@ public extension BSDevice {
     var firmwareUpgradeStateDidChangePublisher: BSFirmwareUpgradeStateDidChangePublisher {
         firmwareManager.firmwareUpgradeStateDidChangePublisher
     }
-    
+
     var firmwareUpgradeStatePublisher: AnyPublisher<BSFirmwareUpgradeState, Never> {
         firmwareManager.firmwareUpgradeStatePublisher
     }

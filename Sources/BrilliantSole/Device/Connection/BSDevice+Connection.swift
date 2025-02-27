@@ -11,35 +11,45 @@ public extension BSDevice {
 
         connectionManagerCancellables.removeAll(keepingCapacity: true)
 
-        connectionManager?.connectionStatusPublisher.sink { [weak self] connectionStatus in
+        guard let connectionManager else {
+            return
+        }
+
+        connectionManager.connectionStatusPublisher.sink { [weak self] connectionStatus in
             self?.onConnectionManagerStatusChanged(connectionStatus)
         }.store(in: &connectionManagerCancellables)
 
-        connectionManager?.batteryLevelPublisher.sink { [weak self] batteryLevel in
+        connectionManager.batteryLevelPublisher.sink { [weak self] batteryLevel in
             self?.batteryLevel = batteryLevel
         }.store(in: &connectionManagerCancellables)
 
-        connectionManager?.deviceInformationPublisher.sink { [weak self] type, value in
+        connectionManager.deviceInformationPublisher.sink { [weak self] type, value in
             self?.deviceInformationManager[type] = value
         }.store(in: &connectionManagerCancellables)
 
-        connectionManager?.rxMessagePublisher.sink { [weak self] messageType, messageData in
+        connectionManager.rxMessagePublisher.sink { [weak self] messageType, messageData in
             self?.onRxMessage(type: messageType, data: messageData)
         }.store(in: &connectionManagerCancellables)
 
-        connectionManager?.rxMessagesPublisher.sink { [weak self] in
+        connectionManager.rxMessagesPublisher.sink { [weak self] in
             self?.onRxMessages()
         }.store(in: &connectionManagerCancellables)
 
-        connectionManager?.sendTxDataPublisher.sink { [weak self] in
+        connectionManager.sendTxDataPublisher.sink { [weak self] in
             self?.onSendTxData()
         }.store(in: &connectionManagerCancellables)
 
-        if let name = connectionManager?.name {
+        if let name = connectionManager.name {
             informationManager.initName(name)
         }
-        if let deviceType = connectionManager?.deviceType {
+        if let deviceType = connectionManager.deviceType {
             informationManager.initDeviceType(deviceType)
+        }
+
+        if let bleConnectionManager = connectionManager as? BSBleConnectionManager {
+            bleConnectionManager.peripheralStatePublisher.sink { [weak self] state in
+                self?.firmwareManager.onPeripheralStateUpdate(state)
+            }.store(in: &connectionManagerCancellables)
         }
     }
 

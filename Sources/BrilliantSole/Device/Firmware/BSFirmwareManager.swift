@@ -37,18 +37,26 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
 
     private(set) var firmwareUpgradeState: BSFirmwareUpgradeState = .none {
         didSet {
+            guard firmwareUpgradeState != oldValue else {
+                logger?.log("redundant firmwareUpgradeState \(String(describing: self.firmwareUpgradeState))")
+                return
+            }
+            firmwareUpgradeStateSubject.send(firmwareUpgradeState)
             isInProgress = firmwareUpgradeManager?.isInProgress() ?? false
             isPaused = firmwareUpgradeManager?.isPaused() ?? false
-            firmwareUpgradeStateSubject.send(firmwareUpgradeState)
+            if firmwareUpgradeState == .reset {
+                isFirmwareResetting = true
+            }
         }
     }
 
     private(set) var isInProgress: Bool = false {
         didSet {
             guard isInProgress != oldValue else {
-                logger?.log("reundant isInProgress \(self.isInProgress)")
+                logger?.log("redundant isInProgress \(self.isInProgress)")
                 return
             }
+            logger?.log("updated isInProgress \(self.isInProgress)")
             isFirmwareInProgressSubject.send(isInProgress)
         }
     }
@@ -56,10 +64,28 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     private(set) var isPaused: Bool = false {
         didSet {
             guard isPaused != oldValue else {
-                logger?.log("reundant isPaused \(self.isPaused)")
+                logger?.log("redundant isPaused \(self.isPaused)")
                 return
             }
+            logger?.log("updated isPaused \(self.isPaused)")
             isFirmwarePausedSubject.send(isPaused)
+        }
+    }
+
+    var isFirmwareResetting: Bool = false {
+        didSet {
+            guard isFirmwareResetting != oldValue else {
+                logger?.log("redundant isFirmwareResetting \(self.isFirmwareResetting)")
+                return
+            }
+            logger?.log("updated isFirmwareResetting \(self.isFirmwareResetting)")
+            isFirmwareResettingSubject.send(isFirmwareResetting)
+        }
+    }
+
+    func onPeripheralStateUpdate(_ state: CBPeripheralState) {
+        if isFirmwareResetting, state == .connected {
+            isFirmwareResetting = false
         }
     }
 
@@ -110,6 +136,11 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     }
 
     // MARK: - publishers
+
+    private let isFirmwareResettingSubject: PassthroughSubject<Bool, Never> = .init()
+    var isFirmwareResettingPublisher: AnyPublisher<Bool, Never> {
+        isFirmwareResettingSubject.eraseToAnyPublisher()
+    }
 
     private let isFirmwareInProgressSubject: PassthroughSubject<Bool, Never> = .init()
     var isFirmwareInProgressPublisher: AnyPublisher<Bool, Never> {
@@ -183,6 +214,7 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     public func upgradeDidCancel(state: FirmwareUpgradeState) {
         logger?.debug("firmware upgradeDidCancel state \(String(describing: state))")
         firmwareUpgradeDidCancelSubject.send(state)
+        firmwareUpgradeState = state
     }
 
     public func uploadProgressDidChange(bytesSent: Int, imageSize: Int, timestamp: Date) {

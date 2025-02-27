@@ -70,7 +70,13 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
 
     public internal(set) var connectionStatus: BSConnectionStatus = .notConnected {
         didSet {
-            guard connectionStatus != oldValue else { return }
+            guard connectionStatus != oldValue else {
+                logger?.log("redundant connectionStatus assignment \(self.connectionStatus.name)")
+                if connectionStatus == .connected && isFirmwareResetting {
+                    firmwareManager.isFirmwareResetting = false
+                }
+                return
+            }
             logger?.debug("updated connectionStatus \(self.connectionStatus.name)")
 
             updateCanUpgradeFirmware()

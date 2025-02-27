@@ -70,7 +70,6 @@ class BSBleConnectionManager: BSBaseConnectionManager {
             characteristics.removeAll()
             connectionStatus = .notConnected
         case .connecting:
-            // FILL - resetting
             logger?.debug("peripheral state \"connecting\"")
         case .disconnecting:
             logger?.debug("peripheral state \"disconnecting\"")
@@ -78,6 +77,12 @@ class BSBleConnectionManager: BSBaseConnectionManager {
         default:
             break
         }
+        peripheralStateSubject.send(peripheral.state)
+    }
+
+    private let peripheralStateSubject: PassthroughSubject<CBPeripheralState, Never> = .init()
+    var peripheralStatePublisher: AnyPublisher<CBPeripheralState, Never> {
+        peripheralStateSubject.eraseToAnyPublisher()
     }
 
     func checkIfFullyConnected() {
