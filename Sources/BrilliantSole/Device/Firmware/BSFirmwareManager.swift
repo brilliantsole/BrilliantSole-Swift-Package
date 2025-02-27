@@ -11,7 +11,21 @@ import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+public typealias BSFirmwareUpgradeState = FirmwareUpgradeState
+
+public typealias BSFirmwareUploadProgressDidChangeData = (bytesSent: Int, imageSize: Int, progress: Float, timestamp: Date)
+typealias BSFirmwareUploadProgressDidChangeSubject = PassthroughSubject<BSFirmwareUploadProgressDidChangeData, Never>
+public typealias BSFirmwareUploadProgressDidChangePublisher = AnyPublisher<BSFirmwareUploadProgressDidChangeData, Never>
+
+public typealias BSFirmwareUpgradeDidFailData = (state: FirmwareUpgradeState, error: any Error)
+typealias BSFirmwareUpgradeDidFailSubject = PassthroughSubject<BSFirmwareUpgradeDidFailData, Never>
+public typealias BSFirmwareUpgradeDidFailPublisher = AnyPublisher<BSFirmwareUpgradeDidFailData, Never>
+
+public typealias BSFirmwareUpgradeStateDidChangeData = (previousState: FirmwareUpgradeState, newState: FirmwareUpgradeState)
+typealias BSFirmwareUpgradeStateDidChangeSubject = PassthroughSubject<BSFirmwareUpgradeStateDidChangeData, Never>
+public typealias BSFirmwareUpgradeStateDidChangePublisher = AnyPublisher<BSFirmwareUpgradeStateDidChangeData, Never>
+
+@StaticLogger(disabled: false)
 class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     // MARK: - firmwareUpgradeManager
 
@@ -21,33 +35,48 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
         }
     }
 
-    var isInProgress: Bool {
-        firmwareUpgradeManager?.isInProgress() ?? false
+    private(set) var firmwareUpgradeState: BSFirmwareUpgradeState = .none {
+        didSet {
+            isInProgress = firmwareUpgradeManager?.isInProgress() ?? false
+            isPaused = firmwareUpgradeManager?.isPaused() ?? false
+        }
     }
 
-    var isPaused: Bool {
-        firmwareUpgradeManager?.isPaused() ?? false
+    private(set) var isInProgress: Bool = false {
+        didSet {
+            guard isInProgress != oldValue else {
+                logger?.log("reundant isInProgress \(self.isInProgress)")
+                return
+            }
+            isFirmwareInProgressSubject.send(isInProgress)
+        }
+    }
+
+    private(set) var isPaused: Bool = false {
+        didSet {
+            guard isPaused != oldValue else {
+                logger?.log("reundant isPaused \(self.isPaused)")
+                return
+            }
+            isFirmwarePausedSubject.send(isPaused)
+        }
     }
 
     // MARK: - commands
 
-    func upgradeFirmware(fileName: String = "firmware", fileExtension: String = "bin", bundle: Bundle = .main, peripheral: CBPeripheral) {
+    func upgradeFirmware(url: URL, peripheral: CBPeripheral) {
         guard !isInProgress else {
             logger?.debug("already upgrading")
             return
         }
 
-        logger?.debug("updating firmware to \(fileName).\(fileExtension)")
+        logger?.debug("updating firmware to \(url.lastPathComponent)")
 
         do {
             let bleTransport = McuMgrBleTransport(peripheral)
             firmwareUpgradeManager = FirmwareUpgradeManager(transport: bleTransport, delegate: self)
-            guard let packageURL = bundle.url(forResource: fileName, withExtension: fileExtension) else {
-                logger?.error("file \(fileName).\(fileExtension) not found")
-                return
-            }
-            try firmwareUpgradeManager?.setUploadMtu(mtu: .init(mtu))
-            let package = try McuMgrPackage(from: packageURL)
+            // try firmwareUpgradeManager?.setUploadMtu(mtu: .init(mtu))
+            let package = try McuMgrPackage(from: url)
             let configuration: FirmwareUpgradeConfiguration = .init(estimatedSwapTime: 10.0, pipelineDepth: 2, upgradeMode: .confirmOnly)
             try firmwareUpgradeManager?.start(package: package, using: configuration)
         } catch {
@@ -81,13 +110,23 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
 
     // MARK: - publishers
 
+    private let isFirmwareInProgressSubject: PassthroughSubject<Bool, Never> = .init()
+    var isFirmwareInProgressPublisher: AnyPublisher<Bool, Never> {
+        isFirmwareInProgressSubject.eraseToAnyPublisher()
+    }
+
+    private let isFirmwarePausedSubject: PassthroughSubject<Bool, Never> = .init()
+    var isFirmwarePausedPublisher: AnyPublisher<Bool, Never> {
+        isFirmwarePausedSubject.eraseToAnyPublisher()
+    }
+
     private let firmwareUpgradeDidStartSubject: PassthroughSubject<Void, Never> = .init()
     var firmwareUpgradeDidStartPublisher: AnyPublisher<Void, Never> {
         firmwareUpgradeDidStartSubject.eraseToAnyPublisher()
     }
 
-    private let firmwareUpgradeStateDidChangeSubject: PassthroughSubject<(FirmwareUpgradeState, FirmwareUpgradeState), Never> = .init()
-    var firmwareUpgradeStateDidChangePublisher: AnyPublisher<(FirmwareUpgradeState, FirmwareUpgradeState), Never> {
+    private let firmwareUpgradeStateDidChangeSubject: BSFirmwareUpgradeStateDidChangeSubject = .init()
+    var firmwareUpgradeStateDidChangePublisher: BSFirmwareUpgradeStateDidChangePublisher {
         firmwareUpgradeStateDidChangeSubject.eraseToAnyPublisher()
     }
 
@@ -96,8 +135,8 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
         firmwareUpgradeDidCompleteSubject.eraseToAnyPublisher()
     }
 
-    private let firmwareUpgradeDidFailSubject: PassthroughSubject<(FirmwareUpgradeState, any Error), Never> = .init()
-    var firmwareUpgradeDidFailPublisher: AnyPublisher<(FirmwareUpgradeState, any Error), Never> {
+    private let firmwareUpgradeDidFailSubject: BSFirmwareUpgradeDidFailSubject = .init()
+    var firmwareUpgradeDidFailPublisher: BSFirmwareUpgradeDidFailPublisher {
         firmwareUpgradeDidFailSubject.eraseToAnyPublisher()
     }
 
@@ -106,8 +145,8 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
         firmwareUpgradeDidCancelSubject.eraseToAnyPublisher()
     }
 
-    private let firmwareUploadProgressDidChangeSubject: PassthroughSubject<(Int, Int, Float, Date), Never> = .init()
-    var firmwareUploadProgressDidChangePublisher: AnyPublisher<(Int, Int, Float, Date), Never> {
+    private let firmwareUploadProgressDidChangeSubject: BSFirmwareUploadProgressDidChangeSubject = .init()
+    var firmwareUploadProgressDidChangePublisher: BSFirmwareUploadProgressDidChangePublisher {
         firmwareUploadProgressDidChangeSubject.eraseToAnyPublisher()
     }
 
@@ -120,6 +159,7 @@ class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
 
     public func upgradeStateDidChange(from previousState: FirmwareUpgradeState, to newState: FirmwareUpgradeState) {
         logger?.debug("firmware upgradeStateDidChange from \(String(describing: previousState)) to \(String(describing: newState))")
+        firmwareUpgradeState = newState
         firmwareUpgradeStateDidChangeSubject.send((previousState, newState))
     }
 

@@ -47,28 +47,40 @@ public extension BSDevice {
 
     // MARK: - state
 
-    var isUpgradingFirmware: Bool {
+    var firmwareUpgradeState: BSFirmwareUpgradeState {
+        firmwareManager.firmwareUpgradeState
+    }
+
+    var isFirmwareInProgress: Bool {
         firmwareManager.isInProgress
     }
 
-    var isFirmwareUpgradePaused: Bool {
+    var isFirmwarePaused: Bool {
         firmwareManager.isPaused
     }
 
     // MARK: - commands
 
     func upgradeFirmware(fileName: String = "firmware", fileExtension: String = "bin", bundle: Bundle = .main) {
+        guard let url = bundle.url(forResource: fileName, withExtension: fileExtension) else {
+            logger?.error("file \(fileName).\(fileExtension) not found")
+            return
+        }
+        upgradeFirmware(url: url)
+    }
+
+    func upgradeFirmware(url: URL) {
         guard canUpgradeFirmware else {
             return
         }
-        logger?.debug("updating firmware to \(fileName).\(fileExtension)")
+        logger?.debug("updating firmware to \(url.lastPathComponent)")
 
         guard let bleConnectionManager = connectionManager as? BSBleConnectionManager else {
             logger?.error("failed to cast connectionManager as BSBleConnectionManager")
             return
         }
 
-        firmwareManager.upgradeFirmware(fileName: fileName, fileExtension: fileExtension, bundle: bundle, peripheral: bleConnectionManager.peripheral)
+        firmwareManager.upgradeFirmware(url: url, peripheral: bleConnectionManager.peripheral)
     }
 
     func cancelFirmwareUpgrade() {
@@ -85,11 +97,19 @@ public extension BSDevice {
 
     // MARK: - publishers
 
+    var isFirmwareInProgressPublisher: AnyPublisher<Bool, Never> {
+        firmwareManager.isFirmwareInProgressPublisher
+    }
+
+    var isFirmwarePausedPublisher: AnyPublisher<Bool, Never> {
+        firmwareManager.isFirmwarePausedPublisher
+    }
+
     var firmwareUpgradeDidStartPublisher: AnyPublisher<Void, Never> {
         firmwareManager.firmwareUpgradeDidStartPublisher
     }
 
-    var firmwareUpgradeStateDidChangePublisher: AnyPublisher<(FirmwareUpgradeState, FirmwareUpgradeState), Never> {
+    var firmwareUpgradeStateDidChangePublisher: BSFirmwareUpgradeStateDidChangePublisher {
         firmwareManager.firmwareUpgradeStateDidChangePublisher
     }
 
@@ -97,7 +117,7 @@ public extension BSDevice {
         firmwareManager.firmwareUpgradeDidCompletePublisher
     }
 
-    var firmwareUpgradeDidFailPublisher: AnyPublisher<(FirmwareUpgradeState, any Error), Never> {
+    var firmwareUpgradeDidFailPublisher: BSFirmwareUpgradeDidFailPublisher {
         firmwareManager.firmwareUpgradeDidFailPublisher
     }
 
@@ -105,7 +125,7 @@ public extension BSDevice {
         firmwareManager.firmwareUpgradeDidCancelPublisher
     }
 
-    var firmwareUploadProgressDidChangePublisher: AnyPublisher<(Int, Int, Float, Date), Never> {
+    var firmwareUploadProgressDidChangePublisher: BSFirmwareUploadProgressDidChangePublisher {
         firmwareManager.firmwareUploadProgressDidChangePublisher
     }
 }
