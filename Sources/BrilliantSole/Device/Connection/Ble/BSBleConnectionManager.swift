@@ -10,7 +10,7 @@ import CoreBluetooth
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 class BSBleConnectionManager: BSBaseConnectionManager {
     override class var connectionType: BSConnectionType { .ble }
 

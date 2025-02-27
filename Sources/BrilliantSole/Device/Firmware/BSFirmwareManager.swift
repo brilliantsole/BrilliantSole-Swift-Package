@@ -25,7 +25,7 @@ public typealias BSFirmwareUpgradeStateDidChangeData = (previousState: FirmwareU
 typealias BSFirmwareUpgradeStateDidChangeSubject = PassthroughSubject<BSFirmwareUpgradeStateDidChangeData, Never>
 public typealias BSFirmwareUpgradeStateDidChangePublisher = AnyPublisher<BSFirmwareUpgradeStateDidChangeData, Never>
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 class BSFirmwareManager: FirmwareUpgradeDelegate, McuMgrLogDelegate {
     // MARK: - firmwareUpgradeManager
 

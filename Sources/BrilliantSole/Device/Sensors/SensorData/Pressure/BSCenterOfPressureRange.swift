@@ -24,10 +24,8 @@ struct BSCenterOfPressureRange {
     mutating func update(with value: BSCenterOfPressure) {
         x.update(with: Float(value.x))
         y.update(with: Float(value.y))
-#if DEBUG
         let string = String(describing: self)
         logger?.debug("updated to \(string)")
-#endif
     }
 
     func getNormalization(for value: BSCenterOfPressure) -> BSCenterOfPressure {

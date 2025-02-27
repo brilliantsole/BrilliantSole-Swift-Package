@@ -25,7 +25,7 @@ public typealias BSFileReceivedData = (fileType: BSFileType, data: Data)
 typealias BSFileReceivedSubject = PassthroughSubject<BSFileReceivedData, Never>
 public typealias BSFileReceivedPublisher = AnyPublisher<BSFileReceivedData, Never>
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
         [.getMaxFileLength,
