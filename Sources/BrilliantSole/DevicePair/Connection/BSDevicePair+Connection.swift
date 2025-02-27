@@ -40,6 +40,15 @@ public extension BSDevicePair {
         }
     }
 
+    var connectedSide: BSInsoleSide? {
+        guard isHalfConnected else { return nil }
+        return devices[.left]?.isConnected == true ? .left : .right
+    }
+
+    var unconnectedSide: BSInsoleSide? {
+        connectedSide?.otherSide
+    }
+
     internal func checkIsFullyConnected() {
         let newIsFullyConnected = connectedDeviceCount == 2
         logger?.debug("newIsFullyConnected: \(newIsFullyConnected)")

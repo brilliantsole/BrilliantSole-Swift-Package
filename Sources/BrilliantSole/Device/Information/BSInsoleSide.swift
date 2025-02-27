@@ -11,4 +11,13 @@ import UkatonMacros
 public enum BSInsoleSide: CaseIterable, Sendable {
     case left
     case right
+
+    var otherSide: BSInsoleSide {
+        switch self {
+        case .left:
+            return .right
+        case .right:
+            return .left
+        }
+    }
 }

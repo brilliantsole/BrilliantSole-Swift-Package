@@ -11,7 +11,7 @@ public typealias BSCenterOfPressureTuple = (centerOfPressure: BSCenterOfPressure
 typealias BSCenterOfPressureSubject = PassthroughSubject<BSCenterOfPressureTuple, Never>
 public typealias BSCenterOfPressurePublisher = AnyPublisher<BSCenterOfPressureTuple, Never>
 
-public protocol BSCenterOfPressureProvider {
+public protocol BSCenterOfPressureProvider: BSSensorConfigurable {
     var centerOfPressurePublisher: BSCenterOfPressurePublisher { get }
     func resetPressure()
 }
