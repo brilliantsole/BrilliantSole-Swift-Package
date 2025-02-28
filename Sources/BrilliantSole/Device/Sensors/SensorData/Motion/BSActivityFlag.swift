@@ -23,6 +23,25 @@ public struct BSActivityFlag: OptionSet, Sendable, CaseIterable {
     public static let bicycle = BSActivityFlag(rawValue: 1 << 3)
     public static let vehicle = BSActivityFlag(rawValue: 1 << 4)
     public static let tilting = BSActivityFlag(rawValue: 1 << 5)
+
+    public var name: String {
+        switch self {
+        case .still:
+            "still"
+        case .walking:
+            "walking"
+        case .running:
+            "running"
+        case .bicycle:
+            "bicycle"
+        case .vehicle:
+            "vehicle"
+        case .tilting:
+            "tilting"
+        default:
+            "unknown"
+        }
+    }
 }
 
 public typealias BSActivityFlags = [BSActivityFlag]

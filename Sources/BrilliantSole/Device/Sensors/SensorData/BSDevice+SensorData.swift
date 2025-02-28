@@ -66,19 +66,19 @@ public extension BSDevice {
         sensorDataManager.motionSensorDataManager.orientationPublisher
     }
 
-    var stepCountPublisher: AnyPublisher<(BSStepCount, BSTimestamp), Never> {
+    var stepCountPublisher: BSStepCountPublisher {
         sensorDataManager.motionSensorDataManager.stepCountPublisher
     }
 
-    var stepDetectionPublisher: AnyPublisher<BSTimestamp, Never> {
+    var stepDetectionPublisher: BSVoidTimestampPublisher {
         sensorDataManager.motionSensorDataManager.stepDetectionPublisher
     }
 
-    var activityPublisher: AnyPublisher<(BSActivityFlags, BSTimestamp), Never> {
+    var activityPublisher: BSActivityPublisher {
         sensorDataManager.motionSensorDataManager.activityPublisher
     }
 
-    var deviceOrientationPublisher: AnyPublisher<(BSDeviceOrientation, BSTimestamp), Never> {
+    var deviceOrientationPublisher: BSDeviceOrientationPublisher {
         sensorDataManager.motionSensorDataManager.deviceOrientationPublisher
     }
 

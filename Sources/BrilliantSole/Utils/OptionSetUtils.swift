@@ -25,7 +25,9 @@ extension OptionSet where Self: CaseIterable, Self.RawValue == UInt8 {
             logger?.error("invalid data \(data)")
             return []
         }
-        let rawValue = data[0]
+        guard let rawValue: UInt8 = .parse(data) else {
+            return []
+        }
         return allCases
             .compactMap { flag in
                 rawValue & flag.rawValue != 0 ? flag : nil

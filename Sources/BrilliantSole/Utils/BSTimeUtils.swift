@@ -16,7 +16,7 @@ func getUtcTime() -> BSTimestamp {
     .init(Date().timeIntervalSince1970 * 1000)
 }
 
-private let timestampThreshold: UInt16 = 60_000
+private let timestampThreshold: UInt16 = 60000
 
 func parseTimestamp(_ data: Data, at offset: inout Data.Index) -> BSTimestamp? {
     let currentTime = getUtcTime()

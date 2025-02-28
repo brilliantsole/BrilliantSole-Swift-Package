@@ -38,6 +38,15 @@ public enum BSSensorType: UInt8, BSEnum {
         }
     }
 
+    public var isMotion: Bool {
+        switch self {
+        case .acceleration, .gravity, .linearAcceleration, .gyroscope, .magnetometer, .gameRotation, .rotation, .orientation, .activity, .deviceOrientation, .stepCount, .stepDetection:
+            true
+        default:
+            false
+        }
+    }
+
     public var dataType: Any.Type {
         switch self {
         case .pressure:

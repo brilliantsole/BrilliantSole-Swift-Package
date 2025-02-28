@@ -24,6 +24,22 @@ public typealias BSQuaternionData = (quaternion: BSQuaternion, timestamp: BSTime
 typealias BSQuaternionSubject = PassthroughSubject<BSQuaternionData, Never>
 public typealias BSQuaternionPublisher = AnyPublisher<BSQuaternionData, Never>
 
+public typealias BSStepCountData = (stepCount: BSStepCount, timestamp: BSTimestamp)
+typealias BSStepCountSubject = PassthroughSubject<BSStepCountData, Never>
+public typealias BSStepCountPublisher = AnyPublisher<BSStepCountData, Never>
+
+public typealias BSDeviceOrientationData = (deviceOrientation: BSDeviceOrientation, timestamp: BSTimestamp)
+typealias BSDeviceOrientationSubject = PassthroughSubject<BSDeviceOrientationData, Never>
+public typealias BSDeviceOrientationPublisher = AnyPublisher<BSDeviceOrientationData, Never>
+
+public typealias BSActivityData = (activityFlags: BSActivityFlags, timestamp: BSTimestamp)
+typealias BSActivitySubject = PassthroughSubject<BSActivityData, Never>
+public typealias BSActivityPublisher = AnyPublisher<BSActivityData, Never>
+
+public typealias BSVoidTimestampData = BSTimestamp
+typealias BSVoidTimestampSubject = PassthroughSubject<BSVoidTimestampData, Never>
+public typealias BSVoidTimestampPublisher = AnyPublisher<BSVoidTimestampData, Never>
+
 @StaticLogger(disabled: true)
 final class BSMotionSensorDataManager: BSBaseSensorDataManager {
     override class var sensorTypes: Set<BSSensorType> { [
@@ -206,8 +222,8 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - activity
 
-    private let activitySubject = PassthroughSubject<(BSActivityFlags, BSTimestamp), Never>()
-    var activityPublisher: AnyPublisher<(BSActivityFlags, BSTimestamp), Never> {
+    private let activitySubject = BSActivitySubject()
+    var activityPublisher: BSActivityPublisher {
         activitySubject.eraseToAnyPublisher()
     }
 
@@ -219,8 +235,8 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - stepDetection
 
-    private let stepDetectionSubject = PassthroughSubject<BSTimestamp, Never>()
-    var stepDetectionPublisher: AnyPublisher<BSTimestamp, Never> {
+    private let stepDetectionSubject = BSVoidTimestampSubject()
+    var stepDetectionPublisher: BSVoidTimestampPublisher {
         stepDetectionSubject.eraseToAnyPublisher()
     }
 
@@ -231,21 +247,21 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
 
     // MARK: - stepCount
 
-    private let stepCountSubject = PassthroughSubject<(BSStepCount, BSTimestamp), Never>()
-    var stepCountPublisher: AnyPublisher<(BSStepCount, BSTimestamp), Never> {
+    private let stepCountSubject = BSStepCountSubject()
+    var stepCountPublisher: BSStepCountPublisher {
         stepCountSubject.eraseToAnyPublisher()
     }
 
     private func parseStepCount(data: Data, timestamp: BSTimestamp) {
-        guard let stepCount = BSStepCount.parse(data, littleEndian: false) else { return }
+        guard let stepCount = BSStepCount.parse(data, littleEndian: true) else { return }
         logger?.debug("stepCount: \(stepCount) (\(timestamp)ms)")
         stepCountSubject.send((stepCount, timestamp))
     }
 
     // MARK: - deviceOrientation
 
-    private let deviceOrientationSubject = PassthroughSubject<(BSDeviceOrientation, BSTimestamp), Never>()
-    var deviceOrientationPublisher: AnyPublisher<(BSDeviceOrientation, BSTimestamp), Never> {
+    private let deviceOrientationSubject = BSDeviceOrientationSubject()
+    var deviceOrientationPublisher: BSDeviceOrientationPublisher {
         deviceOrientationSubject.eraseToAnyPublisher()
     }
 
