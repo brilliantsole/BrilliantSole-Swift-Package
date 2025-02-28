@@ -18,7 +18,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
         self.isScanningAvailablePublisher.sink { isScanningAvailable in
             if isScanningAvailable {
-                self.checkIfScanning(sendImmediately: false)
+                self.checkIfScanning()
             }
         }.store(in: &cancellables)
     }
@@ -121,7 +121,7 @@ public class BSBaseClient: BSBaseScanner, BSDeviceClient, BSClient {
 
             switch connectionStatus {
             case .connected:
-                // sendRequiredMessages(sendImmediately: false)
+                // sendRequiredMessages()
                 break
             case .notConnected:
                 reset()
