@@ -18,13 +18,13 @@ public extension BSNamedEnum {
     var id: Self { self }
 }
 
-extension BSNamedEnum where Self: CaseIterable {
+public extension BSNamedEnum where Self: CaseIterable {
     init?(name: String, useCamelCase: Bool = true) {
         if let matchingCase = Self.allCases.first(where: { $0.name == (useCamelCase ? camelCaseToSpaces(name) : name) }) {
-            // logger?.debug("parsed \(name) as \(matchingCase.name)")
+            logger?.debug("parsed \(name) as \(matchingCase.name)")
             self = matchingCase
         } else {
-            // logger?.debug("failed to parse \(name)")
+            logger?.debug("failed to parse \(name)")
             return nil
         }
     }

@@ -13,6 +13,8 @@ private let logger = getLogger(category: "BSConnectionManager", disabled: true)
 public typealias BSBatteryLevel = UInt8
 
 protocol BSConnectionManager: Identifiable & Hashable {
+    var id: String { get }
+
     static var connectionType: BSConnectionType { get }
     var connectionType: BSConnectionType { get }
 

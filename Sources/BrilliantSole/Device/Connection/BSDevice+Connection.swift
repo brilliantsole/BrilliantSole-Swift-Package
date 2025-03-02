@@ -55,6 +55,7 @@ public extension BSDevice {
 
     var connectionType: BSConnectionType? { connectionManager?.connectionType }
     var connectionManagerStatus: BSConnectionStatus? { connectionManager?.connectionStatus }
+    var connectionId: String { connectionManager?.id ?? "" }
 
     private func onConnectionManagerStatusChanged(_ connectionManagerStatus: BSConnectionStatus) {
         logger?.debug("connectionManagerStatus updated to \(connectionManagerStatus.name)")

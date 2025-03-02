@@ -43,7 +43,7 @@ public protocol BSScanner {
     var discoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
 
     var discoveredDevicesPublisher: AnyPublisher<[BSDiscoveredDevice], Never> { get }
-    var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
+    var expiredDiscoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> { get }
 
     mutating func connect(to device: BSDiscoveredDevice) -> BSDevice
     func disconnect(from device: BSDiscoveredDevice) -> BSDevice?

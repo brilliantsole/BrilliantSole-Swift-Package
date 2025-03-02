@@ -148,9 +148,9 @@ public class BSBaseScanner: NSObject, BSScanner {
         discoveredDevicesSubject.eraseToAnyPublisher()
     }
 
-    private let expiredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
-    public var expiredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
-        expiredDeviceSubject.eraseToAnyPublisher()
+    private let expiredDiscoveredDeviceSubject: PassthroughSubject<BSDiscoveredDevice, Never> = .init()
+    public var expiredDiscoveredDevicePublisher: AnyPublisher<BSDiscoveredDevice, Never> {
+        expiredDiscoveredDeviceSubject.eraseToAnyPublisher()
     }
 
     func add(discoveredDevice: BSDiscoveredDevice) {
@@ -175,7 +175,7 @@ public class BSBaseScanner: NSObject, BSScanner {
             return
         }
         discoveredDevicesMap[discoveredDevice.id] = nil
-        expiredDeviceSubject.send(discoveredDevice)
+        expiredDiscoveredDeviceSubject.send(discoveredDevice)
 
         discoveredDevices.removeAll { $0.id == discoveredDevice.id }
         discoveredDevicesSubject.value = discoveredDevices

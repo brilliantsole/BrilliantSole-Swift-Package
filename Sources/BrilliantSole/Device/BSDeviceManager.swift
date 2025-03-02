@@ -14,7 +14,7 @@ public final class BSDeviceManager {
     // MARK: - availableDevices
 
     public private(set) nonisolated(unsafe) static var availableDevices: [BSDevice] = .init()
-    private static let availableDevicesSubject: PassthroughSubject<[BSDevice], Never> = .init()
+    private static let availableDevicesSubject: CurrentValueSubject<[BSDevice], Never> = .init([])
     public static var availableDevicesPublisher: AnyPublisher<[BSDevice], Never> {
         availableDevicesSubject.eraseToAnyPublisher()
     }
@@ -24,10 +24,15 @@ public final class BSDeviceManager {
         availableDeviceSubject.eraseToAnyPublisher()
     }
 
+    private static let unavailableDeviceSubject: PassthroughSubject<BSDevice, Never> = .init()
+    public static var unavailableDevicePublisher: AnyPublisher<BSDevice, Never> {
+        unavailableDeviceSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - connectedDevices
 
     public private(set) nonisolated(unsafe) static var connectedDevices: [BSDevice] = .init()
-    private static let connectedDevicesSubject: PassthroughSubject<[BSDevice], Never> = .init()
+    private static let connectedDevicesSubject: CurrentValueSubject<[BSDevice], Never> = .init([])
     public static var connectedDevicesPublisher: AnyPublisher<[BSDevice], Never> {
         connectedDevicesSubject.eraseToAnyPublisher()
     }
@@ -95,6 +100,7 @@ public final class BSDeviceManager {
             if availableDevices.contains(device), !device.isAvailable {
                 logger?.debug("removing \(device.name) from availableDevices")
                 availableDevices.removeAll(where: { $0 === device })
+                unavailableDeviceSubject.send(device)
                 updatedAvailableDevices = true
             }
 
@@ -106,10 +112,10 @@ public final class BSDeviceManager {
         }
 
         if updatedConnectedDevices {
-            connectedDevicesSubject.send(connectedDevices)
+            connectedDevicesSubject.value = connectedDevices
         }
         if updatedAvailableDevices {
-            availableDevicesSubject.send(availableDevices)
+            availableDevicesSubject.value = availableDevices
         }
     }
 }
