@@ -10,14 +10,17 @@ import UkatonMacros
 
 @StaticLogger(disabled: true)
 public struct BSDevicePairPressureData: BSCenterOfPressureData {
-    public let rawSum: Float
+    public let sensors: [BSInsoleSide: [BSPressureSensorData]]
+    public let scaledSum: Float
     public let normalizedSum: Float
 
     public let centerOfPressure: BSCenterOfPressure?
     public let normalizedCenterOfPressure: BSCenterOfPressure?
 
-    init(rawSum: Float, normalizedSum: Float, centerOfPressure: BSCenterOfPressure?, normalizedCenterOfPressure: BSCenterOfPressure?) {
-        self.rawSum = rawSum
+    init(sensors: [BSInsoleSide: [BSPressureSensorData]], scaledSum: Float, normalizedSum: Float, centerOfPressure: BSCenterOfPressure?, normalizedCenterOfPressure: BSCenterOfPressure?) {
+        self.sensors = sensors
+
+        self.scaledSum = scaledSum
         self.normalizedSum = normalizedSum
 
         self.centerOfPressure = centerOfPressure

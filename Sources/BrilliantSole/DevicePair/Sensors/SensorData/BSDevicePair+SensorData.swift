@@ -19,6 +19,7 @@ public extension BSDevicePair {
     }
 
     func resetPressure() {
+        devices.forEach { $0.value.resetPressure() }
         sensorDataManager.pressureSensorDataManager.reset()
     }
 }

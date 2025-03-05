@@ -49,7 +49,7 @@ public struct BSRange {
         return interpolation
     }
 
-    mutating func updateAndGetNormalization(for value: Float, weightBySpan: Bool) -> Float {
+    mutating func updateAndGetNormalization(for value: Float, weightBySpan: Bool = false) -> Float {
         update(with: value)
         return getNormalization(for: value, weightBySpan: weightBySpan)
     }

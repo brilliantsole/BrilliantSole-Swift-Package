@@ -34,6 +34,7 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
         for index in pressureSensorRanges.indices {
             pressureSensorRanges[index].reset()
         }
+        normalizedSumRange.reset()
     }
 
     // MARK: - pressureData
@@ -49,7 +50,7 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
     }
 
     func parsePressureData(_ data: Data, timestamp: BSTimestamp, scalar: Float) {
-        guard let pressureData = BSPressureData.parse(data, scalar: scalar, positions: pressurePositions, ranges: &pressureSensorRanges, centerOfPressureRange: &centerOfPressureRange) else {
+        guard let pressureData = BSPressureData.parse(data, scalar: scalar, positions: pressurePositions, ranges: &pressureSensorRanges, centerOfPressureRange: &centerOfPressureRange, normalizedSumRange: &normalizedSumRange) else {
             logger?.error("failed to parse pressure data")
             return
         }
@@ -65,6 +66,7 @@ final class BSPressureSensorDataManager: BSBaseSensorDataManager {
 
     var pressureSensorRanges: [BSRange] = .init()
     var centerOfPressureRange: BSCenterOfPressureRange = .init()
+    var normalizedSumRange: BSRange = .init()
 
     // MARK: - pressurePositions
 

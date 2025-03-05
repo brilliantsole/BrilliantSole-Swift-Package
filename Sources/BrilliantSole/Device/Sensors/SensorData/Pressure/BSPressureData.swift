@@ -19,16 +19,19 @@ public struct BSPressureData: BSCenterOfPressureData {
 
     init(sensors: [BSPressureSensorData], scaledSum: Float, normalizedSum: Float, centerOfPressure: BSCenterOfPressure?, normalizedCenterOfPressure: BSCenterOfPressure?) {
         self.sensors = sensors
+
         self.scaledSum = scaledSum
         self.normalizedSum = normalizedSum
+
         self.centerOfPressure = centerOfPressure
         self.normalizedCenterOfPressure = normalizedCenterOfPressure
     }
 
-    static func parse(_ data: Data, scalar: Float, positions: [BSPressureSensorPosition], ranges: inout [BSRange], centerOfPressureRange: inout BSCenterOfPressureRange) -> Self? {
-        guard data.count == ranges.count * 2 else {
-            let rangesCount = ranges.count * 2
-            logger?.error("data count mismatch (expected \(rangesCount), got \(data.count)")
+    static func parse(_ data: Data, scalar: Float, positions: [BSPressureSensorPosition], ranges: inout [BSRange], centerOfPressureRange: inout BSCenterOfPressureRange, normalizedSumRange: inout BSRange) -> Self? {
+        let numberOfPressureSensors = ranges.count
+        let expectedDataLength = numberOfPressureSensors * 2
+        guard data.count == expectedDataLength else {
+            logger?.error("data count mismatch (expected \(expectedDataLength), got \(data.count)")
             return nil
         }
         var sensors: [BSPressureSensorData] = .init()
@@ -41,10 +44,10 @@ public struct BSPressureData: BSCenterOfPressureData {
             }
             logger?.debug("#\(index) rawValue: \(rawValue)")
 
-            let scaledValue = Float(rawValue) * scalar
+            let scaledValue = Float(rawValue) * scalar / Float(numberOfPressureSensors)
             logger?.debug("#\(index) scaledValue: \(scaledValue)")
 
-            let normalizedValue = ranges[index].updateAndGetNormalization(for: scaledValue, weightBySpan: true)
+            let normalizedValue = ranges[index].updateAndGetNormalization(for: scaledValue)
             logger?.debug("#\(index) normalizedValue: \(normalizedValue)")
 
             let sensor: BSPressureSensorData = .init(
@@ -57,10 +60,10 @@ public struct BSPressureData: BSCenterOfPressureData {
             sensors.append(sensor)
 
             scaledSum += scaledValue
-            normalizedSum += normalizedValue
+            // normalizedSum += normalizedValue
             logger?.debug("partial (#\(index) scaledSum: \(scaledSum), normalizedValue: \(normalizedValue)")
         }
-
+        normalizedSum = normalizedSumRange.updateAndGetNormalization(for: scaledSum)
         logger?.debug("final scaledSum: \(scaledSum), normalizedSum: \(normalizedSum)")
 
         var centerOfPressure: BSCenterOfPressure?

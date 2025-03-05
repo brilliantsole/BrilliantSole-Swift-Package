@@ -18,6 +18,7 @@ class BSDevicePairPressureSensorDataManager {
     private var devicePressureData: [BSInsoleSide: BSPressureData] = .init()
     private var hasAllData: Bool { devicePressureData.count == 2 }
     private var centerOfPressureRange: BSCenterOfPressureRange = .init()
+    private var normalizedSumRange: BSRange = .init()
 
     private let pressureDataSubject: BSDevicePairPressureSubject = .init()
     var pressureDataPublisher: BSDevicePairPressurePublisher {
@@ -38,30 +39,47 @@ class BSDevicePairPressureSensorDataManager {
         }
         logger?.debug("calculating devicePair pressure data")
 
-        var rawSum: Float = 0
+        var scaledSum: Float = 0
         var normalizedSum: Float = 0
 
         for insoleSide in devicePressureData.keys {
-            rawSum += devicePressureData[insoleSide]!.scaledSum
-            normalizedSum += devicePressureData[insoleSide]!.normalizedSum
+            scaledSum += devicePressureData[insoleSide]!.scaledSum
+            // normalizedSum += devicePressureData[insoleSide]!.normalizedSum
         }
-        logger?.debug("rawSum: \(rawSum), normalizedSum: \(normalizedSum)")
+        normalizedSum = normalizedSumRange.updateAndGetNormalization(for: scaledSum)
+        logger?.debug("rawSum: \(scaledSum), normalizedSum: \(normalizedSum)")
 
         var centerOfPressure: BSCenterOfPressure?
         var normalizedCenterOfPressure: BSCenterOfPressure?
+        var sensors: [BSInsoleSide: [BSPressureSensorData]] = .init()
         if normalizedSum > 0 {
             var centerOfPressureX: Float = 0
             var centerOfPressureY: Float = 0
 
             for insoleSide in devicePressureData.keys {
-                let normalizedSumWeight: Float = devicePressureData[insoleSide]!.normalizedSum / normalizedSum
-                if normalizedSumWeight > 0, devicePressureData[insoleSide]!.normalizedCenterOfPressure != nil {
-                    centerOfPressureY += normalizedSumWeight * devicePressureData[insoleSide]!.normalizedCenterOfPressure!.y
-                    if insoleSide == .right {
-                        centerOfPressureX = normalizedSumWeight
+                if true {
+                    sensors[insoleSide] = .init()
+                    devicePressureData[insoleSide]!.sensors.forEach { _sensor in
+                        var sensor = _sensor
+                        sensor.updateWeightedValue(scaledSum: scaledSum)
+                        sensor.updateDevicePairPosition(insoleSide: insoleSide)
+                        sensors[insoleSide]?.append(sensor)
+
+                        centerOfPressureX += sensor.weightedValue * sensor.position.x
+                        centerOfPressureY += sensor.weightedValue * sensor.position.y
+                    }
+                }
+                else {
+                    let normalizedSumWeight: Float = devicePressureData[insoleSide]!.normalizedSum / normalizedSum
+                    if normalizedSumWeight > 0, devicePressureData[insoleSide]!.normalizedCenterOfPressure != nil {
+                        centerOfPressureY += normalizedSumWeight * devicePressureData[insoleSide]!.normalizedCenterOfPressure!.y
+                        if insoleSide == .right {
+                            centerOfPressureX = normalizedSumWeight
+                        }
                     }
                 }
             }
+
             centerOfPressure = .init(x: Double(centerOfPressureX), y: Double(centerOfPressureY))
             normalizedCenterOfPressure = centerOfPressureRange.updateAndGetNormalization(for: centerOfPressure!)
 
@@ -69,7 +87,8 @@ class BSDevicePairPressureSensorDataManager {
         }
 
         let pressureData: BSDevicePairPressureData = .init(
-            rawSum: rawSum,
+            sensors: sensors,
+            scaledSum: scaledSum,
             normalizedSum: normalizedSum,
             centerOfPressure: centerOfPressure,
             normalizedCenterOfPressure: normalizedCenterOfPressure)
@@ -82,5 +101,6 @@ class BSDevicePairPressureSensorDataManager {
 
     func reset() {
         centerOfPressureRange.reset()
+        normalizedSumRange.reset()
     }
 }

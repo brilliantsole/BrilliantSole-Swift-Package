@@ -13,7 +13,7 @@ public typealias BSPressureSensorPosition = simd_double2
 
 @StaticLogger(disabled: true)
 public struct BSPressureSensorData {
-    public let position: BSPressureSensorPosition
+    public private(set) var position: BSPressureSensorPosition
     public let rawValue: UInt16
     public let scaledValue: Float
     public let normalizedValue: Float
@@ -29,5 +29,12 @@ public struct BSPressureSensorData {
 
     mutating func updateWeightedValue(scaledSum: Float) {
         weightedValue = scaledValue / scaledSum
+    }
+
+    mutating func updateDevicePairPosition(insoleSide: BSInsoleSide) {
+        self.position.x *= 0.5
+        if insoleSide == .right {
+            self.position.x += 0.5
+        }
     }
 }
