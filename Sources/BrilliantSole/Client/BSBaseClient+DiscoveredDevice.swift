@@ -16,7 +16,7 @@ extension BSBaseClient {
 
         var discoveredDevice = allDiscoveredDevices[discoveredDeviceJson.id]
         if let discoveredDevice {
-            discoveredDevice.update(discoveredDeivceJson: discoveredDeviceJson)
+            discoveredDevice.update(discoveredDeviceJson: discoveredDeviceJson)
         }
         else {
             guard discoveredDeviceJson.deviceType != nil else {

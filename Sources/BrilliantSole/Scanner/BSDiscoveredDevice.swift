@@ -120,8 +120,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
         logger?.debug("updated \(self.id)")
     }
 
-    func update(discoveredDeivceJson: BSDiscoveredDeviceJson) {
-        update(name: discoveredDeivceJson.name, deviceType: discoveredDeivceJson.deviceType, rssi: discoveredDeivceJson.rssi)
+    func update(discoveredDeviceJson: BSDiscoveredDeviceJson) {
+        update(name: discoveredDeviceJson.name, deviceType: discoveredDeviceJson.deviceType, rssi: discoveredDeviceJson.rssi)
     }
 
     // MARK: - scanner
