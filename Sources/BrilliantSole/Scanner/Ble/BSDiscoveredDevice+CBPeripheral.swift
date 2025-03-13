@@ -32,10 +32,11 @@ extension BSDiscoveredDevice {
         var deviceType: BSDeviceType?
         if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data, !manufacturerData.isEmpty {
             logger?.debug("manufacturerData \(manufacturerData)")
-            if manufacturerData.count >= 5 {
-                logger?.debug("deviceType byte: \(manufacturerData[4])")
-                deviceType = .parse(manufacturerData, at: 4)
+            if manufacturerData.count >= 3 {
+                logger?.debug("deviceType byte: \(manufacturerData[2])")
+                deviceType = .parse(manufacturerData, at: 2)
             }
+            // TODO: - parse IP address for esp32
         } else {
             logger?.debug("no serviceData found in advertisementData")
         }
