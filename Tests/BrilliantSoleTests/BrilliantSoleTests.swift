@@ -114,7 +114,7 @@ struct BSTests {
     }
 
     @Test func deviceConnectionTest() async throws {
-        connectToDevice(onConnectedDevice: { device in
+        connectToDevice(withName: "Ukaton", onConnectedDevice: { device in
             device.notConnectedPublisher.sink { _ in
                 print("disconnected from device \"\(device.name)\"")
             }.store(in: &cancellablesStore.cancellables)

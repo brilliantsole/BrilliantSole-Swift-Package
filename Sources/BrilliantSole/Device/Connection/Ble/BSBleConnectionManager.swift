@@ -91,11 +91,11 @@ class BSBleConnectionManager: BSBaseConnectionManager {
             logger?.debug("connectionStatus is not connecting (got \(self.connectionStatus.name) - notFullyConnected")
             return
         }
-        if let missingServiceUuid = BSBleServiceUUID.allCases.first(where: { !services.keys.contains($0) }) {
+        if let missingServiceUuid = BSBleServiceUUID.allCases.first(where: { !services.keys.contains($0) && $0 != .smp }) {
             logger?.debug("missingServiceUuid \(missingServiceUuid.name) - notFullyConnected")
             return
         }
-        if let missingCharacteristicUuid = BSBleCharacteristicUUID.allCases.first(where: { !characteristics.keys.contains($0) }) {
+        if let missingCharacteristicUuid = BSBleCharacteristicUUID.allCases.first(where: { !characteristics.keys.contains($0) && $0 != .smp }) {
             logger?.debug("missingCharacteristicUuid \(missingCharacteristicUuid.name) - notFullyConnected")
             return
         }
