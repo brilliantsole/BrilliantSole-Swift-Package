@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSMtu = UInt16
 private let defaultMtu: BSMtu = 23
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     override class var requiredMessageTypes: [BSInformationMessageType]? {
         [
