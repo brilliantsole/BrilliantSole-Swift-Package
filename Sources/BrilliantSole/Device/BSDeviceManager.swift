@@ -90,7 +90,6 @@ public final class BSDeviceManager {
                 logger?.debug("adding \(device.name) to availableDevices")
                 availableDevices.append(device)
                 availableDeviceSubject.send(device)
-                BSDevicePair.shared.add(device: device)
                 updatedAvailableDevices = true
             }
         }

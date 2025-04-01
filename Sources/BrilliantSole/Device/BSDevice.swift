@@ -214,6 +214,10 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
     // MARK: - availability
 
     public var isAvailable: Bool { connectionManager?.isAvailable ?? false }
+
+    // MARK: - Ukaton
+
+    public var isUkaton: Bool { deviceInformation[.modelNumberString]?.contains("Ukaton") == true }
 }
 
 extension BSDevice: Identifiable {}

@@ -11,8 +11,8 @@ public extension BSDevicePair
     {
         device.sensorConfigurationPublisher.sink
         { sensorConfiguration in
-            guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceSensorConfigurationSubject.send((insoleSide, device, sensorConfiguration))
+            guard let side = self.getDeviceSide(device) else { return }
+            self.deviceSensorConfigurationSubject.send((side, device, sensorConfiguration))
         }.store(in: &deviceCancellables[device]!)
     }
 

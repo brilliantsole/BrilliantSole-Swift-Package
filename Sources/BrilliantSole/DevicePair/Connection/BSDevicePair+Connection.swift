@@ -40,12 +40,12 @@ public extension BSDevicePair {
         }
     }
 
-    var connectedSide: BSInsoleSide? {
+    var connectedSide: BSSide? {
         guard isHalfConnected else { return nil }
         return devices[.left]?.isConnected == true ? .left : .right
     }
 
-    var unconnectedSide: BSInsoleSide? {
+    var unconnectedSide: BSSide? {
         connectedSide?.otherSide
     }
 
@@ -96,19 +96,19 @@ public extension BSDevicePair {
     }
 
     internal func onDeviceConnectionStatus(device: BSDevice, connectionStatus: BSConnectionStatus) {
-        guard let insoleSide = device.insoleSide else {
-            logger?.error("device.insoleSide not found")
+        guard let side = device.side else {
+            logger?.error("device.side not found")
             return
         }
-        deviceConnectionStatusSubject.send((insoleSide, device, connectionStatus))
+        deviceConnectionStatusSubject.send((side, device, connectionStatus))
     }
 
     internal func onDeviceIsConnected(device: BSDevice, isConnected: Bool) {
-        guard let insoleSide = device.insoleSide else {
-            logger?.error("device.insoleSide not found")
+        guard let side = device.side else {
+            logger?.error("device.side not found")
             return
         }
         checkIsFullyConnected()
-        deviceIsConnectedSubject.send((insoleSide, device, isConnected))
+        deviceIsConnectedSubject.send((side, device, isConnected))
     }
 }

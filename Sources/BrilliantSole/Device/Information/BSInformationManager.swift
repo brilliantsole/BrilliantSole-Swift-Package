@@ -12,7 +12,7 @@ import UkatonMacros
 public typealias BSMtu = UInt16
 private let defaultMtu: BSMtu = 23
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     override class var requiredMessageTypes: [BSInformationMessageType]? {
         [
@@ -68,7 +68,8 @@ final class BSInformationManager: BSBaseManager<BSInformationMessageType> {
     var maxMtuMessageLength: UInt16 { max(0, mtu - 3) }
 
     private func parseMtu(_ data: Data) {
-        guard let newMtu = UInt16.parse(data) else { return }
+        guard var newMtu = UInt16.parse(data) else { return }
+        newMtu = min(newMtu, 512)
         logger?.debug("parsed mtu: \(newMtu)")
         mtu = newMtu
     }

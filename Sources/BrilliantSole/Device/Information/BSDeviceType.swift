@@ -12,6 +12,10 @@ import UkatonMacros
 public enum BSDeviceType: UInt8, BSEnum {
     case leftInsole
     case rightInsole
+    case leftGlove
+    case rightGlove
+    case glasses
+    case generic
 
     public var isInsole: Bool {
         switch self {
@@ -22,11 +26,20 @@ public enum BSDeviceType: UInt8, BSEnum {
         }
     }
 
-    public var insoleSide: BSInsoleSide? {
+    public var isGlove: Bool {
         switch self {
-        case .leftInsole:
+        case .leftGlove, .rightGlove:
+            true
+        default:
+            false
+        }
+    }
+
+    public var side: BSSide? {
+        switch self {
+        case .leftInsole, .leftGlove:
             .left
-        case .rightInsole:
+        case .rightInsole, .rightGlove:
             .right
         default:
             nil

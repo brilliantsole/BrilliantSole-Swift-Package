@@ -8,23 +8,23 @@
 public extension BSDevicePair {
     internal func addDeviceTfliteListeners(device: BSDevice) {
         device.isTfliteReadyPublisher.sink { [self] isTfliteReady in
-            guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceIsTfliteReadySubject.send(( insoleSide, device, isTfliteReady))
+            guard let side = self.getDeviceSide(device) else { return }
+            self.deviceIsTfliteReadySubject.send((side, device, isTfliteReady))
         }.store(in: &deviceCancellables[device]!)
 
         device.tfliteInferencingEnabledPublisher.sink { [self] tfliteInferencingEnabled in
-            guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteInferencingEnabledSubject.send(( insoleSide, device, tfliteInferencingEnabled))
+            guard let side = self.getDeviceSide(device) else { return }
+            self.deviceTfliteInferencingEnabledSubject.send((side, device, tfliteInferencingEnabled))
         }.store(in: &deviceCancellables[device]!)
 
         device.tfliteInferencePublisher.sink { [self] tfliteInference in
-            guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteInferenceSubject.send(( insoleSide, device, tfliteInference))
+            guard let side = self.getDeviceSide(device) else { return }
+            self.deviceTfliteInferenceSubject.send((side, device, tfliteInference))
         }.store(in: &deviceCancellables[device]!)
 
         device.tfliteClassificationPublisher.sink { [self] tfliteClassification in
-            guard let insoleSide = self.getDeviceInsoleSide(device) else { return }
-            self.deviceTfliteClassificationSubject.send(( insoleSide, device, tfliteClassification))
+            guard let side = self.getDeviceSide(device) else { return }
+            self.deviceTfliteClassificationSubject.send((side, device, tfliteClassification))
         }.store(in: &deviceCancellables[device]!)
     }
 

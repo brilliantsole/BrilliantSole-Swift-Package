@@ -165,7 +165,7 @@ struct BSTests {
     }
 
     @Test func deviceTfliteTest() async throws {
-        connectToDevice(withName: "Right 3", onConnectedDevice: { device in
+        connectToDevice(withName: "Ukaton Device", onConnectedDevice: { device in
             device.sendTfliteModel(&tfliteFile)
 
             device.isTfliteReadyPublisher.sink { isTfliteReady in
@@ -183,7 +183,7 @@ struct BSTests {
     }
 
     @Test func devicePairTest() async throws {
-        let devicePair: BSDevicePair = .shared
+        let devicePair: BSDevicePair = .insoles
         BSBleScanner.shared.startScan()
         BSBleScanner.shared.discoveredDevicePublisher.sink { discoveredDevice in
             print("connecting to discoveredDevice \(discoveredDevice)")

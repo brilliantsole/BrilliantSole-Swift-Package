@@ -35,7 +35,8 @@ public extension BSDevice {
     }
 
     var isInsole: Bool { deviceType.isInsole }
-    var insoleSide: BSInsoleSide? { deviceType.insoleSide }
+    var isGlove: Bool { deviceType.isGlove }
+    var side: BSSide? { deviceType.side }
 
     // MARK: - name
 

@@ -6,34 +6,38 @@
 //
 
 public extension BSDevicePair {
-    subscript(insoleSide: BSInsoleSide) -> BSDevice? {
+    subscript(side: BSSide) -> BSDevice? {
         get {
-            devices[insoleSide]
+            devices[side]
         }
         set(newValue) {
             if let device = newValue {
                 add(device: device)
             }
             else {
-                if let device = devices[insoleSide] {
+                if let device = devices[side] {
                     remove(device: device)
                 }
                 else {
-                    logger?.error("no \(insoleSide.name) device to remove")
+                    logger?.error("no \(side.name) device to remove")
                 }
             }
         }
     }
 
     func add(device: BSDevice) {
-        guard device.isInsole else {
+        if type == .insoles, !device.isInsole {
             logger?.debug("device is not insole")
             return
         }
-        let insoleSide = device.insoleSide!
+        if type == .gloves, !device.isGlove {
+            logger?.debug("device is not glove")
+            return
+        }
+        let side = device.side!
 
-        if devices[insoleSide] != nil {
-            guard device != devices[insoleSide] else {
+        if devices[side] != nil {
+            guard device != devices[side] else {
                 logger?.debug("already added device")
                 return
             }
@@ -42,7 +46,7 @@ public extension BSDevicePair {
 
         logger?.debug("adding device \"\(device.name)\"")
 
-        devices[insoleSide] = device
+        devices[side] = device
         addListeners(device: device)
         checkIsFullyConnected()
     }
@@ -54,21 +58,21 @@ public extension BSDevicePair {
         }
 
         if devices.contains(where: { $0.value === device }) {
-            let insoleSide = devices.keys.first(where: { devices[$0] === device })!
-            remove(insoleSide: insoleSide)
+            let side = devices.keys.first(where: { devices[$0] === device })!
+            remove(side: side)
         }
         else {
             logger?.debug("devicePair doesn't contain \(device.name)")
         }
     }
 
-    func remove(insoleSide: BSInsoleSide) {
-        guard let device = devices[insoleSide] else {
-            logger?.debug("no \(insoleSide.name) device")
+    func remove(side: BSSide) {
+        guard let device = devices[side] else {
+            logger?.debug("no \(side.name) device")
             return
         }
         removeListeners(device: device)
-        devices[insoleSide] = nil
+        devices[side] = nil
         checkIsFullyConnected()
     }
 
@@ -79,12 +83,12 @@ public extension BSDevicePair {
         }
     }
 
-    internal func getDeviceInsoleSide(_ device: BSDevice) -> BSInsoleSide? {
-        guard let insoleSide = device.insoleSide
+    internal func getDeviceSide(_ device: BSDevice) -> BSSide? {
+        guard let side = device.side
         else {
-            self.logger?.error("device \(device.name) missing insoleSide")
+            self.logger?.error("device \(device.name) missing side")
             return nil
         }
-        return insoleSide
+        return side
     }
 }

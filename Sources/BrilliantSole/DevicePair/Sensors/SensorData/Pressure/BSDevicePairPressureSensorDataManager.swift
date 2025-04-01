@@ -15,7 +15,7 @@ public typealias BSDevicePairPressurePublisher = AnyPublisher<BSDevicePairPressu
 
 @StaticLogger(disabled: true)
 class BSDevicePairPressureSensorDataManager {
-    private var devicePressureData: [BSInsoleSide: BSPressureData] = .init()
+    private var devicePressureData: [BSSide: BSPressureData] = .init()
     private var hasAllData: Bool { devicePressureData.count == 2 }
     private var centerOfPressureRange: BSCenterOfPressureRange = .init()
     private var normalizedSumRange: BSRange = .init()
@@ -30,9 +30,9 @@ class BSDevicePairPressureSensorDataManager {
         centerOfPressureSubject.eraseToAnyPublisher()
     }
 
-    func onDevicePressureData(insoleSide: BSInsoleSide, pressureData: BSPressureData, timestamp: BSTimestamp) {
-        logger?.debug("assigning \(insoleSide.name) pressure data")
-        devicePressureData[insoleSide] = pressureData
+    func onDevicePressureData(side: BSSide, pressureData: BSPressureData, timestamp: BSTimestamp) {
+        logger?.debug("assigning \(side.name) pressure data")
+        devicePressureData[side] = pressureData
         guard hasAllData else {
             logger?.debug("not all data received yet")
             return
@@ -42,38 +42,38 @@ class BSDevicePairPressureSensorDataManager {
         var scaledSum: Float = 0
         var normalizedSum: Float = 0
 
-        for insoleSide in devicePressureData.keys {
-            scaledSum += devicePressureData[insoleSide]!.scaledSum
-            // normalizedSum += devicePressureData[insoleSide]!.normalizedSum
+        for side in devicePressureData.keys {
+            scaledSum += devicePressureData[side]!.scaledSum
+            // normalizedSum += devicePressureData[side]!.normalizedSum
         }
         normalizedSum = normalizedSumRange.updateAndGetNormalization(for: scaledSum)
         logger?.debug("rawSum: \(scaledSum), normalizedSum: \(normalizedSum)")
 
         var centerOfPressure: BSCenterOfPressure?
         var normalizedCenterOfPressure: BSCenterOfPressure?
-        var sensors: [BSInsoleSide: [BSPressureSensorData]] = .init()
+        var sensors: [BSSide: [BSPressureSensorData]] = .init()
         if normalizedSum > 0 {
             var centerOfPressureX: Float = 0
             var centerOfPressureY: Float = 0
 
-            for insoleSide in devicePressureData.keys {
+            for side in devicePressureData.keys {
                 if true {
-                    sensors[insoleSide] = .init()
-                    devicePressureData[insoleSide]!.sensors.forEach { _sensor in
+                    sensors[side] = .init()
+                    devicePressureData[side]!.sensors.forEach { _sensor in
                         var sensor = _sensor
                         sensor.updateWeightedValue(scaledSum: scaledSum)
-                        sensor.updateDevicePairPosition(insoleSide: insoleSide)
-                        sensors[insoleSide]?.append(sensor)
+                        sensor.updateDevicePairPosition(side: side)
+                        sensors[side]?.append(sensor)
 
                         centerOfPressureX += sensor.weightedValue * sensor.position.x
                         centerOfPressureY += sensor.weightedValue * sensor.position.y
                     }
                 }
                 else {
-                    let normalizedSumWeight: Float = devicePressureData[insoleSide]!.normalizedSum / normalizedSum
-                    if normalizedSumWeight > 0, devicePressureData[insoleSide]!.normalizedCenterOfPressure != nil {
-                        centerOfPressureY += normalizedSumWeight * devicePressureData[insoleSide]!.normalizedCenterOfPressure!.y
-                        if insoleSide == .right {
+                    let normalizedSumWeight: Float = devicePressureData[side]!.normalizedSum / normalizedSum
+                    if normalizedSumWeight > 0, devicePressureData[side]!.normalizedCenterOfPressure != nil {
+                        centerOfPressureY += normalizedSumWeight * devicePressureData[side]!.normalizedCenterOfPressure!.y
+                        if side == .right {
                             centerOfPressureX = normalizedSumWeight
                         }
                     }

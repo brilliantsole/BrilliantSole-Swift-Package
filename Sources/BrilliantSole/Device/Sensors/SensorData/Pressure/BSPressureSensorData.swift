@@ -31,9 +31,9 @@ public struct BSPressureSensorData {
         weightedValue = scaledValue / scaledSum
     }
 
-    mutating func updateDevicePairPosition(insoleSide: BSInsoleSide) {
+    mutating func updateDevicePairPosition(side: BSSide) {
         self.position.x *= 0.5
-        if insoleSide == .right {
+        if side == .right {
             self.position.x += 0.5
         }
     }
