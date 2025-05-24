@@ -6,6 +6,7 @@
 //
 
 public protocol BSSensorConfigurable {
+    var sensorTypes: [BSSensorType] { get }
     func setSensorConfiguration(_ newSensorConfiguration: BSSensorConfiguration, clearRest: Bool, sendImmediately: Bool)
     func setSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool)
     func toggleSensorRate(sensorType: BSSensorType, sensorRate: BSSensorRate, sendImmediately: Bool)

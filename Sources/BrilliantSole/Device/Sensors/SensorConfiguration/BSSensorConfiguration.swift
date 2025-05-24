@@ -15,7 +15,7 @@ public typealias BSSensorConfiguration = [BSSensorType: BSSensorRate]
 extension BSSensorConfiguration {
     // MARK: - SensorTypes
 
-    var sensorTypes: [BSSensorType] { keys.map { $0 } }
+    var sensorTypes: [BSSensorType] { keys.map { $0 }.sorted() }
 
     // MARK: - Parsing
 

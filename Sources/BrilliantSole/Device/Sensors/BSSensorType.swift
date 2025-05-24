@@ -36,7 +36,7 @@ public enum BSSensorType: UInt8, BSEnum {
     /// provides data at a continuous rate (as opposed to one-off events)
     public var isContinuous: Bool {
         switch self {
-        case .activity, .stepCount, .stepDetection:
+        case .activity, .stepCount, .stepDetection, .tapDetector, .camera, .microphone: // TODO: - make graph for microphone loudness later
             false
         default:
             true

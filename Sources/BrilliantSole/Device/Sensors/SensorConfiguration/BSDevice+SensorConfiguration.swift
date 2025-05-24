@@ -11,6 +11,7 @@ public extension BSDevice {
     internal func setupSensorConfiguration() {}
 
     var sensorConfiguration: BSSensorConfiguration { sensorConfigurationManager.sensorConfiguration }
+    var sensorTypes: [BSSensorType] { isMock ? BSSensorType.allCases : sensorConfiguration.sensorTypes }
     func containsSensorType(_ sensorType: BSSensorType) -> Bool {
         isMock || sensorConfiguration.contains(sensorType)
     }
