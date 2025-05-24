@@ -16,8 +16,9 @@ final class BSTxRxMessageUtils {
         BSSensorConfigurationManager.self,
         BSSensorDataManager.self,
         BSVibrationManager.self,
-        BSTfliteManager.self,
         BSFileTransferManager.self,
+        BSTfliteManager.self,
+        // FILL - wifi, camera, microphone, display
     ]
 
     static let enumStrings: [String] = initializeEnumStrings()

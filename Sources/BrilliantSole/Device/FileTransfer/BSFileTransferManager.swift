@@ -28,7 +28,8 @@ public typealias BSFileReceivedPublisher = AnyPublisher<BSFileReceivedData, Neve
 @StaticLogger(disabled: true)
 final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
-        [.getMaxFileLength,
+        [.getFileTypes,
+         .getMaxFileLength,
          .getFileTransferType,
          .getFileLength,
          .getFileChecksum,
@@ -37,6 +38,9 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     override func onRxMessage(_ messageType: BSFileTransferMessageType, data: Data) {
         switch messageType {
+        case .getFileTypes:
+            // FILL - parse array of accepted file types
+            break
         case .getMaxFileLength:
             parseMaxFileLength(data)
         case .getFileTransferType, .setFileTransferType:

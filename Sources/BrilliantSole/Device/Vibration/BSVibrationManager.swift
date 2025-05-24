@@ -13,7 +13,16 @@ final class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
         nil
     }
 
-    override func onRxMessage(_ messageType: BSVibrationMessageType, data: Data) {}
+    override func onRxMessage(_ messageType: BSVibrationMessageType, data: Data) {
+        switch messageType {
+        case .getVibrationLocations:
+            // FILL - send array of available vibration locations
+            break
+        case .triggerVibration:
+            // nothing to do
+            break
+        }
+    }
 
     func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool = true) {
         var data: Data = .init()

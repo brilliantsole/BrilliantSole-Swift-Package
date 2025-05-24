@@ -30,9 +30,11 @@ final class BSDeviceEventMessageUtils {
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorConfigurationMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorDataMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSensorType.self)
+        appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSVibrationMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSFileTransferMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSFileTransferEventType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSTfliteMessageType.self)
+        // FILL - wifi, camera, microphone, display
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpMessageType.self)
         appendEnum(offset: &offset, enumStrings: &enumStrings, enum: BSSmpEventType.self)
         logger?.debug("enumStrings: \(enumStrings)")
