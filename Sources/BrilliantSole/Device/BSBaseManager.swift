@@ -94,7 +94,6 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     }
 
     func createMessage(_ messageType: MessageType, data: Data? = nil) -> BSTxMessage {
-        
         return .init(type: Self.enumToTxRx![messageType]!, data: data)
     }
 

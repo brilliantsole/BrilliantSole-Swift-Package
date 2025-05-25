@@ -166,6 +166,11 @@ public final class BSDevicePair {
         deviceDeviceOrientationSubject.eraseToAnyPublisher()
     }
 
+    let deviceTapDetectionSubject: PassthroughSubject<(BSSide, BSDevice, BSTimestamp), Never> = .init()
+    public var deviceTapDetectionPublisher: AnyPublisher<(BSSide, BSDevice, BSTimestamp), Never> {
+        deviceTapDetectionSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - deviceBarometerSensorData
 
     let deviceBarometerSubject: PassthroughSubject<(BSSide, BSDevice, BSBarometer, BSTimestamp), Never> = .init()
