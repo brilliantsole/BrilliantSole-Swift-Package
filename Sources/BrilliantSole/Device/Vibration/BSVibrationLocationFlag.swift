@@ -8,7 +8,7 @@
 import Foundation
 import UkatonMacros
 
-public struct BSVibrationLocationFlag: Identifiable, OptionSet, Sendable, CaseIterable {
+public struct BSVibrationLocationFlag: Identifiable, OptionSet, Sendable, CaseIterable, Hashable {
     public var name: String {
         switch self {
         case .front:
@@ -33,4 +33,27 @@ public struct BSVibrationLocationFlag: Identifiable, OptionSet, Sendable, CaseIt
 
     public static let front = BSVibrationLocationFlag(rawValue: 1 << 0)
     public static let rear = BSVibrationLocationFlag(rawValue: 1 << 1)
+}
+
+public typealias BSVibrationLocationFlags = [BSVibrationLocationFlag]
+
+extension Collection where Element == BSVibrationLocationFlag {
+    static func parse(_ data: Data) -> BSVibrationLocationFlags? {
+        var array: BSVibrationLocationFlags = []
+
+        for index in data {
+            guard BSVibrationLocationFlag.allCases.indices.contains(Int(index)) else {
+                continue
+            }
+            array.append(BSVibrationLocationFlag.allCases[Int(index)])
+        }
+
+        return array.sorted()
+    }
+}
+
+extension BSVibrationLocationFlag: Comparable {
+    public static func < (lhs: BSVibrationLocationFlag, rhs: BSVibrationLocationFlag) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
 }
