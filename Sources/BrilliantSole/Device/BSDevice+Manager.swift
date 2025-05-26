@@ -14,6 +14,7 @@ extension BSDevice {
          vibrationManager,
          fileTransferManager,
          tfliteManager,
+         wifiManager,
          smpManager]
     }
 
@@ -23,9 +24,10 @@ extension BSDevice {
         setupInformationManager()
         setupSensorConfiguration()
         setupSensorData()
+        setupVibrationManager()
         setupFileTransfer()
         setupTfliteManager()
-        setupVibrationManager()
+        setupWifiManager()
         setupFirmwareManager()
         for manager in managers {
             manager.setSendTxMessages { txMessages, sendImmediately in

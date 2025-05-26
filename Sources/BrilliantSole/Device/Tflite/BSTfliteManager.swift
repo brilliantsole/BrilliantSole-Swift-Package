@@ -20,6 +20,10 @@ public typealias BSTfliteClassificationPublisher = AnyPublisher<BSTfliteClassifi
 @StaticLogger(disabled: true)
 final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     override class var requiredMessageTypes: [BSTfliteMessageType]? {
+        []
+    }
+
+    override class var requiredFollowUpMessageTypes: [BSTfliteMessageType]? {
         [
             .getTfliteName,
             .getTfliteTask,
@@ -28,7 +32,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
             .isTfliteReady,
             .getTfliteCaptureDelay,
             .getTfliteThreshold,
-            .getTfliteInferencingEnabled,
+            .getTfliteInferencingEnabled
         ]
     }
 
@@ -222,9 +226,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
     }
 
     private func parseTfliteSensorTypes(_ data: Data) {
-        guard let newTfliteSensorTypes = BSTfliteSensorTypes.parse(data) else {
-            return
-        }
+        guard let newTfliteSensorTypes = BSTfliteSensorTypes.parse(data) else { return }
         logger?.debug("parsed tfliteSensorTypes \(newTfliteSensorTypes)")
         tfliteSensorTypes = newTfliteSensorTypes
     }
@@ -381,7 +383,7 @@ final class BSTfliteManager: BSBaseManager<BSTfliteMessageType> {
         setTfliteInferencingEnabled(false, sendImmediately: sendImmediately)
     }
 
-    func toggleTfliteInferencingEnabled(sendImmediately: Bool = true) {
+    func toggleTfliteInferencing(sendImmediately: Bool = true) {
         setTfliteInferencingEnabled(!tfliteInferencingEnabled, sendImmediately: sendImmediately)
     }
 

@@ -13,4 +13,7 @@ public protocol BSMetaDevice {
 
     var deviceType: BSDeviceType { get }
     var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> { get }
+
+    var ipAddress: String? { get }
+    var ipAddressPublisher: AnyPublisher<String?, Never> { get }
 }

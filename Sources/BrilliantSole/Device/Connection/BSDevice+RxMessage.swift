@@ -22,10 +22,10 @@ extension BSDevice {
 
     func onRxMessages() {
         logger?.debug("parsed rxMessages")
-        sendPendingTxMessages()
         if connectionStatus == .connecting {
             checkIfFullyConnected()
         }
+        sendPendingTxMessages()
     }
 
     func checkIfFullyConnected() {
@@ -51,12 +51,43 @@ extension BSDevice {
         guard receivedAllRequiredTxRxMessages else {
             return
         }
+        var receivedFollowUpMessages = true
+        if sensorTypes.contains(.pressure) {
+            if !sensorDataManager.didReceivePressurePositions {
+                receivedFollowUpMessages = false
+                logger?.debug("getting followUp pressure messages...")
+                sensorDataManager.getPressurePositions(sendImmediately: false)
+            }
+        }
+        if isWifiAvailable {
+            if !checkIfReceivedTxRxMessages(wifiManager.requiredFollowUpTxRxMessageTypes) {
+                receivedFollowUpMessages = false
+                logger?.debug("getting followUp wifi messages...")
+                wifiManager.sendRequiredFollowupMessages(sendImmediately: false)
+            }
+        }
+        if !fileTypes.isEmpty {
+            if !checkIfReceivedTxRxMessages(fileTransferManager.requiredFollowUpTxRxMessageTypes) {
+                receivedFollowUpMessages = false
+                logger?.debug("getting followUp fileTransfer messages...")
+                fileTransferManager.sendRequiredFollowupMessages(sendImmediately: false)
+            }
+        }
+        if isTfliteAvailable {
+            if !checkIfReceivedTxRxMessages(tfliteManager.requiredFollowUpTxRxMessageTypes) {
+                receivedFollowUpMessages = false
+                logger?.debug("getting followUp tflite messages...")
+                tfliteManager.sendRequiredFollowupMessages(sendImmediately: false)
+            }
+        }
+        // TODO: - check camera/mic/display
+        guard receivedFollowUpMessages else { return }
         connectionStatus = .connected
     }
 
-    func checkIfReceivedAllRequiredTxRxMessages() -> Bool {
+    func checkIfReceivedTxRxMessages(_ messageTypes: [UInt8]) -> Bool {
         var receivedAllRequiredTxRxMessages = true
-        for messageType in BSTxRxMessageUtils.requiredTxRxMessageTypes {
+        for messageType in messageTypes {
             if !receivedTxRxMessages.contains(messageType) {
                 logger?.debug("didn't receive mesageType \(BSTxRxMessageUtils.enumStrings[Int(messageType)])")
                 receivedAllRequiredTxRxMessages = false
@@ -64,6 +95,10 @@ extension BSDevice {
             }
         }
         return receivedAllRequiredTxRxMessages
+    }
+
+    func checkIfReceivedAllRequiredTxRxMessages() -> Bool {
+        checkIfReceivedTxRxMessages(BSTxRxMessageUtils.requiredTxRxMessageTypes)
     }
 
     func resetRxMessaging() {

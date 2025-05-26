@@ -28,19 +28,23 @@ public typealias BSFileReceivedPublisher = AnyPublisher<BSFileReceivedData, Neve
 @StaticLogger(disabled: true)
 final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
     override class var requiredMessageTypes: [BSFileTransferMessageType]? {
-        [.getFileTypes,
-         .getMaxFileLength,
-         .getFileTransferType,
-         .getFileLength,
-         .getFileChecksum,
-         .getFileTransferStatus]
+        [.getFileTypes]
+    }
+
+    override class var requiredFollowUpMessageTypes: [BSFileTransferMessageType]? {
+        [
+            .getMaxFileLength,
+            .getFileTransferType,
+            .getFileLength,
+            .getFileChecksum,
+            .getFileTransferStatus,
+        ]
     }
 
     override func onRxMessage(_ messageType: BSFileTransferMessageType, data: Data) {
         switch messageType {
         case .getFileTypes:
-            // FILL - parse array of accepted file types
-            break
+            parseFileTypes(data)
         case .getMaxFileLength:
             parseMaxFileLength(data)
         case .getFileTransferType, .setFileTransferType:
@@ -64,6 +68,9 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
     override func reset() {
         super.reset()
+
+        fileTypes = []
+
         maxFileLength = 0
         fileType = .tflite
         fileLength = 0
@@ -77,6 +84,32 @@ final class BSFileTransferManager: BSBaseManager<BSFileTransferMessageType> {
 
         bytesTransferred = 0
         waitingToSendMoreData = false
+    }
+
+    // MARK: - fileTypes
+
+    private let fileTypesSubject: CurrentValueSubject<BSFileTypes, Never> = .init(.init())
+    var fileTypesPublisher: AnyPublisher<BSFileTypes, Never> {
+        fileTypesSubject.eraseToAnyPublisher()
+    }
+
+    private(set) var fileTypes: BSFileTypes {
+        get { fileTypesSubject.value }
+        set {
+            fileTypesSubject.value = newValue
+            logger?.debug("updated fileTypes to \(newValue)")
+        }
+    }
+
+    func getFileTypes(sendImmediately: Bool = true) {
+        logger?.debug("getting fileTypes")
+        createAndSendMessage(.getFileTypes, sendImmediately: sendImmediately)
+    }
+
+    private func parseFileTypes(_ data: Data) {
+        guard let newFileTypes = BSFileTypes.parse(data) else { return }
+        logger?.debug("parsed fileTypes \(newFileTypes)")
+        fileTypes = newFileTypes
     }
 
     // MARK: - maxFileLength

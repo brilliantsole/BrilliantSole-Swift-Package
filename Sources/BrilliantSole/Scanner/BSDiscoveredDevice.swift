@@ -15,6 +15,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
 
     public let id: String
 
+    // MARK: - name
+
     private lazy var nameSubject: CurrentValueSubject<String, Never> = .init(self.name)
     public var namePublisher: AnyPublisher<String, Never> {
         nameSubject.eraseToAnyPublisher()
@@ -26,6 +28,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
             nameSubject.send(name)
         }
     }
+
+    // MARK: - deviceType
 
     private lazy var deviceTypeSubject: CurrentValueSubject<BSDeviceType, Never> = .init(self.deviceType)
     public var deviceTypePublisher: AnyPublisher<BSDeviceType, Never> {
@@ -39,6 +43,8 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
         }
     }
 
+    // MARK: - rssi
+
     private lazy var rssiSubject: CurrentValueSubject<Int?, Never> = .init(self.rssi)
     public var rssiPublisher: AnyPublisher<Int?, Never> {
         rssiSubject.eraseToAnyPublisher()
@@ -51,9 +57,23 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
         }
     }
 
+    // MARK: - ipAddress
+
+    private lazy var ipAddressSubject: CurrentValueSubject<String?, Never> = .init(nil)
+    public var ipAddressPublisher: AnyPublisher<String?, Never> {
+        ipAddressSubject.eraseToAnyPublisher()
+    }
+
+    public private(set) var ipAddress: String? {
+        didSet {
+            logger?.debug("updated ipAddress \(self.ipAddress ?? "nil")")
+            ipAddressSubject.send(ipAddress)
+        }
+    }
+
     // MARK: - init
 
-    init(scanner: BSScanner, id: String, name: String = "", deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
+    init(scanner: BSScanner, id: String, name: String = "", deviceType: BSDeviceType? = nil, rssi: Int? = nil, ipAddress: String? = nil) {
         self.scanner = scanner
         self.id = id
         self.lastTimeUpdated = .now
@@ -64,6 +84,7 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
         if let rssi {
             self.rssi = rssi
         }
+        self.ipAddress = ipAddress
     }
 
     convenience init(scanner: BSScanner, discoveredDeviceJson: BSDiscoveredDeviceJson) {
@@ -106,7 +127,7 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
 
     // MARK: - update
 
-    func update(name: String? = nil, deviceType: BSDeviceType? = nil, rssi: Int? = nil) {
+    func update(name: String? = nil, deviceType: BSDeviceType? = nil, rssi: Int? = nil, ipAddress: String? = nil) {
         if let name {
             self.name = name
         }
@@ -116,6 +137,7 @@ public final class BSDiscoveredDevice: BSConnectable, BSMetaDevice {
         if let rssi {
             self.rssi = rssi
         }
+        self.ipAddress = ipAddress
         lastTimeUpdated = .now
         logger?.debug("updated \(self.id)")
     }

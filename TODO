@@ -1,1 +1,4 @@
-
+migration
+    vibrationLocations
+        parse
+        provide in device

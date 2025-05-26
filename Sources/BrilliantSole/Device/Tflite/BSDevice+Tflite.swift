@@ -16,6 +16,10 @@ public extension BSDevice {
         }.store(in: &managerCancellables)
     }
 
+    // MARK: - isTfliteAvailable
+
+    var isTfliteAvailable: Bool { fileTypes.contains(.tflite) }
+
     // MARK: - tfliteName
 
     var tfliteName: String { tfliteManager.tfliteName }
@@ -77,8 +81,8 @@ public extension BSDevice {
         tfliteManager.disableTfliteInferencing(sendImmediately: sendImmediately)
     }
 
-    func toggleTfliteInferencingEnabled(sendImmediately: Bool = true) {
-        tfliteManager.toggleTfliteInferencingEnabled(sendImmediately: sendImmediately)
+    func toggleTfliteInferencing(sendImmediately: Bool = true) {
+        tfliteManager.toggleTfliteInferencing(sendImmediately: sendImmediately)
     }
 
     // MARK: - sendTfliteModel

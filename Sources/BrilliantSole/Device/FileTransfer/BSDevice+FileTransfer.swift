@@ -13,6 +13,10 @@ public extension BSDevice {
 
     internal func setupFileTransfer() {}
 
+    // MARK: - fileTypes
+
+    var fileTypes: BSFileTypes { fileTransferManager.fileTypes }
+
     // MARK: - maxFileLength
 
     var maxFileLength: BSFileLength { fileTransferManager.maxFileLength }

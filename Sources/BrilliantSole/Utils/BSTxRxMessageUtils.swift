@@ -18,7 +18,8 @@ final class BSTxRxMessageUtils {
         BSVibrationManager.self,
         BSFileTransferManager.self,
         BSTfliteManager.self,
-        // FILL - wifi, camera, microphone, display
+        BSWifiManager.self,
+        // FILL - camera, microphone, display
     ]
 
     static let enumStrings: [String] = initializeEnumStrings()
@@ -33,7 +34,7 @@ final class BSTxRxMessageUtils {
         for manager in BSManagers {
             manager.initTxRxEnum(at: &offset, enumStrings: &enumStrings)
         }
-        logger?.debug("enumStrings: \(enumStrings)")
+        print("enumStrings: \(enumStrings)")
         return enumStrings
     }
 
