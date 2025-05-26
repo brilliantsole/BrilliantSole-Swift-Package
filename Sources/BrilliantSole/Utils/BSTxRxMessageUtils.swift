@@ -34,7 +34,7 @@ final class BSTxRxMessageUtils {
         for manager in BSManagers {
             manager.initTxRxEnum(at: &offset, enumStrings: &enumStrings)
         }
-        print("enumStrings: \(enumStrings)")
+        logger?.debug("enumStrings: \(enumStrings)")
         return enumStrings
     }
 
