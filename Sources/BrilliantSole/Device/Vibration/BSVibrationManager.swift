@@ -9,7 +9,7 @@ import Combine
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 final class BSVibrationManager: BSBaseManager<BSVibrationMessageType> {
     override class var requiredMessageTypes: [BSVibrationMessageType]? {
         [.getVibrationLocations]
