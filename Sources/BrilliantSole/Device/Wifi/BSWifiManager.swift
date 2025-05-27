@@ -256,8 +256,11 @@ final class BSWifiManager: BSBaseManager<BSWifiMessageType> {
     }
 
     private func parseIpAddress(_ data: Data) {
-        let newIpAddress: String = data.bytes.map { String($0) }.joined(separator: ".")
-        logger?.debug("parsed ipAddress: \(newIpAddress)")
+        var newIpAddress: String?
+        if data.bytes.count == 4 {
+            newIpAddress = data.bytes.map { String($0) }.joined(separator: ".")
+        }
+        logger?.debug("parsed ipAddress: \(newIpAddress ?? "nil")")
         ipAddress = newIpAddress
     }
 

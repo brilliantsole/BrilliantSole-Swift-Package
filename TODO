@@ -1,4 +1,3 @@
-migration
-    vibrationLocations
-        parse
-        provide in device
+camera
+microphone
+display
