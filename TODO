@@ -1,3 +1,6 @@
 camera
+    types
+    manager
+    device+manager
 microphone
 display
