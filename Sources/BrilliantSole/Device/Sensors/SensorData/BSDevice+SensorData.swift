@@ -82,6 +82,10 @@ public extension BSDevice {
         sensorDataManager.motionSensorDataManager.deviceOrientationPublisher
     }
 
+    var tapDetectionPublisher: BSVoidTimestampPublisher {
+        sensorDataManager.motionSensorDataManager.tapDetectionPublisher
+    }
+
     // MARK: - barometer
 
     private func setupBarometerData() {}

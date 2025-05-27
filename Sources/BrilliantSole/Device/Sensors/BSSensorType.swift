@@ -26,12 +26,17 @@ public enum BSSensorType: UInt8, BSEnum {
     case stepDetection
     case deviceOrientation
 
+    case tapDetection
+
     case barometer
+
+    case camera
+    case microphone
 
     /// provides data at a continuous rate (as opposed to one-off events)
     public var isContinuous: Bool {
         switch self {
-        case .activity, .stepCount, .stepDetection, .deviceOrientation:
+        case .activity, .stepCount, .stepDetection, .tapDetection, .camera, .microphone: // TODO: - make graph for microphone loudness later
             false
         default:
             true
@@ -40,7 +45,7 @@ public enum BSSensorType: UInt8, BSEnum {
 
     public var isMotion: Bool {
         switch self {
-        case .acceleration, .gravity, .linearAcceleration, .gyroscope, .magnetometer, .gameRotation, .rotation, .orientation, .activity, .deviceOrientation, .stepCount, .stepDetection:
+        case .acceleration, .gravity, .linearAcceleration, .gyroscope, .magnetometer, .gameRotation, .rotation, .orientation, .activity, .deviceOrientation, .stepCount, .stepDetection, .tapDetection:
             true
         default:
             false
@@ -65,8 +70,14 @@ public enum BSSensorType: UInt8, BSEnum {
             Void.self
         case .deviceOrientation:
             BSDeviceOrientation.self
+        case .tapDetection:
+            Void.self
         case .barometer:
             BSBarometer.self
+        case .camera:
+            Void.self // parsed using CameraManager
+        case .microphone:
+            Void.self // parsed using MicrophoneManager
         }
     }
 }

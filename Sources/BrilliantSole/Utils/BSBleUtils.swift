@@ -34,7 +34,7 @@ extension BSBleUUID {
     var uuidString: String {
         switch type {
         case .main:
-            "ea6da725-\(rawValue)-4f9b-893d-c3913e33b39f"
+            "ea6d\(rawValue)-a725-4f9b-893d-c3913e33b39f"
         default:
             rawValue
         }

@@ -164,6 +164,7 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
     let vibrationManager: BSVibrationManager = .init()
     let fileTransferManager: BSFileTransferManager = .init()
     let tfliteManager: BSTfliteManager = .init()
+    let wifiManager: BSWifiManager = .init()
     let smpManager: BSSmpManager = .init()
 
     var managerCancellables: Set<AnyCancellable> = []

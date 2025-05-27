@@ -10,6 +10,10 @@ import Combine
 public extension BSDevice {
     internal func setupVibrationManager() {}
 
+    var vibrationLocations: BSVibrationLocationFlags {
+        isMock ? .all : vibrationManager.vibrationLocations
+    }
+
     func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool = true) {
         vibrationManager.triggerVibration(vibrationConfigurations, sendImmediately: sendImmediately)
     }

@@ -13,7 +13,6 @@ import UkatonMacros
 final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
     override class var requiredMessageTypes: [BSSensorDataMessageType]? {
         [
-            .getPressurePositions,
             .getSensorScalars
         ]
     }
@@ -33,9 +32,12 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
         super.reset()
         sensorScalars.removeAll()
         sensorDataManagers.forEach { $0.reset() }
+        didReceivePressurePositions = false
     }
 
     // MARK: - pressurePositions
+
+    public private(set) var didReceivePressurePositions: Bool = false
 
     func getPressurePositions(sendImmediately: Bool = true) {
         logger?.debug("getting pressurePositions")
@@ -44,6 +46,7 @@ final class BSSensorDataManager: BSBaseManager<BSSensorDataMessageType> {
 
     private func parsePressurePositions(_ data: Data) {
         pressureSensorDataManager.parsePressurePositions(data)
+        didReceivePressurePositions = true
     }
 
     // MARK: - sensorScalars

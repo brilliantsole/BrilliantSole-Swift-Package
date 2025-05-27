@@ -94,7 +94,6 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     }
 
     func createMessage(_ messageType: MessageType, data: Data? = nil) -> BSTxMessage {
-        
         return .init(type: Self.enumToTxRx![messageType]!, data: data)
     }
 
@@ -105,4 +104,19 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
 
     class var requiredMessageTypes: [MessageType]? { nil }
     static var requiredTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredMessageTypes!) : [] }
+
+    class var requiredFollowUpMessageTypes: [MessageType]? { nil }
+    static var requiredFollowUpTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredFollowUpMessageTypes!) : [] }
+    var requiredFollowUpTxRxMessageTypes: [UInt8] { Self.requiredFollowUpTxRxMessageTypes }
+    static var requiredFollowUpTxRxMessages: [BSTxMessage] {
+        var requiredFollowUpTxRxMessages: [BSTxMessage] = []
+        for requiredFollowUpTxRxMessageType in requiredFollowUpTxRxMessageTypes {
+            requiredFollowUpTxRxMessages.append(.init(type: requiredFollowUpTxRxMessageType))
+        }
+        return requiredFollowUpTxRxMessages
+    }
+
+    func sendRequiredFollowupMessages(sendImmediately: Bool = true) {
+        sendTxMessages(Self.requiredFollowUpTxRxMessages, sendImmediately: sendImmediately)
+    }
 }

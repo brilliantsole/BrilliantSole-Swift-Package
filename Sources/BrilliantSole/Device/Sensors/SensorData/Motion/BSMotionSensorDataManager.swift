@@ -56,6 +56,7 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         .stepCount,
         .stepDetection,
         .deviceOrientation,
+        .tapDetection
     ] }
 
     override func parseSensorData(sensorType: BSSensorType, data: Data, timestamp: BSTimestamp, scalar: Float) {
@@ -75,6 +76,8 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
             parseStepDetection(data: data, timestamp: timestamp)
         case .deviceOrientation:
             parseDeviceOrientation(data: data, timestamp: timestamp)
+        case .tapDetection:
+            parseTapDetection(data: data, timestamp: timestamp)
         default:
             break
         }
@@ -271,5 +274,17 @@ final class BSMotionSensorDataManager: BSBaseSensorDataManager {
         }
         logger?.debug("deviceOrientation: \(deviceOrientation.name) (\(timestamp)ms")
         deviceOrientationSubject.send((deviceOrientation, timestamp))
+    }
+
+    // MARK: - tapDetection
+
+    private let tapDetectionSubject = BSVoidTimestampSubject()
+    var tapDetectionPublisher: BSVoidTimestampPublisher {
+        tapDetectionSubject.eraseToAnyPublisher()
+    }
+
+    private func parseTapDetection(data: Data, timestamp: BSTimestamp) {
+        logger?.debug("tap detected (\(timestamp)ms)")
+        tapDetectionSubject.send(timestamp)
     }
 }

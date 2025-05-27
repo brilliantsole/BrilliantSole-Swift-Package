@@ -89,6 +89,11 @@ public extension BSDevicePair {
             guard let side = getDeviceSide(device) else { return }
             deviceBarometerSubject.send((side, device, barometer, timestamp))
         }.store(in: &deviceCancellables[device]!)
+
+        device.tapDetectionPublisher.sink { [self] timestamp in
+            guard let side = getDeviceSide(device) else { return }
+            deviceTapDetectionSubject.send((side, device, timestamp))
+        }.store(in: &deviceCancellables[device]!)
     }
 
     // MARK: - barometer

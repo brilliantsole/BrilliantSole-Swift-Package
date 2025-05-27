@@ -6,6 +6,8 @@
 //
 
 public protocol BSVibratable {
+    var vibrationLocations: BSVibrationLocationFlags { get }
+
     func triggerVibration(_ vibrationConfigurations: BSVibrationConfigurations, sendImmediately: Bool)
     func triggerVibration(_ vibrationConfiguration: BSVibrationConfiguration, sendImmediately: Bool)
 }
