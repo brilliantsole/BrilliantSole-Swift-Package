@@ -166,6 +166,15 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
         setCameraCommand(.wake, sendImmediately: sendImmediately)
     }
 
+    func toggleWake(sendImmediately: Bool = true) {
+        if cameraStatus == .asleep {
+            wake(sendImmediately: sendImmediately)
+        }
+        else {
+            sleep(sendImmediately: sendImmediately)
+        }
+    }
+
     // MARK: - cameraHeader
 
     private var headerSize: BSCameraSizeType? {

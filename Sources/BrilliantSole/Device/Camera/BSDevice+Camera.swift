@@ -64,6 +64,14 @@ public extension BSDevice {
         cameraManager.sleep(sendImmediately: sendImmediately)
     }
 
+    func toggleCameraWake(sendImmediately: Bool = true) {
+        guard isCameraAvailable else {
+            logger?.error("camera is not available")
+            return
+        }
+        cameraManager.toggleWake(sendImmediately: sendImmediately)
+    }
+
     // MARK: - cameraConfiguration
 
     var cameraConfiguration: BSCameraConfiguration { cameraManager.cameraConfiguration }
