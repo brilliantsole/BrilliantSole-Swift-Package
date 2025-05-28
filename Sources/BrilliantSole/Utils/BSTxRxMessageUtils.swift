@@ -19,7 +19,8 @@ final class BSTxRxMessageUtils {
         BSFileTransferManager.self,
         BSTfliteManager.self,
         BSWifiManager.self,
-        // FILL - camera, microphone, display
+        BSCameraManager.self,
+        // FILL - microphone, display
     ]
 
     static let enumStrings: [String] = initializeEnumStrings()

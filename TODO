@@ -1,6 +1,4 @@
-camera
-    types
-    manager
-    device+manager
+camera example
+    range helpers in BSCameraConfigurationType
 microphone
 display

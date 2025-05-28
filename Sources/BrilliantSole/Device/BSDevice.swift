@@ -10,7 +10,7 @@ import iOSMcuManagerLibrary
 import OSLog
 import UkatonMacros
 
-@StaticLogger(disabled: true)
+@StaticLogger(disabled: false)
 public final class BSDevice: BSConnectable, BSMetaDevice {
     public nonisolated(unsafe) static let mock = BSDevice(isMock: true)
     public let isMock: Bool
@@ -165,6 +165,7 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
     let fileTransferManager: BSFileTransferManager = .init()
     let tfliteManager: BSTfliteManager = .init()
     let wifiManager: BSWifiManager = .init()
+    let cameraManager: BSCameraManager = .init()
     let smpManager: BSSmpManager = .init()
 
     var managerCancellables: Set<AnyCancellable> = []

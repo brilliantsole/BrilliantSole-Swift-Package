@@ -8,11 +8,7 @@
 import Combine
 
 public extension BSDevice {
-    internal func setupWifiManager() {
-        wifiManager.isWifiAvailablePublisher.sink { _ in
-            // TODO: - request followup data
-        }.store(in: &managerCancellables)
-    }
+    internal func setupWifiManager() {}
 
     // MARK: - isWifiAvailable
 
