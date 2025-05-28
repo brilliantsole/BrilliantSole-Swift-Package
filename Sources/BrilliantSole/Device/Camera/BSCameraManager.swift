@@ -11,7 +11,7 @@ import UkatonMacros
 
 typealias BSCameraSizeType = UInt16
 
-@StaticLogger(disabled: false)
+@StaticLogger(disabled: true)
 final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
     override class var requiredFollowUpMessageTypes: [BSCameraMessageType]? {
         [

@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = getLogger(category: "BSCameraConfiguration", disabled: false)
+private let logger = getLogger(category: "BSCameraConfiguration", disabled: true)
 
 public typealias BSCameraConfigurationValue = UInt16
 public typealias BSCameraConfiguration = [BSCameraConfigurationType: BSCameraConfigurationValue]
