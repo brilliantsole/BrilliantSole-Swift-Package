@@ -16,7 +16,7 @@ public typealias BSCameraConfiguration = [BSCameraConfigurationType: BSCameraCon
 extension BSCameraConfiguration {
     // MARK: - CameraConfigurationTypes
 
-    var configurationTypes: [BSCameraConfigurationType] { keys.map { $0 }.sorted() }
+    public var types: [BSCameraConfigurationType] { keys.map { $0 }.sorted() }
 
     // MARK: - Parsing
 

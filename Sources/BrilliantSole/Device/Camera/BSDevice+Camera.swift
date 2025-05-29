@@ -20,7 +20,8 @@ public extension BSDevice {
     // MARK: - cameraStatus
 
     var cameraStatus: BSCameraStatus { cameraManager.cameraStatus }
-    var cameraStatusPubliher: AnyPublisher<BSCameraStatus, Never> { cameraManager.cameraStatusPublisher }
+    var cameraStatusPublisher: AnyPublisher<BSCameraStatus, Never> { cameraManager.cameraStatusPublisher }
+    var cameraFinishedFocusingPublisher: AnyPublisher<Void, Never> { cameraManager.finishedFocusingPublisher }
 
     // MARK: - cameraCommand
 
@@ -84,7 +85,23 @@ public extension BSDevice {
             logger?.error("camera is not available")
             return
         }
-        cameraManager.setCameraConfiguration(configuration, sendImmediately: sendImmediately)
+        cameraManager.setConfiguration(configuration, sendImmediately: sendImmediately)
+    }
+
+    func getCameraConfigurationValue(_ type: BSCameraConfigurationType) -> BSCameraConfigurationValue? {
+        guard isCameraAvailable else {
+            logger?.error("camera is not available")
+            return nil
+        }
+        return cameraManager.getConfigurationValue(type)
+    }
+
+    func setCameraConfigurationValue(_ type: BSCameraConfigurationType, value: BSCameraConfigurationValue, sendImmediately: Bool = true) {
+        guard isCameraAvailable else {
+            logger?.error("camera is not available")
+            return
+        }
+        cameraManager.setConfigurationValue(type, value: value, sendImmediately: sendImmediately)
     }
 
     // MARK: - cameraData

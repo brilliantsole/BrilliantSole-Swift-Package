@@ -57,10 +57,19 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
         cameraStatusSubject.eraseToAnyPublisher()
     }
 
+    private let finishedFocusingSubject = PassthroughSubject<Void, Never>()
+    var finishedFocusingPublisher: AnyPublisher<Void, Never> {
+        finishedFocusingSubject.eraseToAnyPublisher()
+    }
+
     private(set) var cameraStatus: BSCameraStatus {
         get { cameraStatusSubject.value }
         set {
             logger?.debug("updated cameraStatus to \(newValue.name)")
+            if newValue == .idle, cameraStatus == .focusing {
+                logger?.debug("finished focusing")
+                finishedFocusingSubject.send()
+            }
             cameraStatusSubject.value = newValue
         }
     }
@@ -107,7 +116,7 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
         createAndSendMessage(.getCameraConfiguration, sendImmediately: sendImmediately)
     }
 
-    func setCameraConfiguration(_ newCameraConfiguration: BSCameraConfiguration, sendImmediately: Bool = true) {
+    func setConfiguration(_ newCameraConfiguration: BSCameraConfiguration, sendImmediately: Bool = true) {
         guard !newCameraConfiguration.isEmpty else {
             logger?.warning("ignoring empty cameraConfiguration")
             return
@@ -121,7 +130,25 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
         createAndSendMessage(.setCameraConfiguration, data: _newCameraConfiguration.getData(), sendImmediately: sendImmediately)
     }
 
-    var configurationTypes: [BSCameraConfigurationType] { cameraConfiguration.configurationTypes }
+    func containsConfigurationType(_ type: BSCameraConfigurationType) -> Bool { configurationTypes.contains(type) }
+    func getConfigurationValue(_ type: BSCameraConfigurationType) -> BSCameraConfigurationValue? { cameraConfiguration[type] }
+    func setConfigurationValue(_ type: BSCameraConfigurationType, value: BSCameraConfigurationValue, sendImmediately: Bool = true) {
+        guard containsConfigurationType(type) else {
+            logger?.debug("camera doesn't contain configuratinType \(type.name)")
+            return
+        }
+        guard let currentValue = getConfigurationValue(type), currentValue != value else {
+            logger?.debug("type \(type.name) already has value \(value)")
+            return
+        }
+
+        var newCameraConfiguration: BSCameraConfiguration = .init()
+        newCameraConfiguration[type] = value
+        logger?.debug("sending setCameraConfiguration: \(newCameraConfiguration)")
+        setConfiguration(newCameraConfiguration, sendImmediately: sendImmediately)
+    }
+
+    var configurationTypes: [BSCameraConfigurationType] { cameraConfiguration.types }
 
     // MARK: - cameraCommand
 
