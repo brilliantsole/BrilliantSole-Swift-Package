@@ -162,6 +162,7 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
             logger?.warning("cannot take picture when asleep")
             return
         }
+        imageProgress = 0
         setCameraCommand(.takePicture, sendImmediately: sendImmediately)
     }
 
