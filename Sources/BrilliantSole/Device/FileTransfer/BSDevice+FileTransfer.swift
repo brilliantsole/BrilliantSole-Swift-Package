@@ -11,7 +11,7 @@ import Foundation
 public extension BSDevice {
     // MARK: - setup
 
-    internal func setupFileTransfer() {}
+    internal func setupFileTransferManager() {}
 
     // MARK: - fileTypes
 

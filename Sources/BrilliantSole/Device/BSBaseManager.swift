@@ -106,7 +106,7 @@ class BSBaseManager<MessageType>: BSManager where MessageType: BSEnum {
     static var requiredTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredMessageTypes!) : [] }
 
     class var requiredFollowUpMessageTypes: [MessageType]? { nil }
-    static var requiredFollowUpTxRxMessageTypes: [UInt8] { requiredMessageTypes != nil ? enumArrayToTxRxArray(requiredFollowUpMessageTypes!) : [] }
+    static var requiredFollowUpTxRxMessageTypes: [UInt8] { requiredFollowUpMessageTypes != nil ? enumArrayToTxRxArray(requiredFollowUpMessageTypes!) : [] }
     var requiredFollowUpTxRxMessageTypes: [UInt8] { Self.requiredFollowUpTxRxMessageTypes }
     static var requiredFollowUpTxRxMessages: [BSTxMessage] {
         var requiredFollowUpTxRxMessages: [BSTxMessage] = []

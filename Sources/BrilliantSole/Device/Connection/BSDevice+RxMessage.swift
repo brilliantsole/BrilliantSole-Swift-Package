@@ -80,7 +80,14 @@ extension BSDevice {
                 tfliteManager.sendRequiredFollowupMessages(sendImmediately: false)
             }
         }
-        // TODO: - check camera/mic/display
+        if isCameraAvailable {
+            if !checkIfReceivedTxRxMessages(cameraManager.requiredFollowUpTxRxMessageTypes) {
+                receivedFollowUpMessages = false
+                logger?.debug("getting followUp camera messages...")
+                cameraManager.sendRequiredFollowupMessages(sendImmediately: false)
+            }
+        }
+        // TODO: - check microphone/display
         guard receivedFollowUpMessages else { return }
         connectionStatus = .connected
     }
