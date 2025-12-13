@@ -10,6 +10,7 @@ import OSLog
 import UkatonMacros
 
 typealias BSCameraSizeType = UInt16
+typealias BSCameraImageSizeType = UInt32
 
 @StaticLogger(disabled: true)
 final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
@@ -231,7 +232,7 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
 
     // MARK: - cameraImage
 
-    private var imageSize: BSCameraSizeType? {
+    private var imageSize: BSCameraImageSizeType? {
         didSet {
             imageData = .init()
             imageProgress = 0
@@ -336,7 +337,7 @@ final class BSCameraManager: BSBaseManager<BSCameraMessageType> {
     }
 
     private func parseImageSize(_ data: Data) {
-        guard let newImageSize: BSCameraSizeType = .parse(data) else { return }
+        guard let newImageSize: BSCameraImageSizeType = .parse(data) else { return }
         logger?.debug("parsed imageSize \(newImageSize)")
         imageSize = newImageSize
     }
