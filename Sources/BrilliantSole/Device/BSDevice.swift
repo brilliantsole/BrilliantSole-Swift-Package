@@ -143,8 +143,8 @@ public final class BSDevice: BSConnectable, BSMetaDevice {
 
     public internal(set) var batteryLevel: BSBatteryLevel = 0 {
         didSet {
-            guard batteryLevel != oldValue else { return }
             didReceiveBatteryLevel = true
+            guard batteryLevel != oldValue else { return }
             batteryLevelSubject.send(batteryLevel)
         }
     }

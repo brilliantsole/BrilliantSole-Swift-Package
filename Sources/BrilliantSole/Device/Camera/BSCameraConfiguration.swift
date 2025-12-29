@@ -10,7 +10,7 @@ import OSLog
 
 private let logger = getLogger(category: "BSCameraConfiguration", disabled: true)
 
-public typealias BSCameraConfigurationValue = UInt16
+public typealias BSCameraConfigurationValue = Int
 public typealias BSCameraConfiguration = [BSCameraConfigurationType: BSCameraConfigurationValue]
 
 extension BSCameraConfiguration {
@@ -34,7 +34,10 @@ extension BSCameraConfiguration {
                 continue
             }
 
-            guard let value = BSCameraConfigurationValue.parse(data, at: index + 1) else {
+            guard let fixedWidthInteger = cameraConfigurationType.dataType.parse(data, at: index + 1) else {
+                continue
+            }
+            guard let value = Int(exactly: fixedWidthInteger) else {
                 continue
             }
 
@@ -48,7 +51,8 @@ extension BSCameraConfiguration {
         var data: Data = .init()
         for (type, value) in self {
             data += type.data
-            data += value.getData(littleEndian: true)
+            let fixedWidthInteger = type.dataType.init(value)
+            data += fixedWidthInteger.getData(littleEndian: true)
         }
         return data
     }
